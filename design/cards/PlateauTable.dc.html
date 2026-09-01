@@ -14,22 +14,79 @@
     .stage {
       position: relative;
       width: 100%; height: 100%;
-      background: #FBF3E7;
       font-family: system-ui, sans-serif;
       overflow: hidden;
     }
+    .wall {
+      position: absolute; top: 0; left: 0; right: 0; height: 62%;
+      background:
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 2px, transparent 2px 46px),
+        linear-gradient(180deg, #F3E1C6 0%, #EAD2AE 100%);
+    }
+    .wall-rail {
+      position: absolute; left: 0; right: 0; height: 10px;
+      background: #C9A876; box-shadow: 0 3px 4px rgba(80,55,25,0.25);
+    }
+    .floor {
+      position: absolute; left: 0; right: 0; bottom: 0; top: 62%;
+      background: repeating-linear-gradient(180deg, #D8B98A 0 34px, #CDA974 34px 36px);
+    }
+    .window {
+      position: absolute; top: 34px; right: 90px; width: 190px; height: 250px;
+      background: #8A6B4A; border-radius: 60px 60px 12px 12px;
+      padding: 12px; box-shadow: 0 10px 18px rgba(60,40,15,0.25);
+    }
+    .window-pane {
+      width: 100%; height: 100%; border-radius: 48px 48px 6px 6px;
+      background: linear-gradient(180deg, #CFE0DE 0%, #F1D9C4 75%, #F3C9A8 100%);
+      position: relative; overflow: hidden;
+    }
+    .window-pane::before, .window-pane::after {
+      content: ""; position: absolute; background: #8A6B4A;
+    }
+    .window-pane::before { left: 50%; top: 0; bottom: 0; width: 6px; transform: translateX(-50%); }
+    .window-pane::after { top: 50%; left: 0; right: 0; height: 6px; transform: translateY(-50%); }
+    .curtain {
+      position: absolute; top: -6px; width: 46px; height: 130px;
+      background: #C9744B; opacity: 0.9;
+      clip-path: polygon(0 0, 100% 0, 78% 100%, 0% 92%);
+    }
+    .curtain.left { left: -18px; }
+    .curtain.right { right: -18px; transform: scaleX(-1); }
+
+    .chair {
+      position: absolute; bottom: 40px; width: 90px; height: 190px;
+    }
+    .chair.left { left: 26px; }
+    .chair.right { right: 26px; }
+    .chair-back {
+      position: absolute; top: 0; left: 10px; width: 70px; height: 120px;
+      background: #8A6B4A; border-radius: 22px 22px 8px 8px;
+      box-shadow: 0 8px 12px rgba(60,40,15,0.2);
+    }
+    .chair-cushion {
+      position: absolute; top: 14px; left: 24px; width: 42px; height: 92px;
+      background: #E39B6B; border-radius: 14px;
+    }
+    .chair-leg {
+      position: absolute; bottom: 0; width: 10px; height: 70px; background: #6B4E33; border-radius: 3px;
+    }
+    .chair-leg.l { left: 14px; }
+    .chair-leg.r { right: 14px; }
+
     .table-img {
       position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-      width: 960px; height: auto; display: block;
+      width: 780px; height: auto; display: block;
+      filter: drop-shadow(0 16px 20px rgba(40,25,10,0.3));
     }
     .board-panel {
-      position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
-      width: 840px;
+      position: absolute; top: 190px; left: 50%; transform: translateX(-50%);
+      width: 760px;
       background: #F7E4CE;
       border: 6px solid #8A6B4A;
       border-radius: 20px;
       box-shadow: 0 24px 44px rgba(40,25,10,0.35);
-      padding: 18px 22px 22px;
+      padding: 16px 18px 20px;
     }
     .banners {
       display: flex; justify-content: space-between; align-items: center;
@@ -42,8 +99,8 @@
 
     .grid {
       display: grid;
-      grid-template-columns: 78px repeat(6, 1fr);
-      gap: 8px;
+      grid-template-columns: 64px repeat(6, 1fr);
+      gap: 6px;
     }
     .head {
       font: 600 10px system-ui, sans-serif; letter-spacing: 0.5px;
@@ -84,12 +141,34 @@
 
     .cell-front { background: #F0E2C8; border: 2px solid #D8C7A2; gap: 10px; }
     .cell-front.empty { color: #B8A47C; font: 600 11px system-ui, sans-serif; border-style: dashed; }
-    .mini-card { width: 46px; height: auto; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.25)); }
+    .mini-card { width: 40px; height: auto; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.25)); }
     .vs { font: 700 11px "Fredoka", sans-serif; color: #8A6B4A; }
   </style>
 </helmet>
 
 <div class="stage">
+  <div class="wall"></div>
+  <div class="wall-rail" style="top: 62%;"></div>
+  <div class="floor"></div>
+
+  <div class="window">
+    <div class="window-pane">
+      <div class="curtain left"></div>
+      <div class="curtain right"></div>
+    </div>
+  </div>
+
+  <div class="chair left">
+    <div class="chair-back"><div class="chair-cushion"></div></div>
+    <div class="chair-leg l"></div>
+    <div class="chair-leg r"></div>
+  </div>
+  <div class="chair right">
+    <div class="chair-back"><div class="chair-cushion"></div></div>
+    <div class="chair-leg l"></div>
+    <div class="chair-leg r"></div>
+  </div>
+
   <img class="table-img" src="table-bois.webp" alt="">
 
   <div class="board-panel">
