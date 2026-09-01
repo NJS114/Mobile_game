@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .stage {
+      width: 100%; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      background: #FBF3E7;
+      font-family: system-ui, sans-serif;
+    }
+    .card {
+      width: 300px; height: 430px;
+      border-radius: 24px;
+      background: #4A3222;
+      padding: 10px;
+      box-shadow: 0 14px 28px rgba(74,50,34,0.28);
+    }
+    .card-inner {
+      position: relative;
+      width: 100%; height: 100%;
+      border-radius: 17px;
+      background: #F7E4CE;
+      border: 4px solid #E39B6B;
+      display: flex; flex-direction: column;
+    }
+    .cost-badge {
+      position: absolute; top: -14px; left: -14px; z-index: 3;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: #E39B6B; border: 4px solid #4A3222;
+      display: flex; align-items: center; justify-content: center;
+      font: 700 20px "Fredoka", sans-serif; color: #4A3222;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    .trait-badge {
+      position: absolute; top: -14px; right: -14px; z-index: 3;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 4px solid #4A3222; background: #6E9BC7;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    .rarity-band {
+      position: absolute; top: 10px; left: 50%; transform: translateX(-50%); z-index: 3;
+      background: #6E9BC7; color: #FBF3E7;
+      font: 600 11px system-ui, sans-serif; letter-spacing: 1.5px;
+      padding: 4px 14px; border-radius: 10px;
+    }
+    .art-panel {
+      position: relative;
+      height: 232px;
+      border-top-left-radius: 13px; border-top-right-radius: 13px;
+      background: #F0D2AE;
+      overflow: hidden;
+      display: flex; align-items: flex-end; justify-content: center;
+    }
+    .art { position: relative; height: 226px; width: auto; }
+    .name-plate {
+      background: #C9744B; color: #FBF3E7; text-align: center;
+      font: 700 20px "Fredoka", sans-serif;
+      padding: 9px 12px 3px;
+    }
+    .type-line {
+      text-align: center; font: 500 12px system-ui, sans-serif;
+      color: #7A5B3D; padding-bottom: 8px; background: #F7E4CE; flex: 1 1 auto;
+    }
+    .stat {
+      position: absolute; bottom: -14px; z-index: 3;
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 4px solid #4A3222;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: #FBF3E7; box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    }
+    .stat span { font: 700 15px "Fredoka", sans-serif; line-height: 1; margin-top: 1px; }
+    .stat-attack { left: -14px; background: #C9744B; }
+    .stat-defense { right: -14px; background: #7A8B5B; }
+  </style>
+</helmet>
+
+<div class="stage">
+  <div class="card">
+    <div class="card-inner">
+      <div class="cost-badge">5</div>
+      <div class="trait-badge" title="Unite volante">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#FBF3E7" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 12 C6 8 2 10 1 6 C5 7 9 9 12 12 Z"/>
+          <path d="M12 12 C18 8 22 10 23 6 C19 7 15 9 12 12 Z"/>
+          <circle cx="12" cy="12" r="2.2"/>
+        </svg>
+      </div>
+      <div class="rarity-band">RARE</div>
+
+      <div class="art-panel">
+        <img class="art" src="chat-aviateur.webp" alt="">
+      </div>
+
+      <div class="name-plate">Capitaine Minou</div>
+      <div class="type-line">Chat &bull; Pilote (unite volante)</div>
+
+      <div class="stat stat-attack">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 20 L15 9" stroke="#FBF3E7" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M13 5 L19 5 L19 11 L15.5 14.5 L9.5 8.5 Z" fill="#FBF3E7"/>
+          <path d="M4 20 L7 20 L7 17" stroke="#FBF3E7" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>5</span>
+      </div>
+      <div class="stat stat-defense">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2.5 L20 6 V11.5 C20 17 12 21.5 12 21.5 C12 21.5 4 17 4 11.5 V6 Z" fill="#FBF3E7"/>
+        </svg>
+        <span>4</span>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
