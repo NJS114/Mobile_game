@@ -8,7 +8,9 @@ Un jeu de cartes tactique mobile en tranchées, "Chiens vs Chats" : deux faction
 
 Positionnement marché : plus proche d'un **Clash Royale / Hearthstone tactique** que d'un hyper-casual pur — bonne rétention long terme, session courte, mais demande un peu plus d'apprentissage. C'est un compromis assumé entre accessibilité mass-market et profondeur stratégique.
 
-**Direction artistique validée** : pastel cozy/goofy clair (cadres terracotta/sage, illustrations flat/thick-outline), pas une ambiance sombre façon Inscryption/Buckshot Roulette. Les assets d'ambiance sombre générés en exploration (`assets/decor/`, `assets/dealer/`, `assets/cards/dos/`) sont conservés en réserve, non utilisés dans la direction actuelle — potentiellement réutilisables plus tard pour un mode/thème alternatif ou un événement spécial.
+**Direction artistique validée** : pastel cozy/goofy clair (cadres terracotta/sage, illustrations flat/thick-outline), pas une ambiance sombre façon Inscryption/Buckshot Roulette. Les assets d'ambiance sombre générés en exploration (`assets/dealer/`, `assets/cards/dos/`, `assets/decor/fond-sombre.png`, `assets/decor/lampe-suspendue.png`) sont conservés en réserve, non utilisés dans la direction actuelle — potentiellement réutilisables plus tard pour un mode/thème alternatif ou un événement spécial.
+
+**Mise en scène du combat** : format confirmé 1v1, guerre Chats contre Chiens. Le combat se joue visuellement **autour d'une table** plutôt que sur un plateau abstrait plein ecran — les cartes sont posees sur une table de guerre entre les deux camps. Les textures de table en bois (`assets/decor/table-bois-1.png`, `table-bois-2.png`) sont neutres et reutilisables dans la direction pastel pour habiller ce fond de table.
 
 ## 2. Boucle de jeu
 
