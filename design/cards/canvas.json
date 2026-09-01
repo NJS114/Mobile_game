@@ -9,12 +9,15 @@
 
     { "file": "CarteArme.dc.html", "x": 0, "y": 1160, "w": 380, "h": 540 },
     { "file": "CarteChar.dc.html", "x": 460, "y": 1160, "w": 380, "h": 540 },
-    { "file": "CarteAvion.dc.html", "x": 920, "y": 1160, "w": 380, "h": 540 }
+    { "file": "CarteAvion.dc.html", "x": 920, "y": 1160, "w": 380, "h": 540 },
+
+    { "file": "PlateauTable.dc.html", "x": 0, "y": 1760, "w": 960, "h": 700 }
   ],
   "annotations": [
     { "id": "note-units", "x": 0, "y": -10, "w": 700, "text": "Cartes Unite (infanterie) - avec les vraies illustrations et le badge sol/volant" },
     { "id": "note-rarity", "x": 0, "y": 640, "w": 500, "text": "Variantes de cadre selon la rarete" },
-    { "id": "note-newtypes", "x": 0, "y": 1100, "w": 700, "text": "Nouveaux types de cartes : Objet, Vehicule (char), Vehicule (avion)" }
+    { "id": "note-newtypes", "x": 0, "y": 1100, "w": 700, "text": "Nouveaux types de cartes : Objet, Vehicule (char), Vehicule (avion)" },
+    { "id": "note-table", "x": 0, "y": 1700, "w": 700, "text": "Mise en scene : le plateau pose sur une table de guerre (1v1, Chats vs Chiens)" }
   ],
   "launch": { "view": "canvas" }
 }

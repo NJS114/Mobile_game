@@ -1,0 +1,167 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; }
+    .stage {
+      position: relative;
+      width: 100%; height: 100%;
+      background: #FBF3E7;
+      font-family: system-ui, sans-serif;
+      overflow: hidden;
+    }
+    .table-img {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 960px; height: auto; display: block;
+    }
+    .board-panel {
+      position: absolute; top: 120px; left: 50%; transform: translateX(-50%);
+      width: 840px;
+      background: #F7E4CE;
+      border: 6px solid #8A6B4A;
+      border-radius: 20px;
+      box-shadow: 0 24px 44px rgba(40,25,10,0.35);
+      padding: 18px 22px 22px;
+    }
+    .banners {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 10px; margin-bottom: 12px;
+      border-bottom: 3px dashed #C9B78F;
+    }
+    .banner-chat { font: 700 18px "Fredoka", sans-serif; color: #C9744B; }
+    .banner-title { font: 600 13px system-ui, sans-serif; letter-spacing: 2px; color: #8A6B4A; }
+    .banner-chien { font: 700 18px "Fredoka", sans-serif; color: #6C7A4C; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 78px repeat(6, 1fr);
+      gap: 8px;
+    }
+    .head {
+      font: 600 10px system-ui, sans-serif; letter-spacing: 0.5px;
+      color: #6B5A3A; text-align: center; padding-bottom: 4px;
+    }
+    .lane-label {
+      display: flex; align-items: center; justify-content: center;
+      font: 700 13px "Fredoka", sans-serif; color: #4A3222;
+      background: #E9D9BC; border-radius: 10px;
+    }
+
+    .cell {
+      border-radius: 10px;
+      min-height: 78px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 4px;
+    }
+    .cell-reserve { background: #EADFC8; border: 2px dashed #C9B78F; color: #B8A47C; font: 600 11px system-ui, sans-serif; }
+    .cell-tranchee { background: #EFE6D3; border: 2px solid #D8C7A2; display: flex; gap: 5px; }
+    .card-back {
+      width: 24px; height: 34px; border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      font: 700 11px "Fredoka", sans-serif; color: #FBF3E7;
+      border: 2px solid #4A3222;
+    }
+    .card-back.chat { background: #C9744B; }
+    .card-back.chien { background: #6C7A4C; }
+
+    .cell-comm { flex-direction: column; gap: 4px; }
+    .comm-bar { width: 70%; height: 10px; border-radius: 6px; }
+    .comm-label { font: 600 9px system-ui, sans-serif; letter-spacing: 0.5px; }
+    .comm-active .comm-bar { background: #7A9B6E; }
+    .comm-active .comm-label { color: #5C7A4E; }
+    .comm-cut .comm-bar { background: #C9614B; }
+    .comm-cut .comm-label { color: #A5432F; }
+    .comm-repair .comm-bar { background: repeating-linear-gradient(90deg, #D9A63E 0 6px, #F0DFC8 6px 12px); }
+    .comm-repair .comm-label { color: #A5822A; }
+
+    .cell-front { background: #F0E2C8; border: 2px solid #D8C7A2; gap: 10px; }
+    .cell-front.empty { color: #B8A47C; font: 600 11px system-ui, sans-serif; border-style: dashed; }
+    .mini-card { width: 46px; height: auto; filter: drop-shadow(0 3px 4px rgba(0,0,0,0.25)); }
+    .vs { font: 700 11px "Fredoka", sans-serif; color: #8A6B4A; }
+  </style>
+</helmet>
+
+<div class="stage">
+  <img class="table-img" src="table-bois.webp" alt="">
+
+  <div class="board-panel">
+    <div class="banners">
+      <div class="banner-chat">CAMP CHAT</div>
+      <div class="banner-title">FRONT DE GUERRE</div>
+      <div class="banner-chien">CAMP CHIEN</div>
+    </div>
+
+    <div class="grid">
+      <div class="head"></div>
+      <div class="head">Reserve</div>
+      <div class="head">Tranchee</div>
+      <div class="head">Comm.</div>
+      <div class="head">Front</div>
+      <div class="head">Tranchee</div>
+      <div class="head">Reserve</div>
+
+      <div class="lane-label">NORD</div>
+      <div class="cell cell-reserve">vide</div>
+      <div class="cell cell-tranchee">
+        <div class="card-back chat">?</div>
+        <div class="card-back chat">?</div>
+      </div>
+      <div class="cell cell-comm comm-active">
+        <div class="comm-bar"></div>
+        <div class="comm-label">ACTIF</div>
+      </div>
+      <div class="cell cell-front empty">—</div>
+      <div class="cell cell-tranchee">
+        <div class="card-back chien">?</div>
+      </div>
+      <div class="cell cell-reserve">vide</div>
+
+      <div class="lane-label">CENTRE</div>
+      <div class="cell cell-reserve">vide</div>
+      <div class="cell cell-tranchee">
+        <div class="card-back chat">?</div>
+      </div>
+      <div class="cell cell-comm comm-cut">
+        <div class="comm-bar"></div>
+        <div class="comm-label">COUPE</div>
+      </div>
+      <div class="cell cell-front">
+        <img class="mini-card" src="chat-fusilier-1.webp" alt="">
+        <div class="vs">VS</div>
+        <img class="mini-card" src="chien-sapeur.webp" alt="">
+      </div>
+      <div class="cell cell-tranchee">
+        <div class="card-back chien">?</div>
+        <div class="card-back chien">?</div>
+      </div>
+      <div class="cell cell-reserve">vide</div>
+
+      <div class="lane-label">SUD</div>
+      <div class="cell cell-reserve">vide</div>
+      <div class="cell cell-tranchee">
+        <div class="card-back chat">?</div>
+      </div>
+      <div class="cell cell-comm comm-repair">
+        <div class="comm-bar"></div>
+        <div class="comm-label">REPARATION</div>
+      </div>
+      <div class="cell cell-front empty">—</div>
+      <div class="cell cell-tranchee">
+        <div class="card-back chien">?</div>
+        <div class="card-back chien">?</div>
+      </div>
+      <div class="cell cell-reserve">vide</div>
+    </div>
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
