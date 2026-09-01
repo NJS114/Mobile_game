@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Chiens vs Chats - Prototype</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="moral chat">Chats: <span id="moral-chat"></span></div>
+    <div class="turn-info" id="turn-info"></div>
+    <div class="pr-badge" id="pr-badge"></div>
+    <div class="moral chien">Chiens: <span id="moral-chien"></span></div>
+  </div>
+
+  <div id="board"></div>
+  <div id="action-bar"></div>
+  <div id="log"></div>
+
+  <div id="hand-zone"></div>
+
+  <div id="pass-overlay" class="hidden">
+    <h1 id="pass-title"></h1>
+    <p>Passe l'appareil a l'autre joueur, puis appuie pour reveler ton camp.</p>
+    <button id="pass-btn">Je suis pret</button>
+  </div>
+
+  <div id="victory-overlay" class="hidden">
+    <h1 id="victory-text"></h1>
+    <button id="restart-btn">Nouvelle partie</button>
+  </div>
+
+  <script src="cards-data.js"></script>
+  <script src="engine.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>

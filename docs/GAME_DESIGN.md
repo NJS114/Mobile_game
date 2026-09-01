@@ -165,6 +165,6 @@ Victoire par objectifs (pas seulement par destruction) :
 
 - Valider/ajuster les valeurs marquées **[à tester]** (PR, taille de deck, limites de tunnel, seuils de pity).
 - Trancher la question de symétrie Os/Pelote (section 8).
-- Définir la liste initiale de cartes (10-15 par faction) avec stats et texte de capacité pour un premier prototype jouable.
+- ~~Définir la liste initiale de cartes~~ → fait, voir `data/cards.json` et `docs/CARTES.md`.
 - Maquetter la boutique et l'écran de tirage (gacha) dans le canvas de design, dans le même style visuel que les cartes déjà validées.
-- Décider du moteur technique (Unity/Godot/HTML5) pour le prototype jouable.
+- ~~Décider du moteur technique~~ → HTML/CSS/JS pur (pas de build), voir `app/` : prototype v0.1 jouable en pass-and-play à deux (déploiement, tranchée, front, communication, combat simplifié, 3 objets simulés). Reste à faire : tunnels, objets restants, conditions de victoire par objectif, IA/multijoueur distant.

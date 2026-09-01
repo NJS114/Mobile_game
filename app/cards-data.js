@@ -1,0 +1,371 @@
+// Auto-genere depuis data/cards.json - ne pas editer a la main, relancer la conversion si le JSON change.
+/* global module */
+const CARDS = {
+  "unites": [
+    {
+      "id": "chat-fusilier",
+      "nom": "Tom le Flemmard",
+      "faction": "chat",
+      "role": "assaut",
+      "trait": "sol",
+      "rarete": "commune",
+      "cout": 3,
+      "attaque": 4,
+      "defense": 6,
+      "capacite": "Aucune capacite speciale - unite de ligne polyvalente.",
+      "art": "assets/cards/chats/chat-fusilier-1.png",
+      "art_alt": "assets/cards/chats/chat-fusilier-2.png"
+    },
+    {
+      "id": "chat-medecin",
+      "nom": "Infirmiere Miaou",
+      "faction": "chat",
+      "role": "soutien",
+      "trait": "sol",
+      "rarete": "commune",
+      "cout": 3,
+      "attaque": 1,
+      "defense": 5,
+      "capacite": "Depuis la tranchee, soigne une carte du front si la communication est active.",
+      "art": "assets/cards/chats/chat-medecin.png"
+    },
+    {
+      "id": "chat-mecanicien",
+      "nom": "Mecano Roux",
+      "faction": "chat",
+      "role": "soutien",
+      "trait": "sol",
+      "rarete": "commune",
+      "cout": 2,
+      "attaque": 1,
+      "defense": 4,
+      "capacite": "Repare un cable de communication coupe, ou donne +2 defense a un vehicule allie.",
+      "art": "assets/cards/chats/chat-mecanicien.png"
+    },
+    {
+      "id": "chat-artilleur",
+      "nom": "Canonnier Sphinx",
+      "faction": "chat",
+      "role": "artillerie",
+      "trait": "sol",
+      "rarete": "rare",
+      "cout": 5,
+      "attaque": 6,
+      "defense": 3,
+      "capacite": "Peut cibler une carte cachee en tranchee adverse (ignore la protection de tranchee).",
+      "art": "assets/cards/chats/chat-artilleur.png"
+    },
+    {
+      "id": "chat-sapeur",
+      "nom": "Sapeur Noiraud",
+      "faction": "chat",
+      "role": "sapeur",
+      "trait": "sol",
+      "rarete": "commune",
+      "cout": 4,
+      "attaque": 2,
+      "defense": 5,
+      "capacite": "Peut creuser le tunnel de sa ligne (1 par ligne, ne peut rester cache plus de 2 tours).",
+      "art": "assets/cards/chats/chat-sapeur.png"
+    },
+    {
+      "id": "chat-radio",
+      "nom": "Operateur Radio Gris",
+      "faction": "chat",
+      "role": "soutien",
+      "trait": "sol",
+      "rarete": "commune",
+      "cout": 3,
+      "attaque": 1,
+      "defense": 4,
+      "capacite": "Repare instantanement le cable de communication de sa ligne.",
+      "art": "assets/cards/chats/chat-radio.png"
+    },
+    {
+      "id": "chat-commandant",
+      "nom": "Capitaine Fourrure",
+      "faction": "chat",
+      "role": "commandant",
+      "trait": "sol",
+      "rarete": "epique",
+      "cout": 6,
+      "attaque": 3,
+      "defense": 7,
+      "capacite": "Donne +1 attaque a toutes les unites chat de sa ligne, si la communication est active.",
+      "art": "assets/cards/chats/chat-commandant.png"
+    },
+    {
+      "id": "chat-assaut",
+      "nom": "Griffe Rapide",
+      "faction": "chat",
+      "role": "assaut",
+      "trait": "sol",
+      "rarete": "rare",
+      "cout": 4,
+      "attaque": 6,
+      "defense": 4,
+      "capacite": "Peut attaquer deux fois par tour.",
+      "art": "assets/cards/chats/chat-assaut.png"
+    },
+    {
+      "id": "chat-aviateur",
+      "nom": "Capitaine Minou",
+      "faction": "chat",
+      "role": "pilote",
+      "trait": "volant",
+      "rarete": "rare",
+      "cout": 5,
+      "attaque": 5,
+      "defense": 4,
+      "capacite": "Ignore les tranchees : peut frapper directement une carte du front adverse.",
+      "art": "assets/cards/chats/chat-aviateur.png"
+    },
+    {
+      "id": "chat-eclaireur",
+      "nom": "Guetteur Tigre",
+      "faction": "chat",
+      "role": "eclaireur",
+      "trait": "sol",
+      "rarete": "commune",
+      "cout": 2,
+      "attaque": 2,
+      "defense": 3,
+      "capacite": "Revele une carte cachee dans une tranchee adverse.",
+      "art": "assets/cards/chats/chat-eclaireur.png"
+    },
+    {
+      "id": "chien-messager",
+      "nom": "Buddy",
+      "faction": "chien",
+      "role": "soutien",
+      "trait": "sol",
+      "rarete": "commune",
+      "cout": 2,
+      "attaque": 1,
+      "defense": 3,
+      "capacite": "Deplace gratuitement une carte alliee de la reserve vers la tranchee, ou repare un cable.",
+      "art": "assets/cards/chiens/chien-messager-1.png",
+      "art_alt": [
+        "assets/cards/chiens/chien-messager-2.png",
+        "assets/cards/chiens/chien-messager-3.png",
+        "assets/cards/chiens/chien-messager-4.png"
+      ]
+    },
+    {
+      "id": "chien-grenadier",
+      "nom": "Sergent Bouledogue",
+      "faction": "chien",
+      "role": "assaut",
+      "trait": "sol",
+      "rarete": "rare",
+      "cout": 5,
+      "attaque": 7,
+      "defense": 5,
+      "capacite": "Inflige des degats a toutes les cartes d'une tranchee adverse (zone).",
+      "art": "assets/cards/chiens/chien-grenadier.png"
+    },
+    {
+      "id": "chien-eclaireur",
+      "nom": "Beagle Fureteur",
+      "faction": "chien",
+      "role": "eclaireur",
+      "trait": "sol",
+      "rarete": "commune",
+      "cout": 2,
+      "attaque": 2,
+      "defense": 3,
+      "capacite": "Revele une carte cachee dans une tranchee adverse.",
+      "art": "assets/cards/chiens/chien-eclaireur.png"
+    },
+    {
+      "id": "chien-aviateur",
+      "nom": "Lieutenant Husky",
+      "faction": "chien",
+      "role": "pilote",
+      "trait": "volant",
+      "rarete": "rare",
+      "cout": 5,
+      "attaque": 5,
+      "defense": 4,
+      "capacite": "Ignore les tranchees : peut frapper directement une carte du front adverse.",
+      "art": "assets/cards/chiens/chien-aviateur.png"
+    },
+    {
+      "id": "chien-sapeur",
+      "nom": "Rex le Baveux",
+      "faction": "chien",
+      "role": "sapeur",
+      "trait": "sol",
+      "rarete": "rare",
+      "cout": 4,
+      "attaque": 3,
+      "defense": 8,
+      "capacite": "Peut creuser le tunnel de sa ligne (1 par ligne, ne peut rester cache plus de 2 tours).",
+      "art": "assets/cards/chiens/chien-sapeur.png"
+    },
+    {
+      "id": "chien-radio",
+      "nom": "Dalmatien Transmission",
+      "faction": "chien",
+      "role": "soutien",
+      "trait": "sol",
+      "rarete": "commune",
+      "cout": 3,
+      "attaque": 1,
+      "defense": 4,
+      "capacite": "Repare instantanement le cable de communication de sa ligne.",
+      "art": "assets/cards/chiens/chien-radio.png"
+    },
+    {
+      "id": "chien-commandant",
+      "nom": "General Berger",
+      "faction": "chien",
+      "role": "commandant",
+      "trait": "sol",
+      "rarete": "epique",
+      "cout": 6,
+      "attaque": 3,
+      "defense": 7,
+      "capacite": "Donne +1 attaque a toutes les unites chien de sa ligne, si la communication est active.",
+      "art": "assets/cards/chiens/chien-commandant.png"
+    }
+  ],
+  "objets": [
+    {
+      "id": "os-attraction",
+      "nom": "Os d'Attraction",
+      "faction": "chat",
+      "cout": 1,
+      "rarete": "commune",
+      "effet": "Fait reculer une carte chien d'une case et lui fait perdre son action.",
+      "art": null
+    },
+    {
+      "id": "pelote-laine",
+      "nom": "Pelote de Laine",
+      "faction": "chat",
+      "cout": 1,
+      "rarete": "commune",
+      "effet": "Rappelle une carte chat depuis la reserve ou la tranchee et lui donne un petit bouclier.",
+      "art": null
+    },
+    {
+      "id": "mine-enterree",
+      "nom": "Mine Enterree",
+      "faction": "neutre",
+      "cout": 2,
+      "rarete": "commune",
+      "effet": "Inflige des degats et immobilise la premiere carte qui avance sur la case.",
+      "art": "assets/cards/objets/mine-enterree.png"
+    },
+    {
+      "id": "fumigene",
+      "nom": "Fumigene",
+      "faction": "neutre",
+      "cout": 2,
+      "rarete": "commune",
+      "effet": "Empeche les attaques a distance sur la ligne pendant un tour.",
+      "art": null
+    },
+    {
+      "id": "caisse-ravitaillement",
+      "nom": "Caisse de Ravitaillement",
+      "faction": "neutre",
+      "cout": 1,
+      "rarete": "commune",
+      "effet": "Rend de la vie a une carte alliee ou fait gagner une ressource.",
+      "art": "assets/cards/objets/caisse-de-ravitaillement.png"
+    },
+    {
+      "id": "barbeles",
+      "nom": "Barbeles",
+      "faction": "neutre",
+      "cout": 1,
+      "rarete": "commune",
+      "effet": "Bloque le deplacement d'une carte ennemie pendant un tour.",
+      "art": null
+    },
+    {
+      "id": "radio-campagne",
+      "nom": "Radio de Campagne",
+      "faction": "neutre",
+      "cout": 2,
+      "rarete": "rare",
+      "effet": "Repare une communication coupee.",
+      "art": "assets/cards/objets/radio-de-campagne.png"
+    },
+    {
+      "id": "frappe-aerienne",
+      "nom": "Frappe Aerienne",
+      "faction": "neutre",
+      "cout": 5,
+      "rarete": "epique",
+      "effet": "Touche le front et revele une carte cachee dans une tranchee adverse sur la meme ligne.",
+      "art": null
+    },
+    {
+      "id": "cable-campagne",
+      "nom": "Cable de Campagne",
+      "faction": "neutre",
+      "cout": 2,
+      "rarete": "rare",
+      "effet": "Repare une communication coupee (variante materielle de la radio de campagne).",
+      "art": "assets/cards/objets/cable-de-campagne.png"
+    },
+    {
+      "id": "drapeau-objectif",
+      "nom": "Drapeau d'Objectif",
+      "faction": "neutre",
+      "cout": 3,
+      "rarete": "rare",
+      "effet": "Donne des points de victoire si l'equipe le controle pendant un tour.",
+      "art": "assets/cards/objets/drapeau-objectif.png"
+    },
+    {
+      "id": "trousse-secours",
+      "nom": "Trousse de Secours",
+      "faction": "neutre",
+      "cout": 1,
+      "rarete": "commune",
+      "effet": "Soigne completement une carte du front.",
+      "art": "assets/cards/objets/sac-medical.png"
+    },
+    {
+      "id": "sacs-de-sable",
+      "nom": "Sacs de Sable",
+      "faction": "neutre",
+      "cout": 1,
+      "rarete": "commune",
+      "effet": "Une carte alliee gagne +2 defense jusqu'a la fin du tour (fortification temporaire).",
+      "art": "assets/cards/objets/sacs-de-sable.png"
+    }
+  ],
+  "vehicules": [
+    {
+      "id": "char-bouledozer",
+      "nom": "Bouledozer",
+      "faction": "neutre",
+      "trait": "sol",
+      "rarete": "legendaire",
+      "cout": 7,
+      "attaque": 8,
+      "defense": 12,
+      "capacite": "Protege les cartes alliees derriere lui sur la meme ligne (-2 degats subis).",
+      "art": "assets/cards/vehicules/char.png"
+    },
+    {
+      "id": "avion-zephyr",
+      "nom": "Le Zephyr",
+      "faction": "neutre",
+      "trait": "volant",
+      "rarete": "epique",
+      "cout": 6,
+      "attaque": 7,
+      "defense": 5,
+      "capacite": "Ignore les tranchees : peut frapper directement une carte du front adverse.",
+      "art": "assets/cards/vehicules/avion.png"
+    }
+  ]
+};
+
+if (typeof module !== "undefined") module.exports = CARDS;
