@@ -1,6 +1,5 @@
-// Auto-genere depuis data/cards.json - ne pas editer a la main, relancer la conversion si le JSON change.
-/* global module */
-const CARDS = {
+// Auto-genere depuis data/cards.json - relancer ce script si le JSON change.
+export const CARDS = {
   "unites": [
     {
       "id": "chat-fusilier",
@@ -367,5 +366,3 @@ const CARDS = {
     }
   ]
 };
-
-if (typeof module !== "undefined") module.exports = CARDS;
