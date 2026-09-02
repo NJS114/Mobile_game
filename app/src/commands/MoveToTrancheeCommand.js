@@ -1,31 +1,30 @@
 import { Command } from "./Command.js";
 
 export class MoveToTrancheeCommand extends Command {
-  constructor(instanceId, lane) {
+  constructor(instanceId) {
     super();
     this.instanceId = instanceId;
-    this.lane = lane;
   }
 
   execute(game) {
-    if (!game.comm.isActive(this.lane)) {
-      game.log.push("Communication coupee : deplacement impossible sur cette ligne.");
+    if (!game.comm.isActive()) {
+      game.log.push("Communication coupee : deplacement impossible.");
       return;
     }
-    const laneState = game.activePlayer.lanes[this.lane];
-    const instance = laneState.removeFromReserve(this.instanceId);
+    const zones = game.activePlayer.zones;
+    const instance = zones.removeFromReserve(this.instanceId);
     if (!instance) return;
 
     if (instance.isMovementBlocked(game.turn)) {
       game.log.push(`${instance.card.nom} est immobilise par des barbeles.`);
-      laneState.reserve.push(instance);
+      zones.reserve.push(instance);
       return;
     }
-    if (!laneState.placeInTranchee(instance)) {
-      game.log.push("Tranchee pleine sur cette ligne.");
-      laneState.reserve.push(instance);
+    if (!zones.placeInTranchee(instance)) {
+      game.log.push("Tranchee pleine.");
+      zones.reserve.push(instance);
       return;
     }
-    game.log.push(`${game.activeFactionLabel} avance ${instance.card.nom} en tranchee (${this.lane}).`);
+    game.log.push(`${game.activeFactionLabel} avance ${instance.card.nom} en tranchee.`);
   }
 }

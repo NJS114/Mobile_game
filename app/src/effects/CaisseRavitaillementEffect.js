@@ -3,10 +3,14 @@ import { EffectStrategy } from "./EffectStrategy.js";
 export class CaisseRavitaillementEffect extends EffectStrategy {
   static HEAL = 3;
 
-  apply(ctx) {
-    const target = ctx.ownLane.front;
+  requiresTarget() {
+    return true;
+  }
+
+  apply(ctx, targetInstanceId) {
+    const target = ctx.ownZones.front.find((c) => c.instanceId === targetInstanceId);
     if (!target) {
-      ctx.log("Caisse de Ravitaillement : aucune carte au front a soigner.");
+      ctx.log("Caisse de Ravitaillement : cible introuvable au front.");
       return;
     }
     target.heal(CaisseRavitaillementEffect.HEAL);

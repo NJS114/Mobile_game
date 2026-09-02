@@ -11,7 +11,7 @@ export const CARDS = {
       "cout": 3,
       "attaque": 4,
       "defense": 6,
-      "capacite": "Aucune capacite speciale - unite de ligne polyvalente.",
+      "capacite": "Aucune capacite speciale - unite polyvalente.",
       "art": "assets/cards/chats/chat-fusilier-1.png",
       "art_alt": "assets/cards/chats/chat-fusilier-2.png"
     },
@@ -64,7 +64,7 @@ export const CARDS = {
       "cout": 4,
       "attaque": 2,
       "defense": 5,
-      "capacite": "Peut creuser le tunnel de sa ligne (1 par ligne, ne peut rester cache plus de 2 tours).",
+      "capacite": "Peut creuser un tunnel (un seul a la fois, ne peut rester cache plus de 2 tours).",
       "art": "assets/cards/chats/chat-sapeur.png"
     },
     {
@@ -77,7 +77,7 @@ export const CARDS = {
       "cout": 3,
       "attaque": 1,
       "defense": 4,
-      "capacite": "Repare instantanement le cable de communication de sa ligne.",
+      "capacite": "Repare instantanement la communication.",
       "art": "assets/cards/chats/chat-radio.png"
     },
     {
@@ -90,7 +90,7 @@ export const CARDS = {
       "cout": 6,
       "attaque": 3,
       "defense": 7,
-      "capacite": "Donne +1 attaque a toutes les unites chat de sa ligne, si la communication est active.",
+      "capacite": "Donne +1 attaque a toutes les unites chat au front, si la communication est active.",
       "art": "assets/cards/chats/chat-commandant.png"
     },
     {
@@ -199,7 +199,7 @@ export const CARDS = {
       "cout": 4,
       "attaque": 3,
       "defense": 8,
-      "capacite": "Peut creuser le tunnel de sa ligne (1 par ligne, ne peut rester cache plus de 2 tours).",
+      "capacite": "Peut creuser un tunnel (un seul a la fois, ne peut rester cache plus de 2 tours).",
       "art": "assets/cards/chiens/chien-sapeur.png"
     },
     {
@@ -212,7 +212,7 @@ export const CARDS = {
       "cout": 3,
       "attaque": 1,
       "defense": 4,
-      "capacite": "Repare instantanement le cable de communication de sa ligne.",
+      "capacite": "Repare instantanement la communication.",
       "art": "assets/cards/chiens/chien-radio.png"
     },
     {
@@ -225,7 +225,7 @@ export const CARDS = {
       "cout": 6,
       "attaque": 3,
       "defense": 7,
-      "capacite": "Donne +1 attaque a toutes les unites chien de sa ligne, si la communication est active.",
+      "capacite": "Donne +1 attaque a toutes les unites chien au front, si la communication est active.",
       "art": "assets/cards/chiens/chien-commandant.png"
     }
   ],
@@ -263,7 +263,7 @@ export const CARDS = {
       "faction": "neutre",
       "cout": 2,
       "rarete": "commune",
-      "effet": "Empeche les attaques a distance sur la ligne pendant un tour.",
+      "effet": "Empeche les attaques a distance pendant un tour.",
       "art": null
     },
     {
@@ -299,7 +299,7 @@ export const CARDS = {
       "faction": "neutre",
       "cout": 5,
       "rarete": "epique",
-      "effet": "Touche le front et revele une carte cachee dans une tranchee adverse sur la meme ligne.",
+      "effet": "Touche le front et revele une carte cachee dans la tranchee adverse.",
       "art": null
     },
     {
@@ -349,7 +349,7 @@ export const CARDS = {
       "cout": 7,
       "attaque": 8,
       "defense": 12,
-      "capacite": "Protege les cartes alliees derriere lui sur la meme ligne (-2 degats subis).",
+      "capacite": "Protege les cartes alliees au front (-2 degats subis).",
       "art": "assets/cards/vehicules/char.png"
     },
     {

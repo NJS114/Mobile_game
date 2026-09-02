@@ -4,7 +4,7 @@ import { EffectStrategy } from "./EffectStrategy.js";
 // reparer la communication d'un couloir.
 export class RepairCommunicationEffect extends EffectStrategy {
   apply(ctx) {
-    ctx.game.comm.repair(ctx.lane);
-    ctx.log(`${ctx.cardDef.nom} repare la communication du couloir ${ctx.lane}.`);
+    ctx.game.comm.repair();
+    ctx.log(`${ctx.cardDef.nom} repare la communication.`);
   }
 }

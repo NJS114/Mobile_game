@@ -1,10 +1,14 @@
 import { EffectStrategy } from "./EffectStrategy.js";
 
 export class TrousseSecoursEffect extends EffectStrategy {
-  apply(ctx) {
-    const target = ctx.ownLane.front;
+  requiresTarget() {
+    return true;
+  }
+
+  apply(ctx, targetInstanceId) {
+    const target = ctx.ownZones.front.find((c) => c.instanceId === targetInstanceId);
     if (!target) {
-      ctx.log("Trousse de Secours : aucune carte au front a soigner.");
+      ctx.log("Trousse de Secours : cible introuvable au front.");
       return;
     }
     target.fullyHeal();

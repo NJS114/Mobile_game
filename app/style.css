@@ -37,53 +37,42 @@ html, body {
 }
 .turn-info { font-size: 13px; font-weight: 600; color: #6B5A3A; }
 
-#board {
-  padding: 10px; max-width: 720px; margin: 0 auto;
+#table {
+  padding: 10px; max-width: 520px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 6px;
 }
-.lane {
-  display: grid;
-  grid-template-columns: 40px 1fr 1fr 36px 1.6fr 1fr 1fr;
-  gap: 4px;
-  margin-bottom: 8px;
-  align-items: stretch;
+.side {
+  background: #F0E2C8; border: 2px solid #D8C7A2; border-radius: 12px;
+  padding: 8px; display: flex; flex-direction: column; gap: 6px;
 }
-.lane-header {
-  display: grid;
-  grid-template-columns: 40px 1fr 1fr 36px 1.6fr 1fr 1fr;
-  gap: 4px;
-  margin-bottom: 4px;
+.side-label {
+  font-weight: 700; font-size: 13px; text-align: center;
+  border-radius: 6px; padding: 2px 0;
 }
-.lane-header span {
-  font-size: 8px; font-weight: 700; text-align: center; color: #8A6B4A;
-  letter-spacing: 0.3px;
+.side-label.chat { color: #C9744B; }
+.side-label.chien { color: #6C7A4C; }
+
+.zone-row { display: flex; align-items: center; gap: 6px; }
+.zone-row-label {
+  flex: 0 0 56px; font-size: 9px; font-weight: 700; color: #8A6B4A;
+  letter-spacing: 0.3px; text-transform: uppercase;
 }
-.lane-label {
-  display: flex; align-items: center; justify-content: center;
-  writing-mode: vertical-rl; text-orientation: mixed;
-  font-weight: 700; font-size: 12px; background: #E9D9BC; border-radius: 8px;
+.zone-cards {
+  flex: 1 1 auto; display: flex; flex-wrap: wrap; gap: 4px;
+  min-height: 58px; align-content: center;
 }
-.zone {
-  background: #F0E2C8; border: 2px solid #D8C7A2; border-radius: 8px;
-  min-height: 64px; padding: 3px; display: flex; flex-wrap: wrap; gap: 3px;
-  align-content: flex-start; justify-content: center;
-  position: relative;
+
+.comm-global {
+  text-align: center; font-size: 11px; font-weight: 700; letter-spacing: 0.5px;
+  padding: 5px; border-radius: 8px;
 }
-.zone.reserve.own { cursor: default; }
-.zone.selectable { outline: 3px dashed #7A9B6E; outline-offset: -3px; }
-.zone-label {
-  position: absolute; top: 1px; left: 3px; font-size: 8px; font-weight: 700;
-  color: #B8A47C; letter-spacing: 0.5px; pointer-events: none;
+.comm-active { background: #DCEAD3; color: #5C7A4E; }
+.comm-cut { background: #F2D6CC; color: #A5432F; }
+
+.tunnel-badge {
+  font-size: 10px; font-weight: 700; color: #8A6B4A; text-align: center;
+  background: #E9D9BC; border-radius: 6px; padding: 3px;
 }
-.comm {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 3px; border-radius: 8px; cursor: pointer; padding: 2px;
-}
-.comm-actif { background: #DCEAD3; }
-.comm-coupe { background: #F2D6CC; }
-.comm-bar { width: 70%; height: 6px; border-radius: 4px; }
-.comm-actif .comm-bar { background: #7A9B6E; }
-.comm-coupe .comm-bar { background: #C9614B; }
-.comm-txt { font-size: 7px; font-weight: 700; text-align: center; }
 
 .mini-card {
   width: 42px; height: 58px; border-radius: 6px; border: 2px solid #4A3222;
@@ -96,6 +85,8 @@ html, body {
 .mini-card.chien-owned { background-color: #8E9B6B; }
 .mini-card.hidden-card { background: #C9B78F url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Ctext x='2' y='8' font-size='8' fill='%234A3222'%3E?%3C/text%3E%3C/svg%3E"); }
 .mini-card.selected { outline: 3px solid #4A3222; outline-offset: 1px; }
+.mini-card.targetable { outline: 3px dashed #C9614B; outline-offset: 1px; }
+.mini-card.has-attacked { opacity: 0.5; }
 .mini-card .stat-row {
   display: flex; justify-content: space-between; width: 100%; padding: 0 2px;
   background: rgba(74,50,34,0.55); font-size: 8px;
@@ -132,9 +123,12 @@ html, body {
 }
 #action-bar button:disabled { opacity: 0.4; cursor: not-allowed; }
 #action-bar button.primary { background: #C9744B; color: #FBF3E7; }
+.hint {
+  display: block; font-size: 11px; color: #8A6B4A; width: 100%; text-align: center;
+}
 
 #log {
-  max-width: 720px; margin: 0 auto; padding: 8px 14px 100px;
+  max-width: 520px; margin: 0 auto; padding: 8px 14px 100px;
   font-size: 11px; color: #6B5A3A; max-height: 140px; overflow-y: auto;
 }
 #log div { padding: 1px 0; }

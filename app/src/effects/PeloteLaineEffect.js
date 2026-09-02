@@ -10,7 +10,7 @@ export class PeloteLaineEffect extends EffectStrategy {
   }
 
   apply(ctx, targetInstanceId) {
-    const target = this.recallTarget(ctx.ownLane, targetInstanceId);
+    const target = this.recallTarget(ctx.ownZones, targetInstanceId);
     if (!target) {
       ctx.log("Pelote de Laine : cible introuvable.");
       return;
@@ -19,12 +19,12 @@ export class PeloteLaineEffect extends EffectStrategy {
     ctx.log(`Pelote de Laine : ${target.card.nom} protege (+${PeloteLaineEffect.SHIELD} defense).`);
   }
 
-  recallTarget(laneState, targetInstanceId) {
-    const fromReserve = laneState.removeFromReserve(targetInstanceId);
+  recallTarget(zones, targetInstanceId) {
+    const fromReserve = zones.removeFromReserve(targetInstanceId);
     if (fromReserve) {
-      laneState.placeInTranchee(fromReserve);
+      zones.placeInTranchee(fromReserve);
       return fromReserve;
     }
-    return laneState.tranchee.find((c) => c && c.instanceId === targetInstanceId) ?? null;
+    return zones.tranchee.find((c) => c && c.instanceId === targetInstanceId) ?? null;
   }
 }

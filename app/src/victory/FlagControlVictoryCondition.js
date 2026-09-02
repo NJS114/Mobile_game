@@ -1,13 +1,14 @@
 import { VictoryCondition } from "./VictoryCondition.js";
 import { otherFaction } from "../constants.js";
 
-// Capturer le drapeau d'objectif pendant plusieurs tours cumules (pas
-// forcement consecutifs) sur le couloir ou il a ete pose.
+// Une fois le Drapeau d'Objectif joue, le camp dont le front est occupe
+// alors que l'adversaire n'a personne au front accumule des tours de
+// controle (pas forcement consecutifs) ; il gagne au bout de 3.
 export class FlagControlVictoryCondition extends VictoryCondition {
   static TURNS_NEEDED = 3;
 
   check(game) {
-    if (!game.flagLane) return null;
+    if (!game.flagActive) return null;
     for (const faction of ["chat", "chien"]) {
       if (this.updateStreakAndCheck(game, faction)) return faction;
     }
@@ -16,10 +17,8 @@ export class FlagControlVictoryCondition extends VictoryCondition {
 
   updateStreakAndCheck(game, faction) {
     const enemyFaction = otherFaction(faction);
-    const own = game.players[faction].lanes[game.flagLane];
-    const enemy = game.players[enemyFaction].lanes[game.flagLane];
-    const controlsFlag = Boolean(own.front) && !enemy.front;
-    own.flagControlStreak = controlsFlag ? own.flagControlStreak + 1 : own.flagControlStreak;
-    return own.flagControlStreak >= FlagControlVictoryCondition.TURNS_NEEDED;
+    const controlsField = game.players[faction].zones.front.length > 0 && game.players[enemyFaction].zones.front.length === 0;
+    if (controlsField) game.flagControlStreak[faction] += 1;
+    return game.flagControlStreak[faction] >= FlagControlVictoryCondition.TURNS_NEEDED;
   }
 }

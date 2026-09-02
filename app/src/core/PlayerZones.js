@@ -1,15 +1,14 @@
-import { TRANCHEE_SLOTS } from "../constants.js";
+import { TRANCHEE_SLOTS, FRONT_CAPACITY } from "../constants.js";
 
-// Etat d'un couloir pour UN camp (chaque joueur a ses 3 PlayerLaneState).
-// Chaque methode fait une seule chose, pour rester facile a tester/relire.
-export class PlayerLaneState {
+// Zones d'un joueur : reserve, tranchee (cachee), front (partage, cartes
+// libres - voir docs/GAME_DESIGN.md), et un tunnel optionnel.
+export class PlayerZones {
   constructor() {
     this.reserve = [];
     this.tranchee = new Array(TRANCHEE_SLOTS).fill(null);
-    this.front = null;
+    this.front = [];
     this.tunnel = null;
     this.tunnelTurnsHidden = 0;
-    this.flagControlStreak = 0;
   }
 
   hasFreeTrancheeSlot() {
@@ -37,10 +36,26 @@ export class PlayerLaneState {
     return this.reserve.splice(index, 1)[0];
   }
 
+  hasFreeFrontSlot() {
+    return this.front.length < FRONT_CAPACITY;
+  }
+
+  addToFront(instance) {
+    if (!this.hasFreeFrontSlot()) return false;
+    this.front.push(instance);
+    return true;
+  }
+
+  removeFromFront(instanceId) {
+    const index = this.front.findIndex((c) => c.instanceId === instanceId);
+    if (index === -1) return null;
+    return this.front.splice(index, 1)[0];
+  }
+
   findAnywhere(instanceId) {
-    if (this.front?.instanceId === instanceId) return this.front;
-    if (this.tunnel?.instanceId === instanceId) return this.tunnel;
     return (
+      this.front.find((c) => c.instanceId === instanceId) ??
+      (this.tunnel?.instanceId === instanceId ? this.tunnel : null) ??
       this.reserve.find((c) => c.instanceId === instanceId) ??
       this.tranchee.find((c) => c && c.instanceId === instanceId) ??
       null

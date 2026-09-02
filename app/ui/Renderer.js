@@ -1,5 +1,3 @@
-import { LANES } from "../src/constants.js";
-
 // Responsabilite unique : transformer l'etat du jeu en DOM. Ne modifie
 // jamais l'etat, ne sait pas ce qu'est une Command - elle se contente
 // d'appeler les callbacks qu'on lui donne quand l'utilisateur clique.
@@ -10,9 +8,15 @@ export class Renderer {
 
   render(game, ui, callbacks) {
     this.renderTopbar(game);
-    this.renderBoard(game, ui, callbacks);
+    this.renderComm(game);
+    this.renderSide(this.dom.enemySide, game, this.enemyFaction(game), ui, callbacks);
+    this.renderSide(this.dom.ownSide, game, game.active, ui, callbacks);
     this.renderHand(game, ui, callbacks);
     this.renderLog(game);
+  }
+
+  enemyFaction(game) {
+    return game.active === "chat" ? "chien" : "chat";
   }
 
   renderTopbar(game) {
@@ -22,87 +26,71 @@ export class Renderer {
     this.dom.turnInfo.textContent = `Tour ${game.turn} - ${game.activeFactionLabel}`;
   }
 
-  renderBoard(game, ui, callbacks) {
-    this.dom.board.innerHTML = "";
-    this.dom.board.appendChild(this.buildLaneHeader());
-    for (const lane of LANES) {
-      this.dom.board.appendChild(this.buildLaneRow(game, lane, ui, callbacks));
-    }
+  renderComm(game) {
+    const active = game.comm.isActive();
+    this.dom.commBar.className = `comm-global ${active ? "comm-active" : "comm-cut"}`;
+    this.dom.commBar.textContent = active ? "Communication : ACTIVE" : "Communication : COUPEE";
   }
 
-  buildLaneHeader() {
-    const header = document.createElement("div");
-    header.className = "lane-header";
-    header.innerHTML = "<span></span><span>Reserve</span><span>Tranchee</span><span>Comm.</span><span>Front</span><span>Tranchee</span><span>Reserve</span>";
-    return header;
+  renderSide(container, game, faction, ui, callbacks) {
+    container.innerHTML = "";
+    container.className = `side ${faction === game.active ? "side-own" : "side-enemy"}`;
+    container.appendChild(this.buildSideLabel(faction, game));
+    container.appendChild(this.buildZoneRow("Reserve", this.buildReserveCards(game, faction, ui, callbacks)));
+    container.appendChild(this.buildZoneRow("Tranchee", this.buildTrancheeCards(game, faction, ui, callbacks)));
+    container.appendChild(this.buildZoneRow("Front", this.buildFrontCards(game, faction, ui, callbacks)));
+    if (game.players[faction].zones.tunnel) container.appendChild(this.buildTunnelBadge(faction, game));
   }
 
-  buildLaneRow(game, lane, ui, callbacks) {
-    const row = document.createElement("div");
-    row.className = "lane";
-    row.appendChild(this.buildLaneLabel(lane));
-    row.appendChild(this.buildReserveZone(game, "chat", lane, ui, callbacks));
-    row.appendChild(this.buildTrancheeZone(game, "chat", lane, ui, callbacks));
-    row.appendChild(this.buildCommZone(game, lane));
-    row.appendChild(this.buildFrontZone(game, lane, ui, callbacks));
-    row.appendChild(this.buildTrancheeZone(game, "chien", lane, ui, callbacks));
-    row.appendChild(this.buildReserveZone(game, "chien", lane, ui, callbacks));
-    return row;
-  }
-
-  buildLaneLabel(lane) {
+  buildSideLabel(faction, game) {
     const label = document.createElement("div");
-    label.className = "lane-label";
-    label.textContent = lane.toUpperCase();
+    label.className = `side-label ${faction}`;
+    label.textContent = faction === "chat" ? "Chats" : "Chiens";
     return label;
   }
 
-  buildReserveZone(game, faction, lane, ui, callbacks) {
-    const zone = this.zoneWithLabel("RES");
-    for (const instance of game.players[faction].lanes[lane].reserve) {
-      zone.appendChild(this.buildMiniCard(instance, false, ui, callbacks, faction, lane, "reserve"));
-    }
-    return zone;
-  }
-
-  buildTrancheeZone(game, faction, lane, ui, callbacks) {
-    const zone = this.zoneWithLabel("TRA");
-    for (const instance of game.players[faction].lanes[lane].tranchee) {
-      if (!instance) continue;
-      const faceDown = faction !== game.active && !instance.revealed;
-      zone.appendChild(this.buildMiniCard(instance, faceDown, ui, callbacks, faction, lane, "tranchee"));
-    }
-    return zone;
-  }
-
-  buildFrontZone(game, lane, ui, callbacks) {
-    const zone = this.zoneWithLabel("FRONT");
-    const chatCard = game.players.chat.lanes[lane].front;
-    const chienCard = game.players.chien.lanes[lane].front;
-    if (chatCard) zone.appendChild(this.buildMiniCard(chatCard, false, ui, callbacks, "chat", lane, "front"));
-    if (chienCard) zone.appendChild(this.buildMiniCard(chienCard, false, ui, callbacks, "chien", lane, "front"));
-    return zone;
-  }
-
-  buildCommZone(game, lane) {
-    const state = game.comm.status[lane];
-    const div = document.createElement("div");
-    div.className = `comm comm-${state}`;
-    div.innerHTML = `<div class="comm-bar"></div><div class="comm-txt">${state === "actif" ? "OK" : "COUPE"}</div>`;
-    return div;
-  }
-
-  zoneWithLabel(text) {
-    const zone = document.createElement("div");
-    zone.className = "zone";
+  buildZoneRow(title, cards) {
+    const row = document.createElement("div");
+    row.className = "zone-row";
     const label = document.createElement("div");
-    label.className = "zone-label";
-    label.textContent = text;
-    zone.appendChild(label);
-    return zone;
+    label.className = "zone-row-label";
+    label.textContent = title;
+    row.appendChild(label);
+    const cardsWrap = document.createElement("div");
+    cardsWrap.className = "zone-cards";
+    for (const card of cards) cardsWrap.appendChild(card);
+    row.appendChild(cardsWrap);
+    return row;
   }
 
-  buildMiniCard(instance, faceDown, ui, callbacks, faction, lane, zoneName) {
+  buildReserveCards(game, faction, ui, callbacks) {
+    return game.players[faction].zones.reserve.map((instance) =>
+      this.buildMiniCard(instance, false, ui, callbacks, faction, "reserve")
+    );
+  }
+
+  buildTrancheeCards(game, faction, ui, callbacks) {
+    return game.players[faction].zones.tranchee
+      .filter((instance) => instance)
+      .map((instance) => {
+        const faceDown = faction !== game.active && !instance.revealed;
+        return this.buildMiniCard(instance, faceDown, ui, callbacks, faction, "tranchee");
+      });
+  }
+
+  buildFrontCards(game, faction, ui, callbacks) {
+    return game.players[faction].zones.front.map((instance) => this.buildMiniCard(instance, false, ui, callbacks, faction, "front"));
+  }
+
+  buildTunnelBadge(faction, game) {
+    const badge = document.createElement("div");
+    badge.className = "tunnel-badge";
+    const hidden = game.players[faction].zones.tunnelTurnsHidden;
+    badge.textContent = `Tunnel occupe (${hidden}/2)`;
+    return badge;
+  }
+
+  buildMiniCard(instance, faceDown, ui, callbacks, faction, zoneName) {
     const div = document.createElement("div");
     div.className = `mini-card ${faction}-owned` + (faceDown ? " hidden-card" : "");
     if (!faceDown) {
@@ -112,9 +100,11 @@ export class Renderer {
       stats.className = "stat-row";
       stats.innerHTML = `<span>${instance.attaque}</span><span>${instance.defense}</span>`;
       div.appendChild(stats);
+      if (zoneName === "front" && instance.hasAttacked) div.classList.add("has-attacked");
     }
     if (ui.isSelected(instance.instanceId)) div.classList.add("selected");
-    div.addEventListener("click", () => callbacks.onCardClick(faction, zoneName, lane, instance.instanceId));
+    if (ui.isTargetable(faction, zoneName, instance.instanceId)) div.classList.add("targetable");
+    div.addEventListener("click", () => callbacks.onCardClick(faction, zoneName, instance.instanceId));
     return div;
   }
 

@@ -33,13 +33,13 @@ app/
   cards-data.js         Donnees des cartes (genere depuis data/cards.json)
   main.js                Point d'entree : assemble Game + Renderer + InputController
   src/
-    constants.js          Constantes partagees (couloirs, helpers de faction)
+    constants.js          Constantes partagees (tailles de zones, helpers de faction)
     Game.js               Orchestrateur (etat global, delegue tout le reste)
     core/
       Card.js               Hierarchie Card -> UnitCard -> VehicleCard, ObjectCard
       CardFactory.js         Factory Pattern : construit les Card depuis le JSON
-      CardInstance.js        Un exemplaire pose sur le plateau (etat mutable : PV, boucliers, statuts)
-      Deck.js, Player.js, PlayerLaneState.js, CommunicationNetwork.js
+      CardInstance.js        Un exemplaire pose sur le plateau (etat mutable : PV, boucliers, statuts, hasAttacked)
+      Deck.js, Player.js, PlayerZones.js, CommunicationNetwork.js
     effects/
       EffectStrategy.js      Interface Strategy Pattern
       EffectRegistry.js      Associe chaque carte objet a sa strategie
@@ -47,17 +47,19 @@ app/
                               Pelote de Laine, Mine Enterree, Fumigene, Barbeles,
                               Radio/Cable de Campagne, Frappe Aerienne, Drapeau
                               d'Objectif, Trousse de Secours, Sacs de Sable,
-                              Caisse de Ravitaillement)
-    combat/CombatResolver.js  Resout les combats de front (Single Responsibility)
+                              Caisse de Ravitaillement) ; certaines exigent une
+                              cible explicite via `requiresTarget()`
+    combat/CombatMath.js      Calculs de degats purs (embuscade, effets a usage unique)
     victory/
       VictoryCondition.js      Interface Strategy Pattern
-      <NomCondition>.js         Moral, Controle de front, Controle du drapeau
+      <NomCondition>.js         Moral, Controle du Front via le drapeau
       VictoryChecker.js         Composite qui interroge chaque condition
     commands/
       Command.js                Interface Command Pattern
       <NomCommand>.js            Une classe par action joueur (Deployer, Avancer en
                                  tranchee, Engager au front, Creuser un tunnel,
-                                 Surgir en embuscade, Jouer un objet, Finir le tour)
+                                 Surgir en embuscade, Attaquer une carte ou frapper
+                                 le camp adverse, Jouer un objet, Finir le tour)
     events/EventEmitter.js    Observer Pattern minimal (le moteur emet, l'UI ecoute)
   ui/
     Renderer.js             Traduit l'etat du jeu en DOM (jamais l'inverse)
@@ -82,20 +84,28 @@ app/
 
 ## Mecaniques implementees
 
+- Plateau simplifie sans couloirs (Nord/Centre/Sud abandonnes) : chaque
+  camp a une Reserve, une Tranchee (4 emplacements caches) et un Front
+  **partage** ou les cartes se posent librement (capacite 5), plus un
+  tunnel optionnel.
 - Deploiement (main -> reserve), avancee reserve -> tranchee -> front.
-- Communication active/coupee/reparable (bloque les deplacements si coupee).
-- Combat au front avec de vrais points de vie (les degats s'accumulent
-  d'un tour a l'autre, un bouclier absorbe avant la vie reelle) ; percee
-  directe sur le moral si le front adverse est vide.
-- Tunnels : un sapeur peut creuser (1 par ligne), rester cache 2 tours
+- Communication : une seule ligne partagee, active/coupee (bloque les
+  deplacements et les soutiens si coupee).
+- Combat manuel et cible : chaque carte au Front peut attaquer une fois
+  par tour une carte adverse au Front de son choix (degats mutuels, de
+  vrais points de vie qui s'accumulent d'un tour a l'autre, un bouclier
+  absorbe avant la vie reelle), ou frapper directement le moral adverse
+  si son Front est vide.
+- Tunnels : un sapeur peut creuser (1 par joueur), rester cache 2 tours
   maximum, et surgir en embuscade (double degats au prochain combat).
-- Les 12 objets du GDD sont tous simules : Os d'Attraction, Pelote de
+- Les objets du GDD sont simules : Os d'Attraction, Pelote de
   Laine, Mine Enterree, Fumigene, Barbeles, Radio/Cable de Campagne,
   Frappe Aerienne, Drapeau d'Objectif, Trousse de Secours, Sacs de Sable,
-  Caisse de Ravitaillement.
-- Trois conditions de victoire : moral a 0, controle de 2 fronts sur 3
-  pendant 2 tours consecutifs, controle cumule du couloir du Drapeau
-  d'Objectif pendant 3 tours.
+  Caisse de Ravitaillement. Plusieurs exigent de designer explicitement
+  leur cible (Os d'Attraction, Sacs de Sable, Trousse de Secours, Caisse
+  de Ravitaillement, Frappe Aerienne) faute de couloir pour l'impliquer.
+- Deux conditions de victoire : moral a 0, controle cumule du Front
+  pendant 3 tours une fois le Drapeau d'Objectif joue.
 
 ## Pas encore implemente
 

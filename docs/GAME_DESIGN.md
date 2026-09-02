@@ -4,7 +4,7 @@
 
 ## 1. Pitch
 
-Un jeu de cartes tactique mobile en tranchées, "Chiens vs Chats" : deux factions s'affrontent sur trois couloirs (Nord / Centre / Sud), avec un système de tranchées cachées, de tunnels et de câbles de communication à couper ou réparer. Chaque faction a son identité de gameplay propre (les chats rappellent et protègent via la pelote de laine, les chiens sont perturbés par l'os d'attraction). Parties courtes (8–12 min), profondeur tactique, forte identité visuelle "cozy/goofy".
+Un jeu de cartes tactique mobile en tranchées, "Chiens vs Chats" : deux factions s'affrontent sur un Front commun où les cartes se posent librement (plus de couloirs Nord/Centre/Sud, voir section 3), avec un système de tranchées cachées, de tunnels et d'une ligne de communication à couper ou réparer. Chaque faction a son identité de gameplay propre (les chats rappellent et protègent via la pelote de laine, les chiens sont perturbés par l'os d'attraction). Parties courtes (8–12 min), profondeur tactique, forte identité visuelle "cozy/goofy".
 
 Positionnement marché : plus proche d'un **Clash Royale / Hearthstone tactique** que d'un hyper-casual pur — bonne rétention long terme, session courte, mais demande un peu plus d'apprentissage. C'est un compromis assumé entre accessibilité mass-market et profondeur stratégique.
 
@@ -21,30 +21,26 @@ C'est cette boucle méta qui doit être répétitive et gratifiante — voir sec
 
 ## 3. Plateau de jeu
 
-Reprise du plateau proposé, 3 couloirs symétriques :
+**Simplification adoptée (remplace la version "3 couloirs Nord/Centre/Sud")** : plus de découpage en couloirs. Chaque camp a une seule Réserve, une seule Tranchée et un seul Front **partagé**, où les cartes sont posées librement — pas de case ni d'alignement strict entre elles. But : un plateau plus simple à lire sur mobile, sans perdre les mécaniques qui font l'identité du jeu (tranchée cachée, tunnel, communication).
 
-| Couloir | Camp chat | Tranchée chat | Communication | Front de bataille | Tranchée chien | Camp chien |
-|---|---|---|---|---|---|---|
-| Nord | Réserve | 2 cartes cachées | Câble Nord | Combats directs | 2 cartes cachées | Réserve |
-| Centre | Réserve | 2 cartes cachées | Câble Centre | Combats directs | 2 cartes cachées | Réserve |
-| Sud | Réserve | 2 cartes cachées | Câble Sud | Combats directs | 2 cartes cachées | Réserve |
+| Camp chat | Tranchée chat | Communication | Front (cartes libres) | Tranchée chien | Camp chien |
+|---|---|---|---|---|---|
+| Réserve | 4 cartes cachées max | Une seule ligne, partagée | Jusqu'à 5 cartes par camp | 4 cartes cachées max | Réserve |
 
-Chaque joueur possède : 3 lignes de front, 3 tranchées (2 emplacements chacune), une réserve, une ligne de communication par couloir, et un tunnel optionnel par ligne (1 seul, pour garder le plateau lisible sur mobile).
+Chaque joueur possède : une Réserve, une Tranchée (4 emplacements **[à tester]**), un Front (capacité 5 **[à tester]**) et un tunnel optionnel (1 seul). La communication est désormais une seule ligne partagée par les deux camps (voir section 7).
 
 ## 4. Déroulement d'un tour
 
 Système **tour par tour alterné** (plus lisible sur mobile qu'un temps réel, et compatible avec l'information cachée des tranchées) :
 
 1. **Phase de ravitaillement** — le joueur actif gagne des Points de Ravitaillement (PR), sa ressource pour jouer des cartes. PR de départ : 3, +1 par tour, plafond 10 **[à tester]** (courbe façon Hearthstone/Clash Royale).
-2. **Phase d'action** — avec ses PR et jusqu'à 3 actions **[à tester]**, le joueur peut :
-   - déployer une carte de sa main vers la Réserve ou directement en Tranchée (coût = coût de la carte) ;
-   - déplacer une carte Réserve → Tranchée → Front (1 action, gratuit ou 1 PR **[à tester]**) ;
-   - faire creuser un tunnel par un Sapeur ;
-   - jouer un objet de déstabilisation (coût en PR) ;
-   - déclencher une capacité de soutien (médecin, radio, commandant) si la communication est active.
-3. **Phase de combat** — chaque unité au Front engage l'unité en face (même couloir) ou attaque directement le Camp adverse si le Front adverse est vide sur ce couloir.
-4. **Phase de résolution** — application des dégâts, vérification des conditions de victoire, mise à jour de l'état des câbles (coupé → clignotant → réparé selon les actions jouées).
-5. Passage au joueur suivant.
+2. **Phase d'action** — avec ses PR, le joueur peut, dans n'importe quel ordre :
+   - déployer une carte de sa main vers la Réserve (coût = coût de la carte) ;
+   - avancer une carte Réserve → Tranchée, puis Tranchée → Front ;
+   - faire creuser un tunnel par un Sapeur depuis la Tranchée ;
+   - jouer un objet de déstabilisation (coût en PR, certains demandent de désigner une carte cible) ;
+   - **attaquer** : chaque carte au Front peut attaquer une fois par tour une carte adverse de son choix au Front (combat mutuel, les deux cartes encaissent des dégâts), ou frapper directement le camp adverse si son Front est vide.
+3. **Fin de tour** — vérification des conditions de victoire, sortie forcée d'un tunnel occupé depuis plus de 2 tours, passage au joueur suivant.
 
 Une partie dure typiquement 10–16 tours par joueur.
 
@@ -60,28 +56,28 @@ Deck : 24 cartes **[à tester]**, maximum 3 exemplaires d'une même carte (2 pou
 - Cartes visibles.
 - Peuvent attaquer directement l'ennemi, avancer vers sa base, capturer un objectif, protéger les cartes derrière elles.
 
-### Tranchée (2 emplacements)
+### Tranchée (4 emplacements)
+- Une seule Tranchée par joueur (partagée, plus de découpage par couloir), avec 4 emplacements cachés **[à tester]**.
 - Cartes placées face cachée possibles.
 - Protégées des attaques normales, mais vulnérables à : attaque aérienne, artillerie, mine, effet de révélation.
 - Médecins, radios et commandants peuvent soutenir le Front depuis la Tranchée **si la communication est active**.
 
-### Tunnel (1 par ligne)
+### Tunnel (1 par joueur)
 - Les Sapeurs peuvent creuser un passage sous le champ de bataille.
 - Une carte en tunnel : ne peut pas être attaquée normalement, peut se déplacer vers une autre zone, peut apparaître derrière les lignes ennemies, peut déclencher une embuscade.
-- Limites anti-abus : un seul tunnel par ligne ; une carte ne peut pas rester cachée plus de **2 tours [à tester]** avant de devoir ressortir.
+- Limites anti-abus : un seul tunnel par joueur (plus de tunnel par couloir) ; une carte ne peut pas rester cachée plus de **2 tours [à tester]** avant de devoir ressortir.
 
 ### Réserve
-- Zone de stockage des cartes déployées mais pas encore engagées ; capacité limitée **[à tester : 3 emplacements]**.
+- Zone de stockage des cartes déployées mais pas encore engagées. Capacité **illimitée dans le prototype actuel** ; une limite **[à tester : 3 emplacements]** reste une piste d'équilibrage si la Réserve s'avère trop confortable en playtest.
 
 ## 7. Communication (câbles)
 
-Chaque ligne a un câble de communication, avec état visuel :
+**Simplification adoptée** : plus de câble par couloir — une seule ligne de communication, partagée par les deux camps, avec deux états (plus d'état intermédiaire "en réparation" dans le prototype) :
 - 🟢 **Actif** : buffs, soins, ordres, déplacements Réserve↔Tranchée↔Front, capacités de commandant/radio disponibles.
-- 🔴 **Coupé** : plus de buffs, plus de soins vers le Front, plus de renforts par cette ligne, plus d'ordres depuis la Tranchée ; les unités déjà présentes peuvent quand même attaquer/défendre.
-- 🟡 **Clignotant** : en cours de réparation.
+- 🔴 **Coupé** : plus de buffs, plus de soins vers le Front, plus de renforts, plus d'ordres depuis la Tranchée ; les unités déjà présentes peuvent quand même attaquer/défendre.
 
 **Peut être coupé par** : saboteur, mine spéciale, bombardement, carte de brouillage radio, attaque du relais.
-**Peut être réparé par** : médecin (capacité spéciale), opérateur radio, messager, sapeur, carte "câble de campagne".
+**Peut être réparé par** : médecin (capacité spéciale), opérateur radio, messager, sapeur, carte "câble de campagne" (Radio de campagne).
 
 ## 8. Objets de déstabilisation
 
@@ -98,27 +94,29 @@ Chaque ligne a un câble de communication, avec état visuel :
 | Char blindé | Protège les cartes alliées derrière lui et avance lentement. |
 | Drapeau d'objectif | Donne des points si une équipe le contrôle pendant un tour. |
 
-L'Os et la Pelote ne suppriment jamais une carte définitivement — ils la font reculer, lui font perdre son action, ou la déplacent de ligne. Objectif : de la déstabilisation, pas de la frustration.
+L'Os et la Pelote ne suppriment jamais une carte définitivement — ils la font reculer, lui font perdre son action, ou la rappellent vers une autre zone. Objectif : de la déstabilisation, pas de la frustration.
+
+**Ciblage explicite** : sans couloirs pour désigner implicitement "la" carte concernée, plusieurs objets demandent maintenant de choisir explicitement leur cible au moment d'être joués (Os d'attraction, Sacs de sable, Trousse de secours, Caisse de ravitaillement, Frappe aérienne). Les autres agissent globalement (Mine enterrée pose un piège partagé, Fumigène et Radio de campagne agissent sur l'unique ligne de communication, Drapeau d'objectif active le suivi de contrôle du Front).
 
 **Suggestion d'équilibrage des factions** *(à valider)* : pour une identité symétrique, on pourrait donner aux Chiens un objet miroir de la Pelote (ex. "Balle qui rebondit" : rappelle une carte chien avec un petit bonus), et aux Chats un objet miroir de l'Os que les Chiens retourneraient contre eux (ex. "Sifflet à ultrasons" : désoriente une carte chat). À trancher ensemble si tu veux garder l'asymétrie actuelle (chats = rappel/soutien, chiens = subissent la distraction) ou aller vers une symétrie plus classique de TCG compétitif.
 
 ## 9. Conditions de victoire
 
-Victoire par objectifs (pas seulement par destruction) :
-- Contrôler 2 fronts sur 3 pendant 2 tours consécutifs ;
-- Une unité atteint la base ennemie (percée) ;
+Victoire par objectifs (pas seulement par destruction). Avec un seul Front partagé (plus de couloirs), la condition "contrôler plusieurs fronts" n'a plus de sens et a été retirée ; il reste deux conditions, implémentées dans le prototype (`app/src/victory/`) :
 - Faire tomber le moral adverse à zéro (jauge qui descend en perdant des unités/zones) ;
-- Capturer le Drapeau d'objectif pendant un nombre de tours cumulés **[à tester : 3 tours]**.
+- Une fois le Drapeau d'objectif joué, contrôler le Front (occuper le Front pendant que le Front adverse est vide) pendant un nombre de tours cumulés **[à tester : 3 tours]**.
 
-## 10. Exemple de tour (repris tel quel)
+Une unité qui atteint la base ennemie déclenche déjà une frappe directe sur le moral adverse (voir section 4, "attaquer") plutôt qu'une condition de victoire séparée.
 
-1. Le joueur chat coupe la communication du couloir Nord.
-2. Les cartes chiens de la tranchée Nord ne peuvent plus renforcer leur front.
-3. Le joueur pose une mine au centre.
-4. Un chien avance et déclenche la mine.
-5. Le joueur chat fait sortir un soldat de sa tranchée par un tunnel.
-6. Le combat frontal commence.
-7. Le chien utilise un messager pour réparer son câble.
+## 10. Exemple de tour (adapté au plateau simplifié)
+
+1. Le joueur chat coupe la communication (ligne unique, partagée).
+2. Les cartes chiens de la Tranchée ne peuvent plus renforcer le Front tant que la ligne est coupée.
+3. Le joueur pose une mine enterrée sur le Front.
+4. Un chien avance en Front et déclenche la mine.
+5. Le joueur chat fait sortir un soldat de sa Tranchée par un tunnel.
+6. Le joueur chat désigne une carte chien au Front et l'attaque (combat mutuel).
+7. Le chien utilise un messager pour réparer sa communication.
 
 ## 11. Progression joueur (hors match)
 
@@ -167,4 +165,4 @@ Victoire par objectifs (pas seulement par destruction) :
 - Trancher la question de symétrie Os/Pelote (section 8).
 - ~~Définir la liste initiale de cartes~~ → fait, voir `data/cards.json` et `docs/CARTES.md`.
 - Maquetter la boutique et l'écran de tirage (gacha) dans le canvas de design, dans le même style visuel que les cartes déjà validées.
-- ~~Décider du moteur technique~~ → HTML/CSS/JS pur (modules ES, pas de build), voir `app/` : prototype v1 jouable en pass-and-play à deux. Architecture orientée objet (Strategy/Command/Factory/Observer, voir `app/README.md`), mécaniques complètes : déploiement, tunnels avec embuscade, communication, combat avec vrais points de vie, les 12 objets du GDD, et 3 conditions de victoire (moral, contrôle de front, drapeau). Reste à faire : IA, deckbuilding, multijoueur distant, capacités passives des unités (ex. bonus du Commandant) au-delà de leurs stats de base.
+- ~~Décider du moteur technique~~ → HTML/CSS/JS pur (modules ES, pas de build), voir `app/` : prototype v1 jouable en pass-and-play à deux. Architecture orientée objet (Strategy/Command/Factory/Observer, voir `app/README.md`), mécaniques complètes : déploiement, tunnels avec embuscade, communication, combat ciblé (attaque manuelle carte contre carte, ou frappe directe du camp adverse) avec vrais points de vie, les objets du GDD, et 2 conditions de victoire (moral, contrôle du Front via le drapeau). Reste à faire : IA, deckbuilding, multijoueur distant, capacités passives des unités (ex. bonus du Commandant) au-delà de leurs stats de base.

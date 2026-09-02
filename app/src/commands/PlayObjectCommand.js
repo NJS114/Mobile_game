@@ -2,10 +2,9 @@ import { Command } from "./Command.js";
 import { EffectContext } from "../effects/EffectContext.js";
 
 export class PlayObjectCommand extends Command {
-  constructor(instanceId, lane, targetInstanceId = null) {
+  constructor(instanceId, targetInstanceId = null) {
     super();
     this.instanceId = instanceId;
-    this.lane = lane;
     this.targetInstanceId = targetInstanceId;
   }
 
@@ -22,7 +21,7 @@ export class PlayObjectCommand extends Command {
 
     player.spendPR(instance.card.cout);
     player.removeFromHand(this.instanceId);
-    const context = new EffectContext({ game, faction: game.active, lane: this.lane, cardDef: instance.card });
+    const context = new EffectContext({ game, faction: game.active, cardDef: instance.card });
     strategy.apply(context, this.targetInstanceId);
   }
 }

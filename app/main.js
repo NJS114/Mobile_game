@@ -8,7 +8,9 @@ const dom = {
   moralChien: document.getElementById("moral-chien"),
   prBadge: document.getElementById("pr-badge"),
   turnInfo: document.getElementById("turn-info"),
-  board: document.getElementById("board"),
+  commBar: document.getElementById("comm-bar"),
+  enemySide: document.getElementById("enemy-side"),
+  ownSide: document.getElementById("own-side"),
   handZone: document.getElementById("hand-zone"),
   log: document.getElementById("log"),
 };
@@ -36,13 +38,10 @@ const overlays = {
   },
 };
 
-let game;
-let controller;
-
 function startNewGame() {
-  game = new Game(CARDS);
+  const game = new Game(CARDS);
   const renderer = new Renderer(dom);
-  controller = new InputController(game, renderer, document.getElementById("action-bar"), overlays);
+  const controller = new InputController(game, renderer, document.getElementById("action-bar"), overlays);
   controller.renderAll();
   victoryOverlay.classList.add("hidden");
   overlays.showPass(game.active);

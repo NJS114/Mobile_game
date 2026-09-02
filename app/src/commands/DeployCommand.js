@@ -1,10 +1,9 @@
 import { Command } from "./Command.js";
 
 export class DeployCommand extends Command {
-  constructor(instanceId, lane) {
+  constructor(instanceId) {
     super();
     this.instanceId = instanceId;
-    this.lane = lane;
   }
 
   execute(game) {
@@ -14,7 +13,7 @@ export class DeployCommand extends Command {
 
     player.spendPR(instance.card.cout);
     player.removeFromHand(this.instanceId);
-    player.lanes[this.lane].reserve.push(instance);
-    game.log.push(`${game.activeFactionLabel} deploie ${instance.card.nom} en reserve (${this.lane}).`);
+    player.zones.reserve.push(instance);
+    game.log.push(`${game.activeFactionLabel} deploie ${instance.card.nom} en reserve.`);
   }
 }

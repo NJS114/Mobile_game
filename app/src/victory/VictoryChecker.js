@@ -1,5 +1,4 @@
 import { MoralVictoryCondition } from "./MoralVictoryCondition.js";
-import { FrontControlVictoryCondition } from "./FrontControlVictoryCondition.js";
 import { FlagControlVictoryCondition } from "./FlagControlVictoryCondition.js";
 
 // Composite Pattern : interroge chaque condition dans l'ordre jusqu'a en
@@ -18,6 +17,6 @@ export class VictoryChecker {
   }
 
   static buildDefault() {
-    return new VictoryChecker([new MoralVictoryCondition(), new FrontControlVictoryCondition(), new FlagControlVictoryCondition()]);
+    return new VictoryChecker([new MoralVictoryCondition(), new FlagControlVictoryCondition()]);
   }
 }

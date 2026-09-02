@@ -3,10 +3,9 @@ import { otherFaction } from "../constants.js";
 // Contexte passe a chaque EffectStrategy : evite que chaque effet doive
 // re-ecrire la meme navigation dans l'etat du jeu.
 export class EffectContext {
-  constructor({ game, faction, lane, cardDef }) {
+  constructor({ game, faction, cardDef }) {
     this.game = game;
     this.faction = faction;
-    this.lane = lane;
     this.cardDef = cardDef;
   }
 
@@ -14,12 +13,12 @@ export class EffectContext {
     return otherFaction(this.faction);
   }
 
-  get ownLane() {
-    return this.game.players[this.faction].lanes[this.lane];
+  get ownZones() {
+    return this.game.players[this.faction].zones;
   }
 
-  get enemyLane() {
-    return this.game.players[this.enemyFaction].lanes[this.lane];
+  get enemyZones() {
+    return this.game.players[this.enemyFaction].zones;
   }
 
   log(message) {

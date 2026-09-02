@@ -14,6 +14,7 @@ export class CardInstance {
     this.ambush = false;
     this.movementBlockedUntilTurn = 0;
     this.revealed = false;
+    this.hasAttacked = false;
   }
 
   get attaque() {

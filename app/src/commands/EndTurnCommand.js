@@ -3,7 +3,6 @@ import { Command } from "./Command.js";
 export class EndTurnCommand extends Command {
   execute(game) {
     game.advanceTunnelHiding();
-    game.combatResolver.resolve(game);
 
     game.winner = game.victoryChecker.determineWinner(game);
     if (game.winner) {

@@ -1,5 +1,4 @@
-import { LANES } from "../constants.js";
-import { PlayerLaneState } from "./PlayerLaneState.js";
+import { PlayerZones } from "./PlayerZones.js";
 
 export class Player {
   static PR_INITIAL = 3;
@@ -13,7 +12,7 @@ export class Player {
     this.hand = [];
     this.pr = Player.PR_INITIAL;
     this.moral = Player.MORAL_INITIAL;
-    this.lanes = Object.fromEntries(LANES.map((lane) => [lane, new PlayerLaneState()]));
+    this.zones = new PlayerZones();
     this.drawUpTo();
   }
 
@@ -42,11 +41,11 @@ export class Player {
   }
 
   findInstanceAnywhere(instanceId) {
-    for (const lane of LANES) {
-      const found = this.lanes[lane].findAnywhere(instanceId);
-      if (found) return found;
-    }
-    return null;
+    return this.zones.findAnywhere(instanceId);
+  }
+
+  resetAttacksForNewTurn() {
+    for (const instance of this.zones.front) instance.hasAttacked = false;
   }
 
   isDefeated() {

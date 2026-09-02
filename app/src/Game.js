@@ -1,4 +1,4 @@
-import { LANES, otherFaction, factionLabel } from "./constants.js";
+import { otherFaction, factionLabel } from "./constants.js";
 import { CardFactory } from "./core/CardFactory.js";
 import { CardInstance } from "./core/CardInstance.js";
 import { UnitCard, VehicleCard, ObjectCard } from "./core/Card.js";
@@ -7,7 +7,6 @@ import { Player } from "./core/Player.js";
 import { CommunicationNetwork } from "./core/CommunicationNetwork.js";
 import { EventEmitter } from "./events/EventEmitter.js";
 import { EffectRegistry } from "./effects/EffectRegistry.js";
-import { CombatResolver } from "./combat/CombatResolver.js";
 import { VictoryChecker } from "./victory/VictoryChecker.js";
 
 // Orchestrateur : possede l'etat global et delegue tout le travail a des
@@ -23,13 +22,12 @@ export class Game {
     this.events = new EventEmitter();
 
     this.comm = new CommunicationNetwork();
-    this.traps = Object.fromEntries(LANES.map((lane) => [lane, null]));
-    this.smokeUntil = Object.fromEntries(LANES.map((lane) => [lane, 0]));
-    this.controlStreak = { chat: 0, chien: 0 };
-    this.flagLane = null;
+    this.trap = null;
+    this.smokeUntil = 0;
+    this.flagActive = false;
+    this.flagControlStreak = { chat: 0, chien: 0 };
 
     this.effects = EffectRegistry.buildDefault();
-    this.combatResolver = new CombatResolver();
     this.victoryChecker = VictoryChecker.buildDefault();
 
     this.players = { chat: this.createPlayer("chat"), chien: this.createPlayer("chien") };
@@ -73,32 +71,25 @@ export class Game {
   }
 
   advanceTunnelHiding() {
-    for (const lane of LANES) {
-      this.advanceTunnelHidingForLane(lane);
-    }
+    const zones = this.activePlayer.zones;
+    if (!zones.tunnel) return;
+    zones.tunnelTurnsHidden += 1;
+    if (zones.tunnelTurnsHidden > 2) this.forceEmergeTunnel();
   }
 
-  advanceTunnelHidingForLane(lane) {
-    const state = this.activePlayer.lanes[lane];
-    if (!state.tunnel) return;
-    state.tunnelTurnsHidden += 1;
-    if (state.tunnelTurnsHidden > 2) this.forceEmergeTunnel(lane);
-  }
+  forceEmergeTunnel() {
+    const zones = this.activePlayer.zones;
+    const instance = zones.tunnel;
+    zones.tunnel = null;
+    zones.tunnelTurnsHidden = 0;
 
-  forceEmergeTunnel(lane) {
-    const state = this.activePlayer.lanes[lane];
-    const instance = state.tunnel;
-    state.tunnel = null;
-    state.tunnelTurnsHidden = 0;
-
-    if (!state.front) {
-      state.front = instance;
-      this.log.push(`${instance.card.nom} doit ressortir du tunnel au front (${lane}).`);
-    } else if (state.placeInTranchee(instance)) {
-      this.log.push(`${instance.card.nom} ressort du tunnel en tranchee (${lane}).`);
+    if (zones.addToFront(instance)) {
+      this.log.push(`${instance.card.nom} doit ressortir du tunnel au front.`);
+    } else if (zones.placeInTranchee(instance)) {
+      this.log.push(`${instance.card.nom} ressort du tunnel en tranchee.`);
     } else {
-      state.reserve.push(instance);
-      this.log.push(`${instance.card.nom} ressort du tunnel en reserve, faute de place (${lane}).`);
+      zones.reserve.push(instance);
+      this.log.push(`${instance.card.nom} ressort du tunnel en reserve, faute de place.`);
     }
   }
 
@@ -107,6 +98,7 @@ export class Game {
     this.turn += 1;
     this.activePlayer.gainPR();
     this.activePlayer.drawUpTo();
+    this.activePlayer.resetAttacksForNewTurn();
     this.log.push(`Tour ${this.turn} - ${this.activeFactionLabel} (PR: ${this.activePlayer.pr}).`);
   }
 }
