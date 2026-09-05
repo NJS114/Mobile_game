@@ -1,68 +1,58 @@
 import { Command } from "./Command.js";
-import { CombatMath } from "../combat/CombatMath.js";
-import { otherFaction } from "../constants.js";
+import { otherPlayer } from "../constants.js";
+import { Target } from "../effects/TargetRef.js";
 
-// Combat manuel et cible : le joueur choisit laquelle de ses cartes au
-// front attaque, et quelle carte adverse elle vise (ou l'ennemi directement
-// si son front est vide). Remplace l'ancienne resolution automatique par
-// couloir.
+// Attaque une unite adverse ciblee, ou frappe directement le heros adverse
+// si la cible est une reference de heros. Respecte la Garde (Taunt) :
+// tant qu'une unite Garde est en vie en face, elle seule peut etre ciblee.
 export class AttackCommand extends Command {
-  constructor(attackerInstanceId, targetInstanceId = null) {
+  constructor(attackerInstanceId, targetId) {
     super();
     this.attackerInstanceId = attackerInstanceId;
-    this.targetInstanceId = targetInstanceId;
+    this.targetId = targetId;
   }
 
   execute(game) {
-    const attacker = this.findAttacker(game);
-    if (!attacker) return;
+    const attackerId = game.active;
+    const defenderId = otherPlayer(attackerId);
+    const attacker = game.players[attackerId].board.find((u) => u.instanceId === this.attackerInstanceId);
+    if (!attacker || !attacker.canAttack()) return;
 
-    const enemyZones = game.players[otherFaction(game.active)].zones;
-    if (this.targetInstanceId) this.attackCard(game, attacker, enemyZones);
-    else this.attackBase(game, attacker, enemyZones);
-
-    attacker.hasAttacked = true;
-  }
-
-  findAttacker(game) {
-    const attacker = game.activePlayer.zones.front.find((c) => c.instanceId === this.attackerInstanceId);
-    if (!attacker) return null;
-    if (attacker.hasAttacked) {
-      game.log.push(`${attacker.card.nom} a deja attaque ce tour.`);
-      return null;
-    }
-    return attacker;
-  }
-
-  attackCard(game, attacker, enemyZones) {
-    const target = enemyZones.front.find((c) => c.instanceId === this.targetInstanceId);
-    if (!target) return;
-
-    const attackerDamage = CombatMath.effectiveAttack(attacker);
-    const targetDamage = CombatMath.effectiveAttack(target);
-    game.log.push(`${attacker.card.nom} (ATQ ${attackerDamage}) attaque ${target.card.nom} (ATQ ${targetDamage}).`);
-
-    if (target.receiveDamage(attackerDamage)) {
-      enemyZones.removeFromFront(target.instanceId);
-      game.log.push(`${target.card.nom} est elimine.`);
-    }
-    if (attacker.receiveDamage(targetDamage)) {
-      game.activePlayer.zones.removeFromFront(attacker.instanceId);
-      game.log.push(`${attacker.card.nom} est elimine en ripostant.`);
-    }
-    CombatMath.consumeOneShotEffects(attacker);
-    CombatMath.consumeOneShotEffects(target);
-  }
-
-  attackBase(game, attacker, enemyZones) {
-    if (enemyZones.front.length > 0) {
-      game.log.push("Impossible de frapper la base : le front adverse n'est pas vide.");
+    const defender = game.players[defenderId];
+    if (!this.isTargetAllowed(defender)) {
+      game.log.push("Une unite Garde doit etre ciblee en priorite.");
       return;
     }
-    const damage = CombatMath.effectiveAttack(attacker);
-    const defenderFaction = otherFaction(game.active);
-    game.players[defenderFaction].moral -= damage;
-    game.log.push(`${attacker.card.nom} frappe directement : ${damage} degats au moral ${defenderFaction}.`);
-    CombatMath.consumeOneShotEffects(attacker);
+
+    attacker.hasAttacked = true;
+
+    if (Target.isHero(this.targetId)) {
+      this.strikeHero(game, attacker, defender);
+    } else {
+      this.strikeUnit(game, attacker, defender);
+    }
+  }
+
+  isTargetAllowed(defender) {
+    const tauntUnits = defender.board.filter((u) => u.isTaunt);
+    if (tauntUnits.length === 0) return true;
+    return !Target.isHero(this.targetId) && tauntUnits.some((u) => u.instanceId === this.targetId);
+  }
+
+  strikeHero(game, attacker, defender) {
+    defender.takeDamage(attacker.atq);
+    game.log.push(`${attacker.card.nom} inflige ${attacker.atq} degats directs.`);
+  }
+
+  strikeUnit(game, attacker, defender) {
+    const defenderUnit = defender.board.find((u) => u.instanceId === this.targetId);
+    if (!defenderUnit) return;
+
+    const attackerDied = attacker.receiveDamage(defenderUnit.atq);
+    const defenderDied = defenderUnit.receiveDamage(attacker.atq);
+    game.log.push(`${attacker.card.nom} affronte ${defenderUnit.card.nom}.`);
+
+    if (attackerDied) game.destroyUnit(attacker);
+    if (defenderDied) game.destroyUnit(defenderUnit);
   }
 }

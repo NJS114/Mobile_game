@@ -1,18 +1,24 @@
-// Strategy Pattern : chaque objet de destabilisation implemente cette
-// interface. Ajouter une nouvelle carte objet = ajouter une classe, sans
-// toucher au moteur (principe ouvert/ferme).
+// Strategy Pattern : chaque sort implemente cette interface. Ajouter un
+// nouveau sort = ajouter une classe + une ligne dans EffectRegistry, sans
+// jamais toucher au moteur (principe ouvert/ferme).
 export class EffectStrategy {
-  // Certains effets ont besoin qu'on designe une carte cible avant de
-  // s'appliquer (Os d'Attraction, Pelote de Laine, Barbeles...).
+  // Certains sorts ont besoin qu'on designe une cible (unite ou heros)
+  // avant de s'appliquer (soin, degats, buff...).
   requiresTarget() {
     return false;
   }
 
+  // Validation fine de la cible (allie/ennemi, unite/heros, cout max...).
+  // Par defaut toute cible est acceptee ; a surcharger si besoin.
+  isValidTarget(_context, _targetId) {
+    return true;
+  }
+
   /**
-   * @param {EffectContext} context
-   * @param {string|null} targetInstanceId
+   * @param {import("./EffectContext.js").EffectContext} context
+   * @param {string|null} targetId
    */
-  apply(_context, _targetInstanceId = null) {
+  apply(_context, _targetId = null) {
     throw new Error("apply() doit etre implemente par la sous-classe");
   }
 }

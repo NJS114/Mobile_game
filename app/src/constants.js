@@ -1,14 +1,20 @@
 // Constantes partagees du moteur de jeu.
-// Plateau simplifie : plus de couloirs Nord/Centre/Sud - chaque camp a une
-// seule reserve, une seule tranchee et un seul front partage ou les cartes
-// sont posees librement (voir docs/GAME_DESIGN.md).
-export const TRANCHEE_SLOTS = 4;
-export const FRONT_CAPACITY = 5;
+// Modele "Paw & Claw" : plateau simple façon Hearthstone (mana, plateau,
+// points de vie de heros) avec des synergies de tribu façon TFT
+// (voir docs/GAME_DESIGN.md).
+export const HERO_HP_INITIAL = 30;
+export const MANA_INITIAL = 1;
+export const MANA_MAX = 10;
+export const BOARD_CAPACITY = 7;
+export const HAND_CAPACITY = 10;
+export const STARTING_HAND_SIZE = 3;
 
-export function otherFaction(faction) {
-  return faction === "chat" ? "chien" : "chat";
+export const TRIBES = ["robots", "nobles", "sante"];
+
+export function otherPlayer(playerId) {
+  return playerId === "joueur1" ? "joueur2" : "joueur1";
 }
 
-export function factionLabel(faction) {
-  return faction === "chat" ? "Chat" : "Chien";
+export function playerLabel(playerId) {
+  return playerId === "joueur1" ? "Joueur 1" : "Joueur 2";
 }

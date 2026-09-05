@@ -3,33 +3,33 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>Chiens vs Chats - Prototype</title>
+  <title>Paw & Claw - Prototype</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="topbar">
-    <div class="moral chat">Chats: <span id="moral-chat"></span></div>
+    <div class="hero hero-joueur1" id="hero-joueur1">
+      <span class="hero-label">Joueur 1</span>
+      <span class="hero-hp" id="hp-joueur1"></span>
+    </div>
     <div class="turn-info" id="turn-info"></div>
-    <div class="pr-badge" id="pr-badge"></div>
-    <div class="moral chien">Chiens: <span id="moral-chien"></span></div>
+    <div class="mana-badge" id="mana-badge"></div>
+    <div class="hero hero-joueur2" id="hero-joueur2">
+      <span class="hero-label">Joueur 2</span>
+      <span class="hero-hp" id="hp-joueur2"></span>
+    </div>
   </div>
 
   <div id="table">
-    <div id="enemy-side"></div>
-    <div id="comm-bar" class="comm-global"></div>
-    <div id="own-side"></div>
+    <div id="enemy-hand" class="hand-strip"></div>
+    <div id="enemy-board" class="board-row"></div>
+    <div id="own-board" class="board-row"></div>
   </div>
   <div id="action-bar"></div>
   <div id="log"></div>
 
   <div id="hand-zone"></div>
-
-  <div id="pass-overlay" class="hidden">
-    <h1 id="pass-title"></h1>
-    <p>Passe l'appareil a l'autre joueur, puis appuie pour reveler ton camp.</p>
-    <button id="pass-btn">Je suis pret</button>
-  </div>
 
   <div id="victory-overlay" class="hidden">
     <h1 id="victory-text"></h1>

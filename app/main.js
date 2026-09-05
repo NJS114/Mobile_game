@@ -4,36 +4,29 @@ import { Renderer } from "./ui/Renderer.js";
 import { InputController } from "./ui/InputController.js";
 
 const dom = {
-  moralChat: document.getElementById("moral-chat"),
-  moralChien: document.getElementById("moral-chien"),
-  prBadge: document.getElementById("pr-badge"),
+  heroJoueur1: document.getElementById("hero-joueur1"),
+  heroJoueur2: document.getElementById("hero-joueur2"),
+  hpJoueur1: document.getElementById("hp-joueur1"),
+  hpJoueur2: document.getElementById("hp-joueur2"),
+  manaBadge: document.getElementById("mana-badge"),
   turnInfo: document.getElementById("turn-info"),
-  commBar: document.getElementById("comm-bar"),
-  enemySide: document.getElementById("enemy-side"),
-  ownSide: document.getElementById("own-side"),
+  enemyHand: document.getElementById("enemy-hand"),
+  enemyBoard: document.getElementById("enemy-board"),
+  ownBoard: document.getElementById("own-board"),
   handZone: document.getElementById("hand-zone"),
   log: document.getElementById("log"),
 };
 
-const passOverlay = document.getElementById("pass-overlay");
-const passTitle = document.getElementById("pass-title");
 const victoryOverlay = document.getElementById("victory-overlay");
 const victoryText = document.getElementById("victory-text");
 
-function factionLabel(faction) {
-  return faction === "chat" ? "Chats" : "Chiens";
+function playerLabel(playerId) {
+  return playerId === "joueur1" ? "Joueur 1" : "Joueur 2";
 }
 
 const overlays = {
-  showPass(faction) {
-    passTitle.textContent = `Au tour des ${factionLabel(faction)}`;
-    passOverlay.classList.remove("hidden");
-  },
-  hidePass() {
-    passOverlay.classList.add("hidden");
-  },
   showVictory(winner) {
-    victoryText.textContent = `Victoire des ${factionLabel(winner)} !`;
+    victoryText.textContent = `Victoire de ${playerLabel(winner)} !`;
     victoryOverlay.classList.remove("hidden");
   },
 };
@@ -44,12 +37,10 @@ function startNewGame() {
   const controller = new InputController(game, renderer, document.getElementById("action-bar"), overlays);
   controller.renderAll();
   victoryOverlay.classList.add("hidden");
-  overlays.showPass(game.active);
   // Expose pour le debogage manuel en console (sans impact sur le jeu normal).
   window.__debug = { game, controller };
 }
 
-document.getElementById("pass-btn").addEventListener("click", () => overlays.hidePass());
 document.getElementById("restart-btn").addEventListener("click", () => startNewGame());
 
 startNewGame();

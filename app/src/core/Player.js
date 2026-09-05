@@ -1,37 +1,50 @@
-import { PlayerZones } from "./PlayerZones.js";
+import {
+  HERO_HP_INITIAL,
+  MANA_INITIAL,
+  MANA_MAX,
+  BOARD_CAPACITY,
+  HAND_CAPACITY,
+  STARTING_HAND_SIZE,
+} from "../constants.js";
 
 export class Player {
-  static PR_INITIAL = 3;
-  static PR_CAP = 10;
-  static MORAL_INITIAL = 20;
-  static HAND_SIZE = 5;
-
-  constructor(faction, deck) {
-    this.faction = faction;
+  constructor(id, deck) {
+    this.id = id;
     this.deck = deck;
     this.hand = [];
-    this.pr = Player.PR_INITIAL;
-    this.moral = Player.MORAL_INITIAL;
-    this.zones = new PlayerZones();
-    this.drawUpTo();
+    this.board = [];
+    this.hp = HERO_HP_INITIAL;
+    this.manaCap = MANA_INITIAL;
+    this.mana = MANA_INITIAL;
+    this.hasPlayedATurn = false;
+    this.drawMany(STARTING_HAND_SIZE);
   }
 
-  drawUpTo(size = Player.HAND_SIZE) {
-    while (this.hand.length < size && !this.deck.isEmpty) {
-      this.hand.push(this.deck.draw());
-    }
+  drawOne() {
+    if (this.deck.isEmpty) return;
+    const card = this.deck.draw();
+    if (this.hand.length >= HAND_CAPACITY) return;
+    this.hand.push(card);
   }
 
-  gainPR(amount = 1) {
-    this.pr = Math.min(Player.PR_CAP, this.pr + amount);
+  drawMany(amount) {
+    for (let i = 0; i < amount; i++) this.drawOne();
+  }
+
+  gainManaCapacity(amount = 1) {
+    this.manaCap = Math.min(MANA_MAX, this.manaCap + amount);
+  }
+
+  refillMana() {
+    this.mana = this.manaCap;
   }
 
   canAfford(card) {
-    return this.pr >= card.cout;
+    return this.mana >= card.cout;
   }
 
-  spendPR(amount) {
-    this.pr -= amount;
+  spendMana(amount) {
+    this.mana -= amount;
   }
 
   removeFromHand(instanceId) {
@@ -40,15 +53,46 @@ export class Player {
     return this.hand.splice(index, 1)[0];
   }
 
+  hasFreeBoardSlot() {
+    return this.board.length < BOARD_CAPACITY;
+  }
+
+  addToBoard(instance) {
+    if (!this.hasFreeBoardSlot()) return false;
+    this.board.push(instance);
+    return true;
+  }
+
+  removeFromBoard(instanceId) {
+    const index = this.board.findIndex((c) => c.instanceId === instanceId);
+    if (index === -1) return null;
+    return this.board.splice(index, 1)[0];
+  }
+
   findInstanceAnywhere(instanceId) {
-    return this.zones.findAnywhere(instanceId);
+    return (
+      this.board.find((c) => c.instanceId === instanceId) ??
+      this.hand.find((c) => c.instanceId === instanceId) ??
+      null
+    );
   }
 
   resetAttacksForNewTurn() {
-    for (const instance of this.zones.front) instance.hasAttacked = false;
+    for (const unit of this.board) {
+      unit.hasAttacked = false;
+      unit.summoningSick = false;
+    }
+  }
+
+  takeDamage(amount) {
+    this.hp -= amount;
+  }
+
+  heal(amount) {
+    this.hp = Math.min(HERO_HP_INITIAL, this.hp + amount);
   }
 
   isDefeated() {
-    return this.moral <= 0;
+    return this.hp <= 0;
   }
 }

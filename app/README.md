@@ -1,8 +1,9 @@
-# Prototype jouable - Chiens vs Chats
+# Prototype jouable - Paw & Claw
 
 Prototype v1 en HTML/CSS/JS, sans etape de build (modules ES natifs).
-Mode passe-et-joue a deux sur le meme appareil (autour d'une "table",
-comme prevu dans le GDD).
+Mode passe-et-joue a deux sur le meme appareil, principes proches de
+Hearthstone (mana, plateau, points de vie de royaume) avec une touche de
+TFT (synergies de tribu) — voir `docs/GAME_DESIGN.md`.
 
 ## Lancer
 
@@ -33,33 +34,34 @@ app/
   cards-data.js         Donnees des cartes (genere depuis data/cards.json)
   main.js                Point d'entree : assemble Game + Renderer + InputController
   src/
-    constants.js          Constantes partagees (tailles de zones, helpers de faction)
+    constants.js          Constantes partagees (PV de depart, mana, capacite de plateau, helpers de joueur)
     Game.js               Orchestrateur (etat global, delegue tout le reste)
     core/
-      Card.js               Hierarchie Card -> UnitCard -> VehicleCard, ObjectCard
-      CardFactory.js         Factory Pattern : construit les Card depuis le JSON
-      CardInstance.js        Un exemplaire pose sur le plateau (etat mutable : PV, boucliers, statuts, hasAttacked)
-      Deck.js, Player.js, PlayerZones.js, CommunicationNetwork.js
+      Card.js               Hierarchie Card -> UnitCard, SpellCard
+      CardFactory.js         Factory Pattern : construit les Card depuis le JSON (champ "type")
+      CardInstance.js        Un exemplaire en main/plateau (etat mutable : PV, bonus de synergie,
+                              buffs de sort, mots-cles accordes, hasAttacked, summoningSick)
+      Deck.js, Player.js    Pioche, main, plateau, mana, PV de heros
+    synergy/
+      TribeSynergy.js        Strategy Pattern : une tribu -> un seuil -> un bonus d'attaque
+      SynergyResolver.js      Recalcule integralement les bonus a chaque changement de plateau
     effects/
-      EffectStrategy.js      Interface Strategy Pattern
-      EffectRegistry.js      Associe chaque carte objet a sa strategie
-      <NomEffet>.js           Une classe par objet de destabilisation (Os d'Attraction,
-                              Pelote de Laine, Mine Enterree, Fumigene, Barbeles,
-                              Radio/Cable de Campagne, Frappe Aerienne, Drapeau
-                              d'Objectif, Trousse de Secours, Sacs de Sable,
-                              Caisse de Ravitaillement) ; certaines exigent une
-                              cible explicite via `requiresTarget()`
-    combat/CombatMath.js      Calculs de degats purs (embuscade, effets a usage unique)
+      EffectStrategy.js      Interface Strategy Pattern (sorts)
+      EffectContext.js        Navigation partagee (cible alliee/ennemie, degats, soin, pioche...)
+      EffectRegistry.js       Associe chaque effetId de carte a sa strategie
+      TargetRef.js            Represente une cible : instanceId d'unite, ou "hero:<idJoueur>"
+      <NomEffet>.js           Une classe par sort (Soin Legere, Eclair Arcanique, Savoir Ancestral,
+                              Rang Serre, Jugement Royal)
     victory/
       VictoryCondition.js      Interface Strategy Pattern
-      <NomCondition>.js         Moral, Controle du Front via le drapeau
+      HeroVictoryCondition.js  Victoire quand les PV d'un joueur tombent a 0
       VictoryChecker.js         Composite qui interroge chaque condition
     commands/
       Command.js                Interface Command Pattern
-      <NomCommand>.js            Une classe par action joueur (Deployer, Avancer en
-                                 tranchee, Engager au front, Creuser un tunnel,
-                                 Surgir en embuscade, Attaquer une carte ou frapper
-                                 le camp adverse, Jouer un objet, Finir le tour)
+      PlayUnitCommand.js         Pose une unite (paiement du mana, plateau plein = refus)
+      PlaySpellCommand.js        Joue un sort, avec ciblage optionnel
+      AttackCommand.js           Attaque une unite ou frappe le heros adverse (Garde respectee)
+      EndTurnCommand.js          Passe au joueur suivant (mana, pioche, reinitialise les attaques)
     events/EventEmitter.js    Observer Pattern minimal (le moteur emet, l'UI ecoute)
   ui/
     Renderer.js             Traduit l'etat du jeu en DOM (jamais l'inverse)
@@ -70,49 +72,57 @@ app/
 - *Command Pattern* pour chaque action : `Game.execute(command)` reste une
   ligne, chaque action est testable isolement, et le journal de partie est
   un sous-produit naturel (chaque commande logge ce qu'elle fait).
-- *Strategy Pattern* pour les objets et les conditions de victoire :
-  ajouter une nouvelle carte objet ou une nouvelle regle de victoire ne
-  demande qu'une nouvelle classe + une ligne d'enregistrement, jamais de
-  toucher au moteur (principe ouvert/ferme).
+- *Strategy Pattern* pour les sorts, les conditions de victoire et les
+  synergies de tribu : ajouter une nouvelle carte, une nouvelle regle de
+  victoire ou une nouvelle tribu ne demande qu'une nouvelle classe (ou une
+  ligne de configuration) + un enregistrement, jamais de toucher au moteur
+  (principe ouvert/ferme).
 - *CardInstance* separe de *Card* : la Card est la definition figee (les
-  stats de base), l'instance porte l'etat mutable (PV restants, bouclier,
-  immobilisation...). Deux exemplaires de la meme carte peuvent donc avoir
-  des etats differents - indispensable des qu'un deck contient des doublons.
+  stats de base), l'instance porte l'etat mutable (PV restants, bonus de
+  synergie, buffs de sort, mots-cles accordes en jeu...). Deux exemplaires
+  de la meme carte peuvent donc avoir des etats differents - indispensable
+  des qu'un deck contient des doublons.
+- *SynergyResolver* recalcule toujours depuis zero (reset puis reapplique)
+  a chaque changement de plateau plutot que d'incrementer des compteurs :
+  reste correct quel que soit le nombre d'appels, et gere naturellement la
+  disparition d'un bonus quand une unite de la tribu meurt.
 - *Renderer* vs *InputController* : le premier ne fait que dessiner l'etat
   du jeu, le second possede la selection en cours et decide quoi faire des
   clics. Aucun des deux ne contient de regle de jeu.
 
 ## Mecaniques implementees
 
-- Plateau simplifie sans couloirs (Nord/Centre/Sud abandonnes) : chaque
-  camp a une Reserve, une Tranchee (4 emplacements caches) et un Front
-  **partage** ou les cartes se posent librement (capacite 5), plus un
-  tunnel optionnel.
-- Deploiement (main -> reserve), avancee reserve -> tranchee -> front.
-- Communication : une seule ligne partagee, active/coupee (bloque les
-  deplacements et les soutiens si coupee).
-- Combat manuel et cible : chaque carte au Front peut attaquer une fois
-  par tour une carte adverse au Front de son choix (degats mutuels, de
-  vrais points de vie qui s'accumulent d'un tour a l'autre, un bouclier
-  absorbe avant la vie reelle), ou frapper directement le moral adverse
-  si son Front est vide.
-- Tunnels : un sapeur peut creuser (1 par joueur), rester cache 2 tours
-  maximum, et surgir en embuscade (double degats au prochain combat).
-- Les objets du GDD sont simules : Os d'Attraction, Pelote de
-  Laine, Mine Enterree, Fumigene, Barbeles, Radio/Cable de Campagne,
-  Frappe Aerienne, Drapeau d'Objectif, Trousse de Secours, Sacs de Sable,
-  Caisse de Ravitaillement. Plusieurs exigent de designer explicitement
-  leur cible (Os d'Attraction, Sacs de Sable, Trousse de Secours, Caisse
-  de Ravitaillement, Frappe Aerienne) faute de couloir pour l'impliquer.
-- Deux conditions de victoire : moral a 0, controle cumule du Front
-  pendant 3 tours une fois le Drapeau d'Objectif joue.
+- Plateau simple façon Hearthstone : chaque joueur a une main, un plateau
+  unique (jusqu'a 7 unites), 30 PV de royaume, un mana qui augmente de 1
+  par tour (plafond 10) et se recharge integralement a chaque tour.
+- Pose d'unites (main -> plateau, paiement du mana) avec mal de
+  debarquement (pas d'attaque le tour ou l'unite est posee, sauf mot-cle
+  Charge).
+- Attaque manuelle et ciblee : chaque unite peut attaquer une fois par tour
+  une unite ennemie de son choix (degats mutuels, vrais points de vie), ou
+  frapper directement le heros adverse si aucune Garde adverse n'est en vie
+  (la Garde doit toujours etre ciblee en priorite).
+- Trois mots-cles : Garde (doit etre ciblee en priorite), Charge (peut
+  attaquer des sa pose), Bouclier (absorbe integralement le premier coup
+  recu).
+- Synergies de tribu façon TFT : Nobles, Robots et Sante octroient chacune
+  un bonus d'attaque a leurs unites des qu'un seuil de copies est atteint
+  sur le plateau (voir `docs/GAME_DESIGN.md` section 6).
+- Cinq sorts avec ciblage explicite ou global : Benediction Legere (soin),
+  Eclair Arcanique (degats), Savoir Ancestral (pioche), Rang Serre (buff +
+  Garde), Jugement Royal (destruction conditionnelle).
+- Une condition de victoire : les PV de royaume d'un joueur tombent a 0.
 
 ## Pas encore implemente
 
 - IA (le prototype est pense pour du pass-and-play a deux humains).
-- Deckbuilding (le deck de chaque camp est auto-compose de toutes ses
-  unites + les objets neutres/de sa faction).
+- Deckbuilding (chaque camp recoit automatiquement un miroir de toute la
+  collection : 2 exemplaires de chaque carte non-legendaire, 1 exemplaire
+  de chaque legendaire).
 - Multijoueur a distance.
-- Capacites passives des unites au-dela de leur cout/attaque/defense
-  (ex. le bonus d'attaque du Commandant n'est pas encore applique
-  automatiquement en combat).
+- Capacites textuelles propres a chaque carte au-dela des mots-cles
+  generiques (le champ `capacite` existe dans le schema de donnees mais
+  n'est pas encore exploite par le moteur).
+- Illustrations reelles des cartes (le champ `art` est `null` partout ;
+  les mini-cartes utilisent un placeholder colore par tribu en attendant
+  que les assets soient deposes dans `assets/cards/<tribu>/`).

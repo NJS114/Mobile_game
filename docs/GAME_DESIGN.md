@@ -1,168 +1,138 @@
-# Chiens vs Chats — Document de Design (GDD v0.1)
+# Paw & Claw — Document de Design (GDD v0.2)
 
-> Statut : premier jet consolidant le concept de plateau fourni + les mécaniques manquantes (tour de jeu, ressources, boutique, gacha). Les valeurs numériques sont des points de départ à équilibrer en playtest — elles sont marquées **[à tester]**.
+> Statut : v0.2 acte le pivot complet depuis le concept initial "Chiens vs Chats, guerre de tranchees 14-18" vers **Paw & Claw**, un jeu de cartes de royaume fantasy avec des principes proches de Hearthstone (mana, plateau, heros) et une touche de TFT (synergies de tribu). L'ancien concept de tranchees/tunnels/communication est abandonne ; l'historique complet de la v0.1 reste consultable dans les commits git anterieurs a ce pivot (`git log -- docs/GAME_DESIGN.md`). Les valeurs numeriques restent des points de depart a equilibrer en playtest, marquees **[a tester]**.
 
 ## 1. Pitch
 
-Un jeu de cartes tactique mobile en tranchées, "Chiens vs Chats" : deux factions s'affrontent sur un Front commun où les cartes se posent librement (plus de couloirs Nord/Centre/Sud, voir section 3), avec un système de tranchées cachées, de tunnels et d'une ligne de communication à couper ou réparer. Chaque faction a son identité de gameplay propre (les chats rappellent et protègent via la pelote de laine, les chiens sont perturbés par l'os d'attraction). Parties courtes (8–12 min), profondeur tactique, forte identité visuelle "cozy/goofy".
+**Paw & Claw** est un jeu de cartes tactique mobile de royaume fantasy peuple de chats et de chiens anthropomorphes, organises en **tribus** (Robots, Nobles, Sante, et d'autres a venir) plutot qu'en deux camps qui s'affrontent. Deux joueurs s'affrontent avec leurs propres decks piochant dans la meme collection : chacun pose des unites sur un plateau commun, gere son mana, et cherche a faire tomber les points de vie du royaume adverse a zero. Parties courtes (8-12 min), profondeur tactique via les synergies de tribu, forte identite visuelle "fantasy cozy" (voir section 2).
 
-Positionnement marché : plus proche d'un **Clash Royale / Hearthstone tactique** que d'un hyper-casual pur — bonne rétention long terme, session courte, mais demande un peu plus d'apprentissage. C'est un compromis assumé entre accessibilité mass-market et profondeur stratégique.
+Positionnement marche : **Hearthstone/Clash Royale tactique avec une touche TFT** (les synergies de tribu recompensent la coherence du deck, comme les traits d'une composition d'auto-battler) - bonne retention long terme, session courte, mais demande un peu plus d'apprentissage qu'un hyper-casual pur.
 
-**Direction artistique validée** : pastel cozy/goofy clair (cadres terracotta/sage, illustrations flat/thick-outline), pas une ambiance sombre façon Inscryption/Buckshot Roulette. Les assets d'ambiance sombre générés en exploration (`assets/dealer/`, `assets/cards/dos/`, `assets/decor/fond-sombre.png`, `assets/decor/lampe-suspendue.png`) sont conservés en réserve, non utilisés dans la direction actuelle — potentiellement réutilisables plus tard pour un mode/thème alternatif ou un événement spécial.
+**Direction artistique validee** : illustrations fantasy semi-realistes/anime, cadres dores ornementes, banniere de rarete en haut de carte (Commune / Rare / Epique / Legendaire), icone de cout en haut a gauche, blason de tribu en bas a gauche, citation en bas de carte. Univers de royaume (chateaux, cathedrales, forets enchantees) plutot que l'ambiance de tranchees 14-18 du concept precedent. Trois tribus etablies pour l'instant :
+- **Robots** — automates et gardiens mecaniques, identite plutot defensive (mot-cle Garde frequent).
+- **Nobles** — cour royale (pages, chevaliers, souverains), identite plutot offensive.
+- **Sante** — soigneurs et medecins de guerre, identite de soutien/resilience.
 
-**Mise en scène du combat** : format confirmé 1v1, guerre Chats contre Chiens. Le combat se joue visuellement **autour d'une table** plutôt que sur un plateau abstrait plein ecran — les cartes sont posees sur une table de guerre entre les deux camps. Les textures de table en bois (`assets/decor/table-bois-1.png`, `table-bois-2.png`) sont neutres et reutilisables dans la direction pastel pour habiller ce fond de table.
+Les illustrations concept-art existantes (chats/chiens en tranchees, decors sombres façon Inscryption) restent archivees dans `assets/` mais ne sont plus la direction active. Les nouvelles illustrations "Paw & Claw" fournies par l'equipe doivent etre deposees dans `assets/cards/<tribu>/` au fur et a mesure ; en attendant, les cartes du prototype utilisent un placeholder colore par tribu (voir `app/style.css`).
 
 ## 2. Boucle de jeu
 
-**Boucle de session (in-match)** : déployer → positionner (front/tranchée/tunnel) → gérer la communication → combattre → sécuriser un objectif → victoire/défaite.
+**Boucle de session (in-match)** : piocher → poser des unites (mana) → attaquer (unite contre unite, ou frappe directe du heros adverse) → activer des synergies de tribu → faire tomber les PV du royaume adverse.
 
-**Boucle méta (entre les matchs)** : jouer un match → gagner croquettes/poussière/XP → ouvrir une caisse ou craft une carte → améliorer/adapter son deck → rejouer.
-C'est cette boucle méta qui doit être répétitive et gratifiante — voir section 13 (Boutique & Gacha).
+**Boucle meta (entre les matchs)** : jouer un match → gagner des recompenses → ouvrir un coffre ou fabriquer une carte → ajuster son deck → rejouer. Voir section 12 (Boutique & Gacha).
 
-## 3. Plateau de jeu
+## 3. Regles de base (façon Hearthstone)
 
-**Simplification adoptée (remplace la version "3 couloirs Nord/Centre/Sud")** : plus de découpage en couloirs. Chaque camp a une seule Réserve, une seule Tranchée et un seul Front **partagé**, où les cartes sont posées librement — pas de case ni d'alignement strict entre elles. But : un plateau plus simple à lire sur mobile, sans perdre les mécaniques qui font l'identité du jeu (tranchée cachée, tunnel, communication).
+- Chaque joueur commence avec **30 PV de royaume** et une reserve de mana de **1**, qui augmente de 1 par tour jusqu'a **10 [a tester]** ; le mana se recharge integralement a chaque tour (il ne se cumule pas d'un tour a l'autre).
+- Chaque joueur pioche une carte au debut de son tour (sauf le tout premier tour de la partie, ou la main de depart suffit).
+- Le plateau est un **unique alignement partage par camp** (pas de couloirs ni de zones cachees) : jusqu'a **7 unites [a tester]** par joueur, toutes visibles en permanence. Seules les mains sont cachees (l'adversaire voit le nombre de cartes, pas leur contenu).
+- Une unite posee souffre du **mal de debarquement** : elle ne peut pas attaquer le tour ou elle est jouee, sauf si elle a le mot-cle **Charge**. A partir du tour suivant, elle peut attaquer une fois par tour.
 
-| Camp chat | Tranchée chat | Communication | Front (cartes libres) | Tranchée chien | Camp chien |
-|---|---|---|---|---|---|
-| Réserve | 4 cartes cachées max | Une seule ligne, partagée | Jusqu'à 5 cartes par camp | 4 cartes cachées max | Réserve |
+## 4. Deroulement d'un tour
 
-Chaque joueur possède : une Réserve, une Tranchée (4 emplacements **[à tester]**), un Front (capacité 5 **[à tester]**) et un tunnel optionnel (1 seul). La communication est désormais une seule ligne partagée par les deux camps (voir section 7).
+1. **Debut de tour** — le mana du joueur actif augmente d'un cran (sauf sur son tout premier tour) puis se recharge au maximum ; il pioche une carte ; ses unites deja en jeu redeviennent capables d'attaquer.
+2. **Phase d'action** — dans l'ordre de son choix, le joueur actif peut :
+   - poser une unite de sa main sur le plateau (cout = cout en mana de la carte, plateau limite a 7 unites) ;
+   - jouer un sort de sa main (cout en mana ; certains sorts demandent de designer une cible, alliee ou ennemie selon le sort) ;
+   - **attaquer** : chaque unite posee depuis au moins un tour peut attaquer une fois par tour une unite ennemie de son choix (degats mutuels), ou frapper directement le heros adverse si aucune unite adverse ayant la **Garde** n'est en vie (une Garde doit toujours etre ciblee en priorite, comme un Taunt).
+3. **Fin de tour** — le tour passe au joueur suivant.
 
-## 4. Déroulement d'un tour
+Une partie dure typiquement 8-14 tours par joueur.
 
-Système **tour par tour alterné** (plus lisible sur mobile qu'un temps réel, et compatible avec l'information cachée des tranchées) :
+## 5. Cartes — statistiques et mots-cles communs
 
-1. **Phase de ravitaillement** — le joueur actif gagne des Points de Ravitaillement (PR), sa ressource pour jouer des cartes. PR de départ : 3, +1 par tour, plafond 10 **[à tester]** (courbe façon Hearthstone/Clash Royale).
-2. **Phase d'action** — avec ses PR, le joueur peut, dans n'importe quel ordre :
-   - déployer une carte de sa main vers la Réserve (coût = coût de la carte) ;
-   - avancer une carte Réserve → Tranchée, puis Tranchée → Front ;
-   - faire creuser un tunnel par un Sapeur depuis la Tranchée ;
-   - jouer un objet de déstabilisation (coût en PR, certains demandent de désigner une carte cible) ;
-   - **attaquer** : chaque carte au Front peut attaquer une fois par tour une carte adverse de son choix au Front (combat mutuel, les deux cartes encaissent des dégâts), ou frapper directement le camp adverse si son Front est vide.
-3. **Fin de tour** — vérification des conditions de victoire, sortie forcée d'un tunnel occupé depuis plus de 2 tours, passage au joueur suivant.
+Toute carte **unite** possede : **Tribu** (Robots / Nobles / Sante / ...), **Cout** (mana), **Attaque**, **Points de vie**, **Rarete** (Commune, Rare, Epique, Legendaire), une liste de **mots-cles**, et un texte de capacite/une citation d'ambiance.
 
-Une partie dure typiquement 10–16 tours par joueur.
+Mots-cles implementes dans le prototype :
+- **Garde** — doit etre ciblee en priorite avant que son controleur puisse etre attaque directement.
+- **Charge** — peut attaquer des le tour ou elle est posee (ignore le mal de debarquement).
+- **Bouclier** (bouclier divin) — absorbe integralement les degats de la premiere attaque recue, puis disparait.
 
-## 5. Cartes — statistiques communes
+Toute carte **sort** possede : **Cout**, **Rarete**, un **effet** (implemente via une strategie dediee, voir `app/README.md`), et peut exiger une cible (alliee ou ennemie selon le sort).
 
-Toute carte unité possède : **Faction** (Chat/Chien), **Coût** (PR), **Attaque**, **Points de vie**, **Rôle** (Assaut, Défense, Soutien, Sapeur, Éclaireur), **Rareté** (Commune, Rare, Épique, Légendaire), et un texte de capacité.
+Deck (prototype) : sans systeme de deckbuilding pour l'instant, chaque joueur recoit automatiquement **2 exemplaires de chaque carte non-legendaire et 1 exemplaire de chaque legendaire** de la collection complete (miroir de collection). Un vrai deckbuilding (30 cartes choisies par le joueur, memes limites de copies) est prevu en V2 — voir section 14.
 
-Deck : 24 cartes **[à tester]**, maximum 3 exemplaires d'une même carte (2 pour les Épiques, 1 pour les Légendaires), construit à partir de la collection du joueur.
+## 6. Synergies de tribu (façon TFT)
 
-## 6. Zones — règles détaillées
+Chaque tribu octroie un bonus d'attaque a toutes ses unites en jeu des qu'un seuil de copies de cette tribu est atteint sur le plateau du meme joueur — comme les traits d'une composition TFT, sans plateau d'auto-battler ni de phase d'achat :
 
-### Front
-- Cartes visibles.
-- Peuvent attaquer directement l'ennemi, avancer vers sa base, capturer un objectif, protéger les cartes derrière elles.
+| Tribu | Seuil | Bonus | Identite |
+|---|---|---|---|
+| Nobles | 2 unites Nobles en jeu | +1 attaque a chaque Noble | Offensive, facile a declencher |
+| Robots | 2 unites Robots en jeu | +2 attaque a chaque Robot | Gardiens qui frappent fort une fois masses |
+| Sante | 3 unites Sante en jeu | +2 attaque a chaque unite Sante | Seuil plus dur, recompense un deck concentre |
 
-### Tranchée (4 emplacements)
-- Une seule Tranchée par joueur (partagée, plus de découpage par couloir), avec 4 emplacements cachés **[à tester]**.
-- Cartes placées face cachée possibles.
-- Protégées des attaques normales, mais vulnérables à : attaque aérienne, artillerie, mine, effet de révélation.
-- Médecins, radios et commandants peuvent soutenir le Front depuis la Tranchée **si la communication est active**.
+Le bonus est recalcule integralement a chaque changement de plateau (unite posee ou detruite) : il n'est jamais cumule d'un recalcul a l'autre, et disparait immediatement si le nombre d'unites de la tribu repasse sous le seuil. Ajouter une nouvelle tribu ne demande qu'une ligne de configuration (voir `SynergyResolver` dans `app/README.md`), sans toucher au moteur — ouvert a l'ajout de synergies plus variees (soin, pioche, degats de zone...) en V2.
 
-### Tunnel (1 par joueur)
-- Les Sapeurs peuvent creuser un passage sous le champ de bataille.
-- Une carte en tunnel : ne peut pas être attaquée normalement, peut se déplacer vers une autre zone, peut apparaître derrière les lignes ennemies, peut déclencher une embuscade.
-- Limites anti-abus : un seul tunnel par joueur (plus de tunnel par couloir) ; une carte ne peut pas rester cachée plus de **2 tours [à tester]** avant de devoir ressortir.
+## 7. Conditions de victoire
 
-### Réserve
-- Zone de stockage des cartes déployées mais pas encore engagées. Capacité **illimitée dans le prototype actuel** ; une limite **[à tester : 3 emplacements]** reste une piste d'équilibrage si la Réserve s'avère trop confortable en playtest.
+Une seule condition pour l'instant, deliberement simple (le concept precedent avait un objectif "Drapeau"/controle de zone qui n'a plus de sens sans couloirs) :
+- **Le royaume adverse tombe a 0 PV ou moins.**
 
-## 7. Communication (câbles)
+D'autres conditions (fatigue en cas de pioche a vide, objectifs annexes) pourront etre ajoutees en V2 sans toucher au moteur, grace au Composite Pattern deja en place (`VictoryChecker`).
 
-**Simplification adoptée** : plus de câble par couloir — une seule ligne de communication, partagée par les deux camps, avec deux états (plus d'état intermédiaire "en réparation" dans le prototype) :
-- 🟢 **Actif** : buffs, soins, ordres, déplacements Réserve↔Tranchée↔Front, capacités de commandant/radio disponibles.
-- 🔴 **Coupé** : plus de buffs, plus de soins vers le Front, plus de renforts, plus d'ordres depuis la Tranchée ; les unités déjà présentes peuvent quand même attaquer/défendre.
+## 8. Exemple de tour
 
-**Peut être coupé par** : saboteur, mine spéciale, bombardement, carte de brouillage radio, attaque du relais.
-**Peut être réparé par** : médecin (capacité spéciale), opérateur radio, messager, sapeur, carte "câble de campagne" (Radio de campagne).
+1. Le joueur actif commence son tour : son mana passe de 2 a 3 et se recharge, il pioche une carte.
+2. Il pose un Chambellan (Noble, cout 2) sur le plateau ; il a deja un Jeune Noble en jeu, donc les deux gagnent +1 attaque grace a la synergie Nobles.
+3. Une unite posee au tour precedent (donc plus malade du debarquement) attaque : l'adversaire n'a pas de carte Garde en jeu, elle frappe directement son heros.
+4. Il joue le sort Eclair Arcanique (cout 2) en ciblant une unite ennemie, lui infligeant 3 degats.
+5. Il termine son tour ; c'est au tour de l'adversaire.
 
-## 8. Objets de déstabilisation
+## 9. Catalogue de cartes (prototype)
 
-| Objet | Effet |
-|---|---|
-| Os d'attraction | Fait reculer une carte chien d'une case et lui fait perdre son action. |
-| Pelote de laine | Rappelle une carte chat depuis la réserve ou la tranchée et lui donne un petit bouclier. |
-| Mine enterrée | Inflige des dégâts et immobilise la première carte qui avance sur la case. |
-| Fumigène | Empêche les attaques à distance pendant un tour. |
-| Caisse de ravitaillement | Rend de la vie ou récupère une ressource. |
-| Barbelés | Bloque le déplacement d'une carte pendant un tour. |
-| Radio de campagne | Répare une communication coupée. |
-| Frappe aérienne | Touche le front et révèle une carte cachée dans une tranchée. |
-| Char blindé | Protège les cartes alliées derrière lui et avance lentement. |
-| Drapeau d'objectif | Donne des points si une équipe le contrôle pendant un tour. |
+Le prototype embarque un premier lot representatif du catalogue "Paw & Claw" — 6 unites par tribu (une par palier de cout 1 a 6, rarete croissante) et 5 sorts — voir `data/cards.json` et `app/README.md`. Ce lot sert a valider le moteur et l'UI ; le catalogue complet illustre par l'equipe (dizaines de cartes par tribu, plusieurs legendaires par tribu) doit etre transcrit progressivement dans `data/cards.json` au fur et a mesure que ses statistiques sont choisies et testees, en suivant le meme schema de champs (`tribu`, `cout`, `attaque`, `pv`, `motscles`, `rarete`, `citation`, `art`).
 
-L'Os et la Pelote ne suppriment jamais une carte définitivement — ils la font reculer, lui font perdre son action, ou la rappellent vers une autre zone. Objectif : de la déstabilisation, pas de la frustration.
+## 10. Progression joueur (hors match)
 
-**Ciblage explicite** : sans couloirs pour désigner implicitement "la" carte concernée, plusieurs objets demandent maintenant de choisir explicitement leur cible au moment d'être joués (Os d'attraction, Sacs de sable, Trousse de secours, Caisse de ravitaillement, Frappe aérienne). Les autres agissent globalement (Mine enterrée pose un piège partagé, Fumigène et Radio de campagne agissent sur l'unique ligne de communication, Drapeau d'objectif active le suivi de contrôle du Front).
+- **Rangs saisonniers** a theme royaume (Ecuyer → ... → Souverain Legendaire).
+- **Missions quotidiennes/hebdomadaires** : source principale de monnaie douce et d'eclats de craft.
+- **Album de collection** : toutes les cartes du jeu visibles, y compris celles pas encore debloquees (silhouette grisee) — moteur de FOMO doux et d'objectif long terme.
+- **Guildes** *(V2)* : entraide (dons de cartes communes/rares), defis cooperatifs, classement de guilde.
 
-**Suggestion d'équilibrage des factions** *(à valider)* : pour une identité symétrique, on pourrait donner aux Chiens un objet miroir de la Pelote (ex. "Balle qui rebondit" : rappelle une carte chien avec un petit bonus), et aux Chats un objet miroir de l'Os que les Chiens retourneraient contre eux (ex. "Sifflet à ultrasons" : désoriente une carte chat). À trancher ensemble si tu veux garder l'asymétrie actuelle (chats = rappel/soutien, chiens = subissent la distraction) ou aller vers une symétrie plus classique de TCG compétitif.
+## 11. Boutique & Gacha
 
-## 9. Conditions de victoire
-
-Victoire par objectifs (pas seulement par destruction). Avec un seul Front partagé (plus de couloirs), la condition "contrôler plusieurs fronts" n'a plus de sens et a été retirée ; il reste deux conditions, implémentées dans le prototype (`app/src/victory/`) :
-- Faire tomber le moral adverse à zéro (jauge qui descend en perdant des unités/zones) ;
-- Une fois le Drapeau d'objectif joué, contrôler le Front (occuper le Front pendant que le Front adverse est vide) pendant un nombre de tours cumulés **[à tester : 3 tours]**.
-
-Une unité qui atteint la base ennemie déclenche déjà une frappe directe sur le moral adverse (voir section 4, "attaquer") plutôt qu'une condition de victoire séparée.
-
-## 10. Exemple de tour (adapté au plateau simplifié)
-
-1. Le joueur chat coupe la communication (ligne unique, partagée).
-2. Les cartes chiens de la Tranchée ne peuvent plus renforcer le Front tant que la ligne est coupée.
-3. Le joueur pose une mine enterrée sur le Front.
-4. Un chien avance en Front et déclenche la mine.
-5. Le joueur chat fait sortir un soldat de sa Tranchée par un tunnel.
-6. Le joueur chat désigne une carte chien au Front et l'attaque (combat mutuel).
-7. Le chien utilise un messager pour réparer sa communication.
-
-## 11. Progression joueur (hors match)
-
-- **Rangs saisonniers** à thème militaire-animalier amusant (Chaton Recrue → ... → Général 5 Étoiles).
-- **Missions quotidiennes/hebdomadaires** : source principale de monnaie douce et de poussière de craft.
-- **Album de collection** : toutes les cartes du jeu visibles, y compris celles pas encore débloquées (silhouette grisée) — moteur de FOMO doux et d'objectif long terme.
-- **Escouades/Clans** *(V2)* : entraide (dons de cartes communes/rares), défis coopératifs, classement de clan.
-
-## 12. Boutique & Gacha
-
-### 12.1 Monnaies
+### 11.1 Monnaies
 
 | Monnaie | Type | Obtention | Usage |
 |---|---|---|---|
-| Croquettes 🦴 | Douce (gratuite) | Victoires, missions, quêtes de campagne | Caisses communes, craft, XP de carte |
-| Médailles ⭐ | Dure (payante ou événementielle) | Achat réel, pass de combat, événements rares | Caisses premium, cosmétiques, skip de timers |
-| Poussière de guerre ✨ | Craft | Doublons de cartes convertis automatiquement | Craft ciblé d'une carte précise manquante |
+| Couronnes 👑 | Douce (gratuite) | Victoires, missions, quetes de campagne | Coffres communs, craft, XP de carte |
+| Gemmes 💎 | Dure (payante ou evenementielle) | Achat reel, pass de combat, evenements rares | Coffres premium, cosmetiques, skip de timers |
+| Eclats Arcanes ✨ | Craft | Doublons de cartes convertis automatiquement | Craft cible d'une carte precise manquante |
 
-### 12.2 Caisses (gacha)
+### 11.2 Coffres (gacha)
 
-- **Caisse de Ravitaillement (Commune)** — prix en Croquettes, contenu majoritairement Commune/Rare.
-- **Caisse Tactique (Rare)** — prix mixte, garantit au moins 1 carte Rare+.
-- **Caisse d'État-Major (Légendaire)** — prix en Médailles ou récompense d'événement, garantit 1 Épique/Légendaire.
-- **Système de pity** : compteur de tirages sans Légendaire ; garantie automatique au bout de **50 tirages [à tester]** — évite la frustration pure RNG, standard du genre.
-- **Anti-doublon** : toute carte déjà possédée au niveau max se convertit en Poussière plutôt que d'être un tirage "perdu".
+- **Coffre du Village (Commun)** — prix en Couronnes, contenu majoritairement Commune/Rare.
+- **Coffre de la Guilde (Rare)** — prix mixte, garantit au moins 1 carte Rare+.
+- **Coffre Royal (Legendaire)** — prix en Gemmes ou recompense d'evenement, garantit 1 Epique/Legendaire.
+- **Systeme de pity** : compteur de tirages sans Legendaire ; garantie automatique au bout de **50 tirages [a tester]**.
+- **Anti-doublon** : toute carte deja possedee au niveau max se convertit en Eclats plutot que d'etre un tirage "perdu".
 
-### 12.3 Structure de la boutique (onglets)
+### 11.3 Structure de la boutique (onglets)
 
-1. **Vitrine du jour** — 3-4 offres en rotation 24h, prix réduits, crée une raison de revenir chaque jour.
-2. **Caisses de cartes** — les 3 caisses ci-dessus.
-3. **Pass de Combat saisonnier** — piste gratuite + piste premium (payante), débloque cosmétiques et cartes exclusives **non plus puissantes**, juste des skins/cadres/avatars — ex. réutiliser la direction artistique déjà validée (variantes "goofy" alternatives d'une même unité, cadres de rareté animés).
-4. **Boutique cosmétique** — skins de cartes, thèmes de plateau, effets visuels du câble de communication (vert/rouge/clignotant stylisés), animations spéciales de tranchée/tunnel.
-5. **Pack de démarrage** — offre unique à prix cassé pour les nouveaux joueurs, non répétable, best-in-class pour la conversion J1.
-6. **Craft** — dépenser la Poussière pour fabriquer directement une carte précise, sans dépendre du hasard.
+1. **Vitrine du jour** — 3-4 offres en rotation 24h, prix reduits, cree une raison de revenir chaque jour.
+2. **Coffres de cartes** — les 3 coffres ci-dessus.
+3. **Pass de Combat saisonnier** — piste gratuite + piste premium (payante), debloque cosmetiques et cartes exclusives **non plus puissantes**, juste des skins/cadres/avatars.
+4. **Boutique cosmetique** — skins de cartes, themes de plateau, effets visuels de mana, animations speciales de synergie de tribu.
+5. **Pack de demarrage** — offre unique a prix casse pour les nouveaux joueurs, non repetable.
+6. **Craft** — depenser les Eclats Arcanes pour fabriquer directement une carte precise, sans dependre du hasard.
 
-### 12.4 Garde-fous anti-P2W (important pour la réputation mass-market)
+### 11.4 Garde-fous anti-P2W
 
-- Toute carte obtenue en caisse reste **atteignable en jouant** (poussière gagnable gratuitement, juste plus lentement).
-- Les cartes Légendaires sont **situationnelles/polyvalentes**, pas strictement plus fortes stat pour stat — pas de power creep pur payant.
-- **Matchmaking basé sur le niveau moyen de collection du deck**, jamais sur l'argent dépensé.
-- Le **cosmétique est le principal levier de monétisation** sans impact sur le gameplay (skins, cadres, effets de câble, animations de victoire).
+- Toute carte obtenue en coffre reste **atteignable en jouant** (eclats gagnables gratuitement, juste plus lentement).
+- Les cartes Legendaires sont **situationnelles/polyvalentes**, pas strictement plus fortes stat pour stat.
+- **Matchmaking base sur le niveau moyen de collection du deck**, jamais sur l'argent depense.
+- Le **cosmetique est le principal levier de monetisation** sans impact sur le gameplay.
 
-## 13. Prochaines étapes
+## 12. Historique du pivot
 
-- Valider/ajuster les valeurs marquées **[à tester]** (PR, taille de deck, limites de tunnel, seuils de pity).
-- Trancher la question de symétrie Os/Pelote (section 8).
-- ~~Définir la liste initiale de cartes~~ → fait, voir `data/cards.json` et `docs/CARTES.md`.
-- Maquetter la boutique et l'écran de tirage (gacha) dans le canvas de design, dans le même style visuel que les cartes déjà validées.
-- ~~Décider du moteur technique~~ → HTML/CSS/JS pur (modules ES, pas de build), voir `app/` : prototype v1 jouable en pass-and-play à deux. Architecture orientée objet (Strategy/Command/Factory/Observer, voir `app/README.md`), mécaniques complètes : déploiement, tunnels avec embuscade, communication, combat ciblé (attaque manuelle carte contre carte, ou frappe directe du camp adverse) avec vrais points de vie, les objets du GDD, et 2 conditions de victoire (moral, contrôle du Front via le drapeau). Reste à faire : IA, deckbuilding, multijoueur distant, capacités passives des unités (ex. bonus du Commandant) au-delà de leurs stats de base.
+La version v0.1 de ce document decrivait un jeu de guerre de tranchees 14-18 "Chats vs Chiens" avec couloirs Nord/Centre/Sud, tranchees cachees, tunnels et cables de communication a couper/reparer. Ce concept a ete entierement remplace par Paw & Claw suite a un changement de direction artistique (voir les mockups de cartes fantasy fournis) et une demande explicite de simplifier les mecaniques vers un modele Hearthstone classique avec une touche TFT (synergies de tribu). Le code de l'ancien prototype (tranchees, tunnels, communication, drapeau d'objectif) a ete entierement retire de `app/src/` ; son historique reste consultable dans les commits git anterieurs a ce pivot.
+
+## 13. Prochaines etapes
+
+- Deposer les illustrations "Paw & Claw" fournies dans `assets/cards/<tribu>/` et les relier aux entrees de `data/cards.json` (`art`).
+- Transcrire progressivement le reste du catalogue illustre (Nobles, Robots, Sante, futures tribus) dans `data/cards.json`, en choisissant des statistiques testees plutot qu'en devinant.
+- Valider/ajuster les valeurs marquees **[a tester]** (paliers de mana, capacite de plateau, seuils de synergie, seuil de pity).
+- Deckbuilding reel (le joueur choisit 30 cartes parmi sa collection, avec limites de copies) plutot que le miroir de collection automatique du prototype.
+- Maquetter la boutique et l'ecran de tirage (gacha) dans le canvas de design, dans le style "Paw & Claw" (cadres dores, bannieres de rarete).
+- Prototype technique : HTML/CSS/JS pur (modules ES, pas de build), voir `app/`. Architecture orientee objet (Command/Strategy/Factory/Observer/Composite, voir `app/README.md`), mecaniques completes : pose d'unites, mana, attaque ciblee avec Garde/Charge/Bouclier, 5 sorts, synergies de tribu, victoire par PV de heros. Reste a faire : IA, deckbuilding, multijoueur distant, capacites textuelles propres a chaque carte au-dela des mots-cles generiques.

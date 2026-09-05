@@ -1,63 +1,59 @@
-# Liste des cartes — v0.1
+# Liste des cartes — v0.2 (Paw & Claw)
 
-> Source de verite : [`data/cards.json`](../data/cards.json). Ce document est une vue lisible de ce fichier ; toute modification de contenu doit se faire d'abord dans le JSON. Les valeurs sont des points de depart a equilibrer en playtest.
+> Source de verite : [`data/cards.json`](../data/cards.json). Ce document est une vue lisible de ce fichier ; toute modification de contenu doit se faire d'abord dans le JSON, puis regenerer `app/cards-data.js` (voir `app/README.md`). Les valeurs sont des points de depart a equilibrer en playtest, marquees **[a tester]**.
+>
+> Ce lot de 23 cartes est un premier echantillon representatif du catalogue "Paw & Claw" (voir `docs/GAME_DESIGN.md`), pas le catalogue final : le reste des cartes illustrees par l'equipe doit etre transcrit ici au meme format au fur et a mesure que ses statistiques sont choisies.
 
-## Unites — Chats (10)
+## Unites — Robots (6)
 
-| Carte | Role | Trait | Rarete | Cout | ATQ | DEF | Capacite |
-|---|---|---|---|---|---|---|---|
-| Tom le Flemmard | Assaut | Sol | Commune | 3 | 4 | 6 | — |
-| Infirmiere Miaou | Soutien | Sol | Commune | 3 | 1 | 5 | Soigne le front depuis la tranchee (communication active) |
-| Mecano Roux | Soutien | Sol | Commune | 2 | 1 | 4 | Repare un cable, ou +2 DEF a un vehicule allie |
-| Canonnier Sphinx | Artillerie | Sol | Rare | 5 | 6 | 3 | Cible une carte cachee en tranchee adverse |
-| Sapeur Noiraud | Sapeur | Sol | Commune | 4 | 2 | 5 | Peut creuser un tunnel |
-| Operateur Radio Gris | Soutien | Sol | Commune | 3 | 1 | 4 | Repare un cable instantanement |
-| Capitaine Fourrure | Commandant | Sol | Epique | 6 | 3 | 7 | +1 ATQ a la ligne (communication active) |
-| Griffe Rapide | Assaut | Sol | Rare | 4 | 6 | 4 | Attaque deux fois par tour |
-| Capitaine Minou | Pilote | Volant | Rare | 5 | 5 | 4 | Ignore les tranchees, frappe le front direct |
-| Guetteur Tigre | Eclaireur | Sol | Commune | 2 | 2 | 3 | Revele une carte cachee adverse |
-
-## Unites — Chiens (7)
-
-| Carte | Role | Trait | Rarete | Cout | ATQ | DEF | Capacite |
-|---|---|---|---|---|---|---|---|
-| Buddy | Soutien | Sol | Commune | 2 | 1 | 3 | Deplace une carte reserve→tranchee gratuitement, ou repare un cable |
-| Sergent Bouledogue | Assaut | Sol | Rare | 5 | 7 | 5 | Degats de zone sur une tranchee adverse |
-| Beagle Fureteur | Eclaireur | Sol | Commune | 2 | 2 | 3 | Revele une carte cachee adverse |
-| Lieutenant Husky | Pilote | Volant | Rare | 5 | 5 | 4 | Ignore les tranchees, frappe le front direct |
-| Rex le Baveux | Sapeur | Sol | Rare | 4 | 3 | 8 | Peut creuser un tunnel |
-| Dalmatien Transmission | Soutien | Sol | Commune | 3 | 1 | 4 | Repare un cable instantanement |
-| General Berger | Commandant | Sol | Epique | 6 | 3 | 7 | +1 ATQ a la ligne (communication active) |
-
-**Trous a combler cote chien** (pas encore d'illustration) : Medecin, Mecanicien, Fusilier de base, Artilleur.
-
-## Objets (12)
-
-| Carte | Faction | Cout | Rarete | Effet | Illustration |
-|---|---|---|---|---|---|
-| Os d'Attraction | Chat | 1 | Commune | Recule une carte chien d'une case, lui fait perdre son action | a generer |
-| Pelote de Laine | Chat | 1 | Commune | Rappelle une carte chat (reserve/tranchee) + petit bouclier | a generer |
-| Mine Enterree | Neutre | 2 | Commune | Degats + immobilise la 1ere carte qui avance sur la case | ✅ |
-| Fumigene | Neutre | 2 | Commune | Bloque les attaques a distance sur la ligne (1 tour) | a generer |
-| Caisse de Ravitaillement | Neutre | 1 | Commune | Soigne ou donne une ressource | ✅ |
-| Barbeles | Neutre | 1 | Commune | Bloque le deplacement d'une carte ennemie (1 tour) | a generer |
-| Radio de Campagne | Neutre | 2 | Rare | Repare une communication coupee | ✅ |
-| Frappe Aerienne | Neutre | 5 | Epique | Touche le front + revele une carte cachee adverse | a generer |
-| Cable de Campagne | Neutre | 2 | Rare | Repare une communication coupee (variante) | ✅ |
-| Drapeau d'Objectif | Neutre | 3 | Rare | Points de victoire si controle pendant un tour | ✅ |
-| Trousse de Secours | Neutre | 1 | Commune | Soigne completement une carte du front | ✅ |
-| Sacs de Sable | Neutre | 1 | Commune | +2 DEF temporaire a une carte alliee | ✅ |
-
-## Vehicules (2)
-
-| Carte | Trait | Rarete | Cout | ATQ | DEF | Capacite |
+| Carte | Cout | ATQ | PV | Rarete | Mots-cles | Citation |
 |---|---|---|---|---|---|---|
-| Bouledozer (Char) | Sol | Legendaire | 7 | 8 | 12 | Protege les allies derriere lui (-2 degats subis) |
-| Le Zephyr (Avion) | Volant | Epique | 6 | 7 | 5 | Ignore les tranchees, frappe le front direct |
+| Petit Automate | 1 | 1 | 3 | Commune | Garde | Petit mais increvable. |
+| Sentinelle a Ressort | 2 | 2 | 3 | Commune | — | Toujours prete a bondir. |
+| Golem d'Horlogerie | 3 | 2 | 5 | Rare | Garde | Chaque rouage compte. |
+| Ingenieure Renarde | 4 | 4 | 4 | Rare | — | Elle repare ce que la guerre casse. |
+| Automate de Siege | 5 | 5 | 6 | Epique | Garde | Un mur qui avance. |
+| Gardien Botanique | 6 | 5 | 8 | Legendaire | Garde | Il prend soin du petit au grand, pour un monde plus serein. |
+
+## Unites — Nobles (6)
+
+| Carte | Cout | ATQ | PV | Rarete | Mots-cles | Citation |
+|---|---|---|---|---|---|---|
+| Jeune Noble | 1 | 1 | 2 | Commune | — | De grands reves pour demain. |
+| Chambellan | 2 | 2 | 2 | Commune | — | L'ordre fait la grandeur. |
+| Comtesse Elegante | 3 | 2 | 4 | Rare | — | La grace est une forme de pouvoir. |
+| Chevalier Royal | 4 | 4 | 4 | Rare | Garde | L'honneur guide chacun de mes pas. |
+| Roi Protecteur | 5 | 4 | 6 | Epique | — | Ecouter. Comprendre. Agir pour tous. |
+| Souveraine Aurelia | 6 | 5 | 7 | Legendaire | Bouclier | Elle eclaire les chemins, meme dans l'ombre. |
+
+## Unites — Sante (6)
+
+| Carte | Cout | ATQ | PV | Rarete | Mots-cles | Citation |
+|---|---|---|---|---|---|---|
+| Infirmiere Souris | 1 | 1 | 2 | Commune | — | Toujours la premiere sur le terrain. |
+| Brancardier Beagle | 2 | 1 | 4 | Commune | — | Personne n'est laisse derriere. |
+| Eclaireur Convalescent | 3 | 2 | 4 | Rare | — | Gueri, mais pas oublie. |
+| Mediatrice Maine Coon | 4 | 3 | 5 | Epique | — | Elle apaise les tempetes et rassemble les coeurs. |
+| Sage Siamois | 5 | 3 | 6 | Epique | — | Il percoit la douleur meme dans le silence. |
+| Archidruide Felin | 6 | 4 | 7 | Legendaire | Bouclier | Elle guerit au-dela des blessures, et rappelle que l'espoir existe toujours. |
+
+## Sorts (5)
+
+| Carte | Cout | Rarete | Cible | Effet |
+|---|---|---|---|---|
+| Benediction Legere | 1 | Commune | Alliee (unite ou heros) | Rend 3 PV a la cible. |
+| Eclair Arcanique | 2 | Commune | Ennemie (unite ou heros) | Inflige 3 degats a la cible. |
+| Savoir Ancestral | 2 | Rare | Aucune | Fait piocher 2 cartes. |
+| Rang Serre | 3 | Rare | Unite alliee | Donne Garde et +2 PV a la cible. |
+| Jugement Royal | 5 | Epique | Unite ennemie de cout ≤ 3 | Detruit la cible. |
+
+## Synergies de tribu
+
+Voir `docs/GAME_DESIGN.md` section 6 pour le detail : Nobles (+1 ATQ des 2 en jeu), Robots (+2 ATQ des 2 en jeu), Sante (+2 ATQ des 3 en jeu).
 
 ## A faire
 
-- Generer les illustrations manquantes : Os d'Attraction, Pelote de Laine, Fumigene, Barbeles, Frappe Aerienne.
-- Completer le roster chien (medecin, mecanicien, fusilier de base, artilleur) pour equilibrer avec les 10 cartes chat.
-- Trancher la question de symetrie Os/Pelote (voir `GAME_DESIGN.md` section 8).
+- Deposer les illustrations reelles dans `assets/cards/<tribu>/` et renseigner le champ `art` de chaque carte (actuellement `null` partout, en attente).
+- Transcrire le reste du catalogue illustre (autres cartes Nobles/Robots/Sante deja concues, et toute nouvelle tribu) avec des statistiques testees.
+- Ecrire des capacites textuelles propres a certaines cartes au-dela des mots-cles generiques (le champ `capacite` existe deja dans le schema mais n'est pas encore exploite par le moteur).
 - Playtester les couts/stats — tout est marque comme point de depart, pas final.

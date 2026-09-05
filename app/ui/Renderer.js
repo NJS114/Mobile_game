@@ -1,3 +1,5 @@
+import { otherPlayer } from "../src/constants.js";
+
 // Responsabilite unique : transformer l'etat du jeu en DOM. Ne modifie
 // jamais l'etat, ne sait pas ce qu'est une Command - elle se contente
 // d'appeler les callbacks qu'on lui donne quand l'utilisateur clique.
@@ -8,104 +10,80 @@ export class Renderer {
 
   render(game, ui, callbacks) {
     this.renderTopbar(game);
-    this.renderComm(game);
-    this.renderSide(this.dom.enemySide, game, this.enemyFaction(game), ui, callbacks);
-    this.renderSide(this.dom.ownSide, game, game.active, ui, callbacks);
+    this.renderEnemyHand(game);
+    this.renderBoard(this.dom.enemyBoard, game, otherPlayer(game.active), ui, callbacks);
+    this.renderBoard(this.dom.ownBoard, game, game.active, ui, callbacks);
     this.renderHand(game, ui, callbacks);
     this.renderLog(game);
-  }
-
-  enemyFaction(game) {
-    return game.active === "chat" ? "chien" : "chat";
+    this.bindHeroes(game, ui, callbacks);
   }
 
   renderTopbar(game) {
-    this.dom.moralChat.textContent = game.players.chat.moral;
-    this.dom.moralChien.textContent = game.players.chien.moral;
-    this.dom.prBadge.textContent = `PR ${game.activePlayer.pr}/10`;
-    this.dom.turnInfo.textContent = `Tour ${game.turn} - ${game.activeFactionLabel}`;
+    this.dom.hpJoueur1.textContent = game.players.joueur1.hp;
+    this.dom.hpJoueur2.textContent = game.players.joueur2.hp;
+    const player = game.activePlayer;
+    this.dom.manaBadge.textContent = `Mana ${player.mana}/${player.manaCap}`;
+    this.dom.turnInfo.textContent = `Tour ${game.turn} - ${game.activeLabel}`;
   }
 
-  renderComm(game) {
-    const active = game.comm.isActive();
-    this.dom.commBar.className = `comm-global ${active ? "comm-active" : "comm-cut"}`;
-    this.dom.commBar.textContent = active ? "Communication : ACTIVE" : "Communication : COUPEE";
+  renderEnemyHand(game) {
+    const enemy = game.players[otherPlayer(game.active)];
+    this.dom.enemyHand.innerHTML = "";
+    for (let i = 0; i < enemy.hand.length; i++) {
+      const back = document.createElement("div");
+      back.className = "hand-card hidden-card";
+      this.dom.enemyHand.appendChild(back);
+    }
   }
 
-  renderSide(container, game, faction, ui, callbacks) {
+  renderBoard(container, game, ownerId, ui, callbacks) {
     container.innerHTML = "";
-    container.className = `side ${faction === game.active ? "side-own" : "side-enemy"}`;
-    container.appendChild(this.buildSideLabel(faction, game));
-    container.appendChild(this.buildZoneRow("Reserve", this.buildReserveCards(game, faction, ui, callbacks)));
-    container.appendChild(this.buildZoneRow("Tranchee", this.buildTrancheeCards(game, faction, ui, callbacks)));
-    container.appendChild(this.buildZoneRow("Front", this.buildFrontCards(game, faction, ui, callbacks)));
-    if (game.players[faction].zones.tunnel) container.appendChild(this.buildTunnelBadge(faction, game));
+    for (const instance of game.players[ownerId].board) {
+      container.appendChild(this.buildMiniCard(instance, ownerId, ui, callbacks));
+    }
   }
 
-  buildSideLabel(faction, game) {
-    const label = document.createElement("div");
-    label.className = `side-label ${faction}`;
-    label.textContent = faction === "chat" ? "Chats" : "Chiens";
-    return label;
+  buildMiniCard(instance, ownerId, ui, callbacks) {
+    const div = document.createElement("div");
+    div.className = `mini-card tribu-${instance.card.tribu}`;
+    if (instance.card.art) div.style.backgroundImage = `url(../${instance.card.art})`;
+    div.title = instance.card.nom;
+
+    div.appendChild(this.buildKeywordRow(instance));
+    div.appendChild(this.buildStatRow(instance));
+
+    if (instance.hasAttacked || instance.summoningSick) div.classList.add("has-attacked");
+    if (ui.isSelected(instance.instanceId)) div.classList.add("selected");
+    if (ui.isTargetable(ownerId, instance.instanceId)) div.classList.add("targetable");
+
+    div.addEventListener("click", () => callbacks.onBoardCardClick(ownerId, instance.instanceId));
+    return div;
   }
 
-  buildZoneRow(title, cards) {
+  buildKeywordRow(instance) {
     const row = document.createElement("div");
-    row.className = "zone-row";
-    const label = document.createElement("div");
-    label.className = "zone-row-label";
-    label.textContent = title;
-    row.appendChild(label);
-    const cardsWrap = document.createElement("div");
-    cardsWrap.className = "zone-cards";
-    for (const card of cards) cardsWrap.appendChild(card);
-    row.appendChild(cardsWrap);
+    row.className = "keyword-row";
+    if (instance.isTaunt) row.appendChild(this.buildKeywordIcon("G", "Garde"));
+    if (instance.hasDivineShield) row.appendChild(this.buildKeywordIcon("B", "Bouclier"));
+    if (instance.isCharge) row.appendChild(this.buildKeywordIcon("C", "Charge"));
     return row;
   }
 
-  buildReserveCards(game, faction, ui, callbacks) {
-    return game.players[faction].zones.reserve.map((instance) =>
-      this.buildMiniCard(instance, false, ui, callbacks, faction, "reserve")
-    );
+  // Des lettres plutot que des emojis : leur rendu depend trop de la
+  // police disponible (tofu box sur certains appareils/environnements).
+  buildKeywordIcon(letter, label) {
+    const span = document.createElement("span");
+    span.className = `keyword-icon keyword-${label.toLowerCase()}`;
+    span.title = label;
+    span.textContent = letter;
+    return span;
   }
 
-  buildTrancheeCards(game, faction, ui, callbacks) {
-    return game.players[faction].zones.tranchee
-      .filter((instance) => instance)
-      .map((instance) => {
-        const faceDown = faction !== game.active && !instance.revealed;
-        return this.buildMiniCard(instance, faceDown, ui, callbacks, faction, "tranchee");
-      });
-  }
-
-  buildFrontCards(game, faction, ui, callbacks) {
-    return game.players[faction].zones.front.map((instance) => this.buildMiniCard(instance, false, ui, callbacks, faction, "front"));
-  }
-
-  buildTunnelBadge(faction, game) {
-    const badge = document.createElement("div");
-    badge.className = "tunnel-badge";
-    const hidden = game.players[faction].zones.tunnelTurnsHidden;
-    badge.textContent = `Tunnel occupe (${hidden}/2)`;
-    return badge;
-  }
-
-  buildMiniCard(instance, faceDown, ui, callbacks, faction, zoneName) {
-    const div = document.createElement("div");
-    div.className = `mini-card ${faction}-owned` + (faceDown ? " hidden-card" : "");
-    if (!faceDown) {
-      if (instance.card.art) div.style.backgroundImage = `url(../${instance.card.art})`;
-      div.title = instance.card.nom;
-      const stats = document.createElement("div");
-      stats.className = "stat-row";
-      stats.innerHTML = `<span>${instance.attaque}</span><span>${instance.defense}</span>`;
-      div.appendChild(stats);
-      if (zoneName === "front" && instance.hasAttacked) div.classList.add("has-attacked");
-    }
-    if (ui.isSelected(instance.instanceId)) div.classList.add("selected");
-    if (ui.isTargetable(faction, zoneName, instance.instanceId)) div.classList.add("targetable");
-    div.addEventListener("click", () => callbacks.onCardClick(faction, zoneName, instance.instanceId));
-    return div;
+  buildStatRow(instance) {
+    const stats = document.createElement("div");
+    stats.className = "stat-row";
+    stats.innerHTML = `<span class="atq">${instance.atq}</span><span class="pv">${instance.currentPv}</span>`;
+    return stats;
   }
 
   renderHand(game, ui, callbacks) {
@@ -119,7 +97,7 @@ export class Renderer {
   buildHandCard(instance, player, ui, callbacks) {
     const affordable = player.canAfford(instance.card);
     const div = document.createElement("div");
-    div.className = "hand-card" + (affordable ? "" : " unaffordable");
+    div.className = `hand-card tribu-${instance.card.tribu ?? "sort"}` + (affordable ? "" : " unaffordable");
     if (instance.card.art) div.style.backgroundImage = `url(../${instance.card.art})`;
     div.innerHTML = `<div class="cost">${instance.card.cout}</div><div class="name">${instance.card.nom}</div>`;
     if (ui.isSelected(instance.instanceId)) div.classList.add("selected");
@@ -133,5 +111,13 @@ export class Renderer {
       .map((line) => `<div>${line}</div>`)
       .join("");
     this.dom.log.scrollTop = this.dom.log.scrollHeight;
+  }
+
+  bindHeroes(game, ui, callbacks) {
+    const heroElements = { joueur1: this.dom.heroJoueur1, joueur2: this.dom.heroJoueur2 };
+    for (const [playerId, el] of Object.entries(heroElements)) {
+      el.classList.toggle("targetable", ui.isHeroTargetable(playerId));
+      el.onclick = () => callbacks.onHeroClick(playerId);
+    }
   }
 }

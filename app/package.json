@@ -1,5 +1,5 @@
 {
-  "name": "chiens-vs-chats-prototype",
+  "name": "paw-and-claw-prototype",
   "private": true,
   "type": "module",
   "description": "Prototype jouable (HTML/CSS/JS, sans etape de build). Ce fichier ne fait que declarer les modules ES pour Node ; aucune dependance n'est requise pour jouer."
