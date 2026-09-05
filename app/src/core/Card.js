@@ -38,6 +38,10 @@ export class UnitCard extends Card {
     return this.def.tribu;
   }
 
+  get espece() {
+    return this.def.espece;
+  }
+
   get attaque() {
     return this.def.attaque;
   }

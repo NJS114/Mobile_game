@@ -1,10 +1,14 @@
-# Paw & Claw — Document de Design (GDD v0.2)
+# Paw & Claw — Document de Design (GDD v0.3)
 
-> Statut : v0.2 acte le pivot complet depuis le concept initial "Chiens vs Chats, guerre de tranchees 14-18" vers **Paw & Claw**, un jeu de cartes de royaume fantasy avec des principes proches de Hearthstone (mana, plateau, heros) et une touche de TFT (synergies de tribu). L'ancien concept de tranchees/tunnels/communication est abandonne ; l'historique complet de la v0.1 reste consultable dans les commits git anterieurs a ce pivot (`git log -- docs/GAME_DESIGN.md`). Les valeurs numeriques restent des points de depart a equilibrer en playtest, marquees **[a tester]**.
+> Statut : v0.3 reintroduit deux camps opposes (Chats contre Chiens) par-dessus le modele Hearthstone/TFT du v0.2, et etend les mots-cles en un petit systeme de statuts generique (etourdissement, poison) applicable via des sorts. L'ancien concept de tranchees/tunnels/communication (v0.1) reste abandonne ; l'historique complet reste consultable dans les commits git anterieurs (`git log -- docs/GAME_DESIGN.md`). Les valeurs numeriques restent des points de depart a equilibrer en playtest, marquees **[a tester]**.
 
 ## 1. Pitch
 
-**Paw & Claw** est un jeu de cartes tactique mobile de royaume fantasy peuple de chats et de chiens anthropomorphes, organises en **tribus** (Robots, Nobles, Sante, et d'autres a venir) plutot qu'en deux camps qui s'affrontent. Deux joueurs s'affrontent avec leurs propres decks piochant dans la meme collection : chacun pose des unites sur un plateau commun, gere son mana, et cherche a faire tomber les points de vie du royaume adverse a zero. Parties courtes (8-12 min), profondeur tactique via les synergies de tribu, forte identite visuelle "fantasy cozy" (voir section 2).
+**Paw & Claw** est un jeu de cartes tactique mobile de royaume fantasy peuple de chats et de chiens anthropomorphes. Deux axes de classification se recoupent sur chaque carte unite :
+- **Espece** (Chat ou Chien) — determine le camp : chaque joueur pioche exclusivement dans les unites de sa propre espece (comme un "chien contre chat" classique), plus l'integralite des sorts qui restent neutres.
+- **Tribu** (Robots, Nobles, Sante, et d'autres a venir) — recoupe les deux especes et active des synergies quand plusieurs unites de la meme tribu sont en jeu (voir section 6).
+
+Deux joueurs s'affrontent donc avec un deck de leur espece : chacun pose des unites sur un plateau commun, gere son mana, et cherche a faire tomber les points de vie du royaume adverse a zero. Parties courtes (8-12 min), profondeur tactique via les synergies de tribu et les statuts (buffs/debuffs), forte identite visuelle "fantasy cozy" (voir section 2).
 
 Positionnement marche : **Hearthstone/Clash Royale tactique avec une touche TFT** (les synergies de tribu recompensent la coherence du deck, comme les traits d'une composition d'auto-battler) - bonne retention long terme, session courte, mais demande un peu plus d'apprentissage qu'un hyper-casual pur.
 
@@ -41,28 +45,40 @@ Une partie dure typiquement 8-14 tours par joueur.
 
 ## 5. Cartes — statistiques et mots-cles communs
 
-Toute carte **unite** possede : **Tribu** (Robots / Nobles / Sante / ...), **Cout** (mana), **Attaque**, **Points de vie**, **Rarete** (Commune, Rare, Epique, Legendaire), une liste de **mots-cles**, et un texte de capacite/une citation d'ambiance.
+Toute carte **unite** possede : **Espece** (Chat ou Chien), **Tribu** (Robots / Nobles / Sante / ...), **Cout** (mana), **Attaque**, **Points de vie**, **Rarete** (Commune, Rare, Epique, Legendaire), une liste de **mots-cles**, et un texte de capacite/une citation d'ambiance.
 
 Mots-cles implementes dans le prototype :
 - **Garde** — doit etre ciblee en priorite avant que son controleur puisse etre attaque directement.
 - **Charge** — peut attaquer des le tour ou elle est posee (ignore le mal de debarquement).
 - **Bouclier** (bouclier divin) — absorbe integralement les degats de la premiere attaque recue, puis disparait.
 
-Toute carte **sort** possede : **Cout**, **Rarete**, un **effet** (implemente via une strategie dediee, voir `app/README.md`), et peut exiger une cible (alliee ou ennemie selon le sort).
+En plus des mots-cles, deux **statuts generiques** peuvent etre accordes par des sorts (voir section 6bis) :
+- **Etourdissement** — la cible ne peut pas attaquer lors de son prochain tour, puis redevient normale.
+- **Poison** — la cible perd des PV a chaque debut de tour de son controleur, tant qu'elle reste en jeu (et tant que rien ne la soigne).
 
-Deck (prototype) : sans systeme de deckbuilding pour l'instant, chaque joueur recoit automatiquement **2 exemplaires de chaque carte non-legendaire et 1 exemplaire de chaque legendaire** de la collection complete (miroir de collection). Un vrai deckbuilding (30 cartes choisies par le joueur, memes limites de copies) est prevu en V2 — voir section 14.
+Toute carte **sort** possede : **Cout**, **Rarete**, un **effet** (implemente via une strategie dediee, voir `app/README.md`), et peut exiger une cible (alliee ou ennemie selon le sort). Les sorts sont **neutres** : disponibles pour les deux especes, contrairement aux unites qui appartiennent chacune a une seule espece.
+
+Deck (prototype) : sans systeme de deckbuilding pour l'instant, chaque camp (Chats et Chiens) recoit automatiquement **2 exemplaires de chaque unite non-legendaire de sa propre espece et 1 exemplaire de chaque legendaire de sa propre espece**, plus l'integralite des sorts (neutres, 2 exemplaires chacun). Un vrai deckbuilding (30 cartes choisies par le joueur, memes limites de copies) est prevu en V2 — voir section 14.
 
 ## 6. Synergies de tribu (façon TFT)
 
-Chaque tribu octroie un bonus d'attaque a toutes ses unites en jeu des qu'un seuil de copies de cette tribu est atteint sur le plateau du meme joueur — comme les traits d'une composition TFT, sans plateau d'auto-battler ni de phase d'achat :
+Chaque tribu octroie un bonus d'attaque a toutes ses unites en jeu des qu'un seuil de copies de cette tribu est atteint sur le plateau du meme joueur — comme les traits d'une composition TFT, sans plateau d'auto-battler ni de phase d'achat. Certaines synergies sont de purs **buffs** (renforcent son propre camp), d'autres combinent **buff et debuff** (renforcent son camp tout en affaiblissant l'adversaire) :
 
-| Tribu | Seuil | Bonus | Identite |
-|---|---|---|---|
-| Nobles | 2 unites Nobles en jeu | +1 attaque a chaque Noble | Offensive, facile a declencher |
-| Robots | 2 unites Robots en jeu | +2 attaque a chaque Robot | Gardiens qui frappent fort une fois masses |
-| Sante | 3 unites Sante en jeu | +2 attaque a chaque unite Sante | Seuil plus dur, recompense un deck concentre |
+| Tribu | Seuil | Effet sur son propre camp | Effet sur le camp adverse | Identite |
+|---|---|---|---|---|
+| Nobles | 2 unites Nobles en jeu | +1 attaque a chaque Noble | — | Offensive, facile a declencher |
+| Robots | 2 unites Robots en jeu | +1 attaque a chaque Robot | -1 attaque a toutes les unites adverses | Buff + debuff : les Robots renforcent leur camp tout en perturbant l'ennemi |
+| Sante | 3 unites Sante en jeu | +2 attaque a chaque unite Sante | — | Seuil plus dur, recompense un deck concentre |
 
-Le bonus est recalcule integralement a chaque changement de plateau (unite posee ou detruite) : il n'est jamais cumule d'un recalcul a l'autre, et disparait immediatement si le nombre d'unites de la tribu repasse sous le seuil. Ajouter une nouvelle tribu ne demande qu'une ligne de configuration (voir `SynergyResolver` dans `app/README.md`), sans toucher au moteur — ouvert a l'ajout de synergies plus variees (soin, pioche, degats de zone...) en V2.
+Le bonus est recalcule integralement a chaque changement de plateau (unite posee ou detruite, sur n'importe quel camp) : il n'est jamais cumule d'un recalcul a l'autre, et disparait immediatement si le nombre d'unites de la tribu repasse sous le seuil. Ajouter une nouvelle tribu, ou faire evoluer une synergie existante vers plus de buff/debuff, ne demande qu'une ligne de configuration (voir `TribeSynergy`/`SynergyResolver` dans `app/README.md`), sans toucher au moteur.
+
+## 6bis. Sorts de statut (buffs/debuffs cibles)
+
+En plus des synergies automatiques, deux sorts appliquent un statut generique a une cible ennemie precise :
+- **Etourdissement** (cout 2, Commune) — empeche la cible d'attaquer lors de son prochain tour.
+- **Poison Sournois** (cout 3, Rare) — inflige 2 degats a la cible a chaque debut de tour de son controleur, tant qu'elle reste en jeu.
+
+Ce systeme de statuts est generique (`CardInstance.applyStun`/`applyPoison`/`tickStatusesForNewTurn`) : ajouter un nouveau statut ou un nouveau sort qui l'applique ne demande pas de toucher aux mots-cles existants (Garde/Charge/Bouclier), qui restent des proprietes fixes de la carte plutot que des etats temporaires.
 
 ## 7. Conditions de victoire
 
@@ -73,15 +89,15 @@ D'autres conditions (fatigue en cas de pioche a vide, objectifs annexes) pourron
 
 ## 8. Exemple de tour
 
-1. Le joueur actif commence son tour : son mana passe de 2 a 3 et se recharge, il pioche une carte.
-2. Il pose un Chambellan (Noble, cout 2) sur le plateau ; il a deja un Jeune Noble en jeu, donc les deux gagnent +1 attaque grace a la synergie Nobles.
+1. Le joueur Chats commence son tour : son mana passe de 2 a 3 et se recharge, il pioche une carte.
+2. Il pose une Comtesse Elegante (Noble, cout 3) sur le plateau ; il a deja un Chambellan (Noble) en jeu, donc les deux gagnent +1 attaque grace a la synergie Nobles.
 3. Une unite posee au tour precedent (donc plus malade du debarquement) attaque : l'adversaire n'a pas de carte Garde en jeu, elle frappe directement son heros.
-4. Il joue le sort Eclair Arcanique (cout 2) en ciblant une unite ennemie, lui infligeant 3 degats.
-5. Il termine son tour ; c'est au tour de l'adversaire.
+4. Il joue le sort Etourdissement (cout 2) sur une unite Chien ennemie, qui ne pourra pas attaquer au prochain tour des Chiens.
+5. Il termine son tour ; c'est au tour des Chiens.
 
 ## 9. Catalogue de cartes (prototype)
 
-Le prototype embarque un premier lot representatif du catalogue "Paw & Claw" — 6 unites par tribu (une par palier de cout 1 a 6, rarete croissante) et 5 sorts — voir `data/cards.json` et `app/README.md`. Ce lot sert a valider le moteur et l'UI ; le catalogue complet illustre par l'equipe (dizaines de cartes par tribu, plusieurs legendaires par tribu) doit etre transcrit progressivement dans `data/cards.json` au fur et a mesure que ses statistiques sont choisies et testees, en suivant le meme schema de champs (`tribu`, `cout`, `attaque`, `pv`, `motscles`, `rarete`, `citation`, `art`).
+Le prototype embarque un premier lot representatif du catalogue "Paw & Claw" — 6 unites par tribu (une par palier de cout 1 a 6, rarete croissante, 3 de chaque espece par tribu) et 7 sorts — voir `data/cards.json` et `app/README.md`. Ce lot sert a valider le moteur et l'UI ; le catalogue complet illustre par l'equipe (dizaines de cartes par tribu, plusieurs legendaires par tribu) doit etre transcrit progressivement dans `data/cards.json` au fur et a mesure que ses statistiques sont choisies et testees, en suivant le meme schema de champs (`espece`, `tribu`, `cout`, `attaque`, `pv`, `motscles`, `rarete`, `citation`, `art`).
 
 ## 10. Progression joueur (hors match)
 
@@ -126,13 +142,15 @@ Le prototype embarque un premier lot representatif du catalogue "Paw & Claw" —
 
 ## 12. Historique du pivot
 
-La version v0.1 de ce document decrivait un jeu de guerre de tranchees 14-18 "Chats vs Chiens" avec couloirs Nord/Centre/Sud, tranchees cachees, tunnels et cables de communication a couper/reparer. Ce concept a ete entierement remplace par Paw & Claw suite a un changement de direction artistique (voir les mockups de cartes fantasy fournis) et une demande explicite de simplifier les mecaniques vers un modele Hearthstone classique avec une touche TFT (synergies de tribu). Le code de l'ancien prototype (tranchees, tunnels, communication, drapeau d'objectif) a ete entierement retire de `app/src/` ; son historique reste consultable dans les commits git anterieurs a ce pivot.
+La version v0.1 de ce document decrivait un jeu de guerre de tranchees 14-18 "Chats vs Chiens" avec couloirs Nord/Centre/Sud, tranchees cachees, tunnels et cables de communication a couper/reparer. Ce concept a ete entierement remplace par Paw & Claw (v0.2) suite a un changement de direction artistique (voir les mockups de cartes fantasy fournis) et une demande explicite de simplifier les mecaniques vers un modele Hearthstone classique avec une touche TFT (synergies de tribu) ; les decks n'etaient alors plus separes par espece (un seul miroir de collection partage). Le code de l'ancien prototype (tranchees, tunnels, communication, drapeau d'objectif) a ete entierement retire de `app/src/`.
+
+La v0.3 reintroduit l'opposition Chats contre Chiens : chaque unite porte desormais un champ `espece` en plus de sa `tribu`, et chaque camp ne pioche que dans les unites de sa propre espece (les sorts restent neutres). Cette version ajoute aussi le systeme de statuts generique (etourdissement, poison) et transforme la synergie Robots en buff+debuff (elle renforce son propre camp tout en affaiblissant l'adversaire). L'historique complet reste consultable dans les commits git anterieurs a chaque pivot.
 
 ## 13. Prochaines etapes
 
-- Deposer les illustrations "Paw & Claw" fournies dans `assets/cards/<tribu>/` et les relier aux entrees de `data/cards.json` (`art`).
-- Transcrire progressivement le reste du catalogue illustre (Nobles, Robots, Sante, futures tribus) dans `data/cards.json`, en choisissant des statistiques testees plutot qu'en devinant.
+- Deposer les illustrations "Paw & Claw" fournies dans `assets/cards/<tribu>/` et les relier aux entrees de `data/cards.json` (`art`) — voir `docs/ASSETS.md` pour l'inventaire deja traite.
+- Transcrire progressivement le reste du catalogue illustre (Nobles, Robots, Sante, futures tribus) dans `data/cards.json`, en choisissant des statistiques testees plutot qu'en devinant, et en assignant une `espece` (Chat/Chien) coherente avec l'illustration.
 - Valider/ajuster les valeurs marquees **[a tester]** (paliers de mana, capacite de plateau, seuils de synergie, seuil de pity).
 - Deckbuilding reel (le joueur choisit 30 cartes parmi sa collection, avec limites de copies) plutot que le miroir de collection automatique du prototype.
 - Maquetter la boutique et l'ecran de tirage (gacha) dans le canvas de design, dans le style "Paw & Claw" (cadres dores, bannieres de rarete).
-- Prototype technique : HTML/CSS/JS pur (modules ES, pas de build), voir `app/`. Architecture orientee objet (Command/Strategy/Factory/Observer/Composite, voir `app/README.md`), mecaniques completes : pose d'unites, mana, attaque ciblee avec Garde/Charge/Bouclier, 5 sorts, synergies de tribu, victoire par PV de heros. Reste a faire : IA, deckbuilding, multijoueur distant, capacites textuelles propres a chaque carte au-dela des mots-cles generiques.
+- Prototype technique : HTML/CSS/JS pur (modules ES, pas de build), voir `app/`. Architecture orientee objet (Command/Strategy/Factory/Observer/Composite, voir `app/README.md`), mecaniques completes : pose d'unites, mana, attaque ciblee avec Garde/Charge/Bouclier, statuts generiques (etourdissement/poison), 7 sorts, synergies de tribu (buffs et debuffs), decks separes par espece, victoire par PV de heros. Reste a faire : IA, deckbuilding, multijoueur distant, capacites textuelles propres a chaque carte au-dela des mots-cles generiques.

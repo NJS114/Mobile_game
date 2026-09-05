@@ -4,10 +4,10 @@ import { Renderer } from "./ui/Renderer.js";
 import { InputController } from "./ui/InputController.js";
 
 const dom = {
-  heroJoueur1: document.getElementById("hero-joueur1"),
-  heroJoueur2: document.getElementById("hero-joueur2"),
-  hpJoueur1: document.getElementById("hp-joueur1"),
-  hpJoueur2: document.getElementById("hp-joueur2"),
+  heroChat: document.getElementById("hero-chat"),
+  heroChien: document.getElementById("hero-chien"),
+  hpChat: document.getElementById("hp-chat"),
+  hpChien: document.getElementById("hp-chien"),
   manaBadge: document.getElementById("mana-badge"),
   turnInfo: document.getElementById("turn-info"),
   enemyHand: document.getElementById("enemy-hand"),
@@ -20,13 +20,13 @@ const dom = {
 const victoryOverlay = document.getElementById("victory-overlay");
 const victoryText = document.getElementById("victory-text");
 
-function playerLabel(playerId) {
-  return playerId === "joueur1" ? "Joueur 1" : "Joueur 2";
+function factionLabel(faction) {
+  return faction === "chat" ? "Chats" : "Chiens";
 }
 
 const overlays = {
   showVictory(winner) {
-    victoryText.textContent = `Victoire de ${playerLabel(winner)} !`;
+    victoryText.textContent = `Victoire des ${factionLabel(winner)} !`;
     victoryOverlay.classList.remove("hidden");
   },
 };

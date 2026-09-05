@@ -1,5 +1,5 @@
 import { Command } from "./Command.js";
-import { otherPlayer } from "../constants.js";
+import { otherFaction } from "../constants.js";
 import { Target } from "../effects/TargetRef.js";
 
 // Attaque une unite adverse ciblee, ou frappe directement le heros adverse
@@ -14,7 +14,7 @@ export class AttackCommand extends Command {
 
   execute(game) {
     const attackerId = game.active;
-    const defenderId = otherPlayer(attackerId);
+    const defenderId = otherFaction(attackerId);
     const attacker = game.players[attackerId].board.find((u) => u.instanceId === this.attackerInstanceId);
     if (!attacker || !attacker.canAttack()) return;
 

@@ -1,6 +1,7 @@
-import { otherPlayer, playerLabel } from "./constants.js";
+import { otherFaction, factionLabel } from "./constants.js";
 import { CardFactory } from "./core/CardFactory.js";
 import { CardInstance } from "./core/CardInstance.js";
+import { UnitCard } from "./core/Card.js";
 import { Deck } from "./core/Deck.js";
 import { Player } from "./core/Player.js";
 import { EventEmitter } from "./events/EventEmitter.js";
@@ -15,38 +16,41 @@ export class Game {
   constructor(cardsData) {
     this.catalog = CardFactory.buildCatalog(cardsData);
     this.turn = 1;
-    this.active = "joueur1";
+    this.active = "chat";
     this.winner = null;
-    this.log = ["La partie commence. Tour 1 - Joueur 1."];
+    this.log = ["La partie commence. Tour 1 - Chats."];
     this.events = new EventEmitter();
 
     this.effects = EffectRegistry.buildDefault();
     this.victoryChecker = VictoryChecker.buildDefault();
     this.synergyResolver = SynergyResolver.buildDefault();
 
-    this.players = { joueur1: this.createPlayer("joueur1"), joueur2: this.createPlayer("joueur2") };
-    // Joueur 1 commence deja "dans" son premier tour (pas de switchActivePlayer
-    // pour l'y faire entrer) : sans ce marqueur, switchActivePlayer lui
-    // donnerait un deuxieme cran de mana des le tour 3 au lieu du tour 3 reel.
-    this.players.joueur1.hasPlayedATurn = true;
+    this.players = { chat: this.createPlayer("chat"), chien: this.createPlayer("chien") };
+    // Les Chats commencent deja "dans" leur premier tour (pas de
+    // switchActivePlayer pour les y faire entrer) : sans ce marqueur,
+    // switchActivePlayer leur donnerait un deuxieme cran de mana des le
+    // tour 3 au lieu du tour 3 reel.
+    this.players.chat.hasPlayedATurn = true;
   }
 
-  createPlayer(playerId) {
-    const deck = Deck.shuffled(this.buildDeckInstances(playerId));
-    return new Player(playerId, deck);
+  createPlayer(faction) {
+    const deck = Deck.shuffled(this.buildDeckInstances(faction));
+    return new Player(faction, deck);
   }
 
-  buildDeckInstances(ownerId) {
-    return this.collectDeckCards().map((card) => new CardInstance(card, ownerId));
+  buildDeckInstances(faction) {
+    return this.collectDeckCards(faction).map((card) => new CardInstance(card, faction));
   }
 
-  // Prototype sans deckbuilding : chaque joueur recoit deux exemplaires de
-  // chaque carte non-legendaire et un exemplaire de chaque legendaire, dans
-  // le meme miroir de collection (voir docs/GAME_DESIGN.md).
-  collectDeckCards() {
+  // Prototype sans deckbuilding : chaque camp recoit deux exemplaires de
+  // chaque carte non-legendaire et un exemplaire de chaque legendaire parmi
+  // les unites de sa propre espece (chat ou chien), plus l'integralite des
+  // sorts neutres (voir docs/GAME_DESIGN.md).
+  collectDeckCards(faction) {
     const copiesFor = (card) => (card.rarete === "legendaire" ? 1 : 2);
     const deck = [];
     for (const card of this.catalog.values()) {
+      if (card instanceof UnitCard && card.espece !== faction) continue;
       for (let i = 0; i < copiesFor(card); i++) deck.push(card);
     }
     return deck;
@@ -57,14 +61,14 @@ export class Game {
   }
 
   get activeLabel() {
-    return playerLabel(this.active);
+    return factionLabel(this.active);
   }
 
   execute(command) {
     if (this.winner) return;
     command.execute(this);
     this.winner = this.victoryChecker.determineWinner(this);
-    if (this.winner) this.log.push(`${playerLabel(this.winner)} remporte la partie !`);
+    if (this.winner) this.log.push(`${factionLabel(this.winner)} remportent la partie !`);
     this.events.emit("stateChanged", this);
   }
 
@@ -79,17 +83,27 @@ export class Game {
     this.recomputeSynergies();
   }
 
+  // Etourdissement et poison (voir CardInstance) s'appliquent au debut du
+  // tour du controleur de l'unite affectee, pas au moment ou le sort est
+  // lance.
+  applyStartOfTurnStatuses() {
+    for (const unit of [...this.activePlayer.board]) {
+      if (unit.tickStatusesForNewTurn()) this.destroyUnit(unit);
+    }
+  }
+
   switchActivePlayer() {
-    this.active = otherPlayer(this.active);
+    this.active = otherFaction(this.active);
     this.turn += 1;
     const player = this.activePlayer;
-    // Le premier tour de chaque joueur reste a la capacite de mana initiale ;
+    // Le premier tour de chaque camp reste a la capacite de mana initiale ;
     // seuls les tours suivants font monter le plafond (voir Game.constructor).
     if (player.hasPlayedATurn) player.gainManaCapacity();
     player.hasPlayedATurn = true;
     player.refillMana();
     player.drawOne();
     player.resetAttacksForNewTurn();
+    this.applyStartOfTurnStatuses();
     this.log.push(`Tour ${this.turn} - ${this.activeLabel} (Mana ${player.mana}/${player.manaCap}).`);
   }
 }

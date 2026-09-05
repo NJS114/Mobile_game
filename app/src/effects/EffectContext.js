@@ -1,4 +1,4 @@
-import { otherPlayer } from "../constants.js";
+import { otherFaction } from "../constants.js";
 import { Target } from "./TargetRef.js";
 
 // Contexte passe a chaque EffectStrategy : evite que chaque sort doive
@@ -11,7 +11,7 @@ export class EffectContext {
   }
 
   get opponentId() {
-    return otherPlayer(this.casterId);
+    return otherFaction(this.casterId);
   }
 
   get caster() {

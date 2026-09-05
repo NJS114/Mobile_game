@@ -19,8 +19,8 @@ html, body {
 .hero.targetable { outline: 3px dashed #C9614B; outline-offset: 1px; cursor: pointer; }
 .hero-label { font-size: 10px; font-weight: 700; color: #8A6B4A; text-transform: uppercase; white-space: nowrap; }
 .hero-hp { font-size: 18px; font-weight: 700; }
-.hero-joueur1 .hero-hp { color: #C9744B; }
-.hero-joueur2 .hero-hp { color: #6C7A4C; }
+.hero-chat .hero-hp { color: #C9744B; }
+.hero-chien .hero-hp { color: #6C7A4C; }
 .mana-badge {
   background: #4A3222; color: #FBF3E7; border-radius: 10px; padding: 4px 10px;
   font-weight: 700; font-size: 13px; white-space: nowrap;
@@ -66,6 +66,8 @@ html, body {
 .keyword-garde { background: #5C7189; }
 .keyword-bouclier { background: #C9A227; }
 .keyword-charge { background: #B34235; }
+.keyword-etourdi { background: #8A6B4A; }
+.keyword-empoisonne { background: #5C7A4E; }
 
 .stat-row {
   display: flex; justify-content: space-between; width: 100%; padding: 2px 4px;

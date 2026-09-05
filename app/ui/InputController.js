@@ -5,7 +5,7 @@ import { EndTurnCommand } from "../src/commands/EndTurnCommand.js";
 import { SpellCard } from "../src/core/Card.js";
 import { EffectContext } from "../src/effects/EffectContext.js";
 import { Target } from "../src/effects/TargetRef.js";
-import { otherPlayer } from "../src/constants.js";
+import { otherFaction } from "../src/constants.js";
 
 // Possede l'etat d'interaction transitoire (attaque en cours, cible de sort
 // en attente) et traduit les clics en Command executees sur le Game. Une
@@ -42,7 +42,7 @@ export class InputController {
   // AttackCommand) : on ne surligne donc que les cibles legales.
   isAttackTargetable(defenderOwnerId, targetId) {
     if (defenderOwnerId === this.game.active) return false;
-    const defender = this.game.players[otherPlayer(this.game.active)];
+    const defender = this.game.players[otherFaction(this.game.active)];
     const tauntUnits = defender.board.filter((u) => u.isTaunt);
     if (tauntUnits.length === 0) return true;
     if (Target.isHero(targetId)) return false;

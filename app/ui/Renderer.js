@@ -1,4 +1,4 @@
-import { otherPlayer } from "../src/constants.js";
+import { otherFaction } from "../src/constants.js";
 
 // Responsabilite unique : transformer l'etat du jeu en DOM. Ne modifie
 // jamais l'etat, ne sait pas ce qu'est une Command - elle se contente
@@ -11,7 +11,7 @@ export class Renderer {
   render(game, ui, callbacks) {
     this.renderTopbar(game);
     this.renderEnemyHand(game);
-    this.renderBoard(this.dom.enemyBoard, game, otherPlayer(game.active), ui, callbacks);
+    this.renderBoard(this.dom.enemyBoard, game, otherFaction(game.active), ui, callbacks);
     this.renderBoard(this.dom.ownBoard, game, game.active, ui, callbacks);
     this.renderHand(game, ui, callbacks);
     this.renderLog(game);
@@ -19,15 +19,15 @@ export class Renderer {
   }
 
   renderTopbar(game) {
-    this.dom.hpJoueur1.textContent = game.players.joueur1.hp;
-    this.dom.hpJoueur2.textContent = game.players.joueur2.hp;
+    this.dom.hpChat.textContent = game.players.chat.hp;
+    this.dom.hpChien.textContent = game.players.chien.hp;
     const player = game.activePlayer;
     this.dom.manaBadge.textContent = `Mana ${player.mana}/${player.manaCap}`;
     this.dom.turnInfo.textContent = `Tour ${game.turn} - ${game.activeLabel}`;
   }
 
   renderEnemyHand(game) {
-    const enemy = game.players[otherPlayer(game.active)];
+    const enemy = game.players[otherFaction(game.active)];
     this.dom.enemyHand.innerHTML = "";
     for (let i = 0; i < enemy.hand.length; i++) {
       const back = document.createElement("div");
@@ -66,6 +66,8 @@ export class Renderer {
     if (instance.isTaunt) row.appendChild(this.buildKeywordIcon("G", "Garde"));
     if (instance.hasDivineShield) row.appendChild(this.buildKeywordIcon("B", "Bouclier"));
     if (instance.isCharge) row.appendChild(this.buildKeywordIcon("C", "Charge"));
+    if (instance.stunTurns > 0) row.appendChild(this.buildKeywordIcon("E", "Etourdi"));
+    if (instance.poisonPerTurn > 0) row.appendChild(this.buildKeywordIcon("P", "Empoisonne"));
     return row;
   }
 
@@ -114,10 +116,10 @@ export class Renderer {
   }
 
   bindHeroes(game, ui, callbacks) {
-    const heroElements = { joueur1: this.dom.heroJoueur1, joueur2: this.dom.heroJoueur2 };
-    for (const [playerId, el] of Object.entries(heroElements)) {
-      el.classList.toggle("targetable", ui.isHeroTargetable(playerId));
-      el.onclick = () => callbacks.onHeroClick(playerId);
+    const heroElements = { chat: this.dom.heroChat, chien: this.dom.heroChien };
+    for (const [faction, el] of Object.entries(heroElements)) {
+      el.classList.toggle("targetable", ui.isHeroTargetable(faction));
+      el.onclick = () => callbacks.onHeroClick(faction);
     }
   }
 }

@@ -3,6 +3,8 @@ import { EclairArcaniqueEffect } from "./EclairArcaniqueEffect.js";
 import { SavoirAncestralEffect } from "./SavoirAncestralEffect.js";
 import { RangSerreEffect } from "./RangSerreEffect.js";
 import { JugementRoyalEffect } from "./JugementRoyalEffect.js";
+import { EtourdissementEffect } from "./EtourdissementEffect.js";
+import { PoisonSournoisEffect } from "./PoisonSournoisEffect.js";
 
 // Registre (Strategy + petit Service Locator) : associe l'effetId d'une
 // carte sort a l'instance de strategie qui sait l'appliquer. Ajouter un
@@ -27,6 +29,8 @@ export class EffectRegistry {
       .register("eclair-arcanique", new EclairArcaniqueEffect())
       .register("savoir-ancestral", new SavoirAncestralEffect())
       .register("rang-serre", new RangSerreEffect())
-      .register("jugement-royal", new JugementRoyalEffect());
+      .register("jugement-royal", new JugementRoyalEffect())
+      .register("etourdissement", new EtourdissementEffect())
+      .register("poison-sournois", new PoisonSournoisEffect());
   }
 }

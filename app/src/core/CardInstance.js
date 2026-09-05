@@ -19,6 +19,12 @@ export class CardInstance {
 
     this.hasAttacked = false;
     this.summoningSick = true;
+
+    // Statuts generiques (accordes par des sorts) : etourdi bloque l'attaque
+    // pendant N tours, poison inflige des degats a chaque debut de tour du
+    // controleur tant qu'il n'est pas soigne.
+    this.stunTurns = 0;
+    this.poisonPerTurn = 0;
   }
 
   get atq() {
@@ -61,7 +67,25 @@ export class CardInstance {
   }
 
   canAttack() {
-    return !this.hasAttacked && !this.summoningSick;
+    return !this.hasAttacked && !this.summoningSick && this.stunTurns <= 0;
+  }
+
+  applyStun(turns) {
+    this.stunTurns = Math.max(this.stunTurns, turns);
+  }
+
+  applyPoison(amountPerTurn) {
+    this.poisonPerTurn += amountPerTurn;
+  }
+
+  // Appele une fois par tour pour le controleur de cette instance : fait
+  // s'ecouler l'etourdissement et inflige les degats de poison. Renvoie
+  // true si le poison vient de detruire l'unite (a l'appelant de la
+  // retirer du plateau, voir Game.applyStartOfTurnStatuses).
+  tickStatusesForNewTurn() {
+    if (this.stunTurns > 0) this.stunTurns -= 1;
+    if (this.poisonPerTurn > 0) return this.receiveDamage(this.poisonPerTurn);
+    return false;
   }
 
   // Le bouclier divin absorbe integralement le premier coup puis disparait.
