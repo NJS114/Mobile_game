@@ -1,6 +1,8 @@
 # Inventaire des assets "Paw & Claw"
 
 > Traitement du lot d'images pousse le 05/09/2026 (38 fichiers `ChatGPT Image ...png` a la racine du repo). Ce document liste ce qui a ete trouve, comment tout a ete range/renomme, et surtout **les doublons de generation a arbitrer** avant d'aller plus loin dans l'integration.
+>
+> **Mise a jour** : chaque carte individuelle (Commune/Rare/Epique/Legendaire) a ete decoupee depuis les planches multi-cartes. Voir section 5.
 
 ## 1. Ce qui a ete fait
 
@@ -84,9 +86,41 @@ Le lot recu contient **plusieurs passes de generation independantes pour la meme
 
 ## 4. Recommandation
 
-Avant d'aller plus loin (decouper le reste, relier plus d'`art` dans `data/cards.json`, agrandir le nombre de tribus jouables), il faudrait trancher :
+Avant d'aller plus loin (relier plus d'`art` dans `data/cards.json`, agrandir le nombre de tribus jouables), il faudrait trancher :
 1. **Une seule generation par tribu** a canoniser (ex. Nobles gen C, Sante, Robots, + choisir/regenerer les manquantes pour Ombres/Magiciens/Creatures).
 2. **Le nom officiel de la tribu "sante" vs "guerisseurs"** (le reste du jeu utilise "sante" en interne, mais les boosters/planche de reference disent "Guerisseurs" - a harmoniser).
 3. **Si on ajoute Ombres, Magiciens et Creatures comme nouvelles tribus jouables**, avec ou sans le systeme de cartes "mecaniques" (Energie/Zone/Soutien/Evenement/Objet/Compagnon) vu sur la planche Ombres, qui demanderait un vrai travail d'extension du moteur.
 
-Une fois ces choix faits, je peux decouper le reste des planches retenues et completer `data/cards.json` en consequence.
+## 5. Decoupe individuelle des cartes (Commune/Rare/Epique/Legendaire)
+
+Chaque carte visible sur une planche a ete decoupee en image individuelle (nom de fichier = nom de la carte), rangee sous `assets/cards/<tribu>/` — avec un sous-dossier `gen-a/`, `gen-b/`, `gen-c/` quand plusieurs generations existent pour la meme tribu (voir section 3), pour ne jamais melanger des cartes de generations differentes qui portent parfois le meme nom.
+
+```
+assets/cards/
+  ombres/
+    gen-a/    7 cartes (8 - Apprenti de l'Ombre, deja isole en rendu individuel)
+    gen-b/    17 cartes (18 - meme carte Apprenti de l'Ombre en double)
+    mecaniques/  21 cartes "mecaniques" (Energie/Zone/Soutien/Evenement/Objet/Compagnon)
+    ombre-apprenti-de-l-ombre.png   (rendu individuel haute-resolution, deja present avant cette passe)
+  magiciens/     8 cartes (generation unique)
+  nobles/
+    gen-a/    8 cartes
+    gen-b/    18 cartes
+    gen-c/    20 cartes (la generation la plus proche de data/cards.json actuel)
+    noble-souveraine-aurelia.png, noble-paladin-orion.png, noble-oracle-nova.png, noble-gardien-sylva.png
+      (planche legendaire "variante realiste", style different des 3 generations ci-dessus)
+  guerisseurs/   8 cartes (generation separee de "sante")
+  sante/         22 cartes (communes+rares+epiques+legendaires, generation coherente unique)
+  creatures/
+    gen-a/    7 cartes (8 - Dragon Celeste, deja isole en rendu individuel)
+    gen-b/    8 cartes
+    gen-c/    10 cartes (6 rares + 4 epiques, style "costume")
+    creature-cerbere.png, creature-dragon-celeste.png   (rendus individuels haute-resolution)
+  robots/        4 cartes legendaires (aucune commune/rare/epique recue pour cette tribu)
+```
+
+**Limites connues** : quelques crops ont un tres leger rognage sur un bord (texte de citation ou icone de cout legerement coupe sur 1-2 cartes de la planche Guerisseurs et de la planche "Sante communes") - le nom, le cout, la rarete et l'illustration restent lisibles dans tous les cas. Les planches sources (`assets/cards/planches/`) restent disponibles si un recadrage plus precis est necessaire plus tard.
+
+Les illustrations "sans cadre" (`*-sans-cadre*.png`, `*-variantes-couleur.png`) n'ont pas ete decoupees individuellement : elles ne montrent ni nom ni cout ni rarete, donc moins utiles telles quelles pour peupler `data/cards.json` en l'etat. Dispo sur demande si besoin de variantes d'illustration "libres" pour un usage hors carte (splash art, menu, etc.).
+
+Une fois la generation canonique choisie par tribu (voir section 3), je peux relier ces illustrations aux entrees de `data/cards.json`.
