@@ -9,7 +9,9 @@
       "cout": 1,
       "attaque": 1,
       "pv": 3,
-      "motscles": ["garde"],
+      "motscles": [
+        "garde"
+      ],
       "capacite": "",
       "citation": "Petit mais increvable.",
       "art": null
@@ -37,7 +39,9 @@
       "cout": 3,
       "attaque": 2,
       "pv": 5,
-      "motscles": ["garde"],
+      "motscles": [
+        "garde"
+      ],
       "capacite": "",
       "citation": "Chaque rouage compte.",
       "art": null
@@ -65,7 +69,9 @@
       "cout": 5,
       "attaque": 5,
       "pv": 6,
-      "motscles": ["garde"],
+      "motscles": [
+        "garde"
+      ],
       "capacite": "",
       "citation": "Un mur qui avance.",
       "art": null
@@ -79,10 +85,12 @@
       "cout": 6,
       "attaque": 5,
       "pv": 8,
-      "motscles": ["garde"],
+      "motscles": [
+        "garde"
+      ],
       "capacite": "",
       "citation": "Il prend soin du petit au grand, pour un monde plus serein.",
-      "art": null
+      "art": "assets/cards/robots/robot-gardien-botanique.png"
     },
     {
       "id": "noble-jeune-noble",
@@ -135,7 +143,9 @@
       "cout": 4,
       "attaque": 4,
       "pv": 4,
-      "motscles": ["garde"],
+      "motscles": [
+        "garde"
+      ],
       "capacite": "",
       "citation": "L'honneur guide chacun de mes pas.",
       "art": null
@@ -163,10 +173,12 @@
       "cout": 6,
       "attaque": 5,
       "pv": 7,
-      "motscles": ["bouclier"],
+      "motscles": [
+        "bouclier"
+      ],
       "capacite": "",
       "citation": "Elle eclaire les chemins, meme dans l'ombre.",
-      "art": null
+      "art": "assets/cards/nobles/noble-souveraine-aurelia.png"
     },
     {
       "id": "sante-infirmiere-souris",
@@ -247,10 +259,12 @@
       "cout": 6,
       "attaque": 4,
       "pv": 7,
-      "motscles": ["bouclier"],
+      "motscles": [
+        "bouclier"
+      ],
       "capacite": "",
       "citation": "Elle guerit au-dela des blessures, et rappelle que l'espoir existe toujours.",
-      "art": null
+      "art": "assets/cards/sante/sante-archidruide-felin.png"
     },
     {
       "id": "sort-benediction-legere",

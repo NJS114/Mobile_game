@@ -53,7 +53,7 @@ Voir `docs/GAME_DESIGN.md` section 6 pour le detail : Nobles (+1 ATQ des 2 en je
 
 ## A faire
 
-- Deposer les illustrations reelles dans `assets/cards/<tribu>/` et renseigner le champ `art` de chaque carte (actuellement `null` partout, en attente).
+- Illustrations reelles recues et traitees (voir `docs/ASSETS.md` pour l'inventaire complet) : `robot-gardien-botanique`, `noble-souveraine-aurelia` et `sante-archidruide-felin` ont desormais leur `art` renseigne dans `data/cards.json`. Les 20 autres cartes du prototype attendent qu'une generation soit choisie par tribu (plusieurs existent en parallele, voir `docs/ASSETS.md` section 3) avant de pouvoir leur assigner une illustration definitive.
 - Transcrire le reste du catalogue illustre (autres cartes Nobles/Robots/Sante deja concues, et toute nouvelle tribu) avec des statistiques testees.
 - Ecrire des capacites textuelles propres a certaines cartes au-dela des mots-cles generiques (le champ `capacite` existe deja dans le schema mais n'est pas encore exploite par le moteur).
 - Playtester les couts/stats — tout est marque comme point de depart, pas final.

@@ -91,7 +91,7 @@ export const CARDS = {
       ],
       "capacite": "",
       "citation": "Il prend soin du petit au grand, pour un monde plus serein.",
-      "art": null
+      "art": "assets/cards/robots/robot-gardien-botanique.png"
     },
     {
       "id": "noble-jeune-noble",
@@ -179,7 +179,7 @@ export const CARDS = {
       ],
       "capacite": "",
       "citation": "Elle eclaire les chemins, meme dans l'ombre.",
-      "art": null
+      "art": "assets/cards/nobles/noble-souveraine-aurelia.png"
     },
     {
       "id": "sante-infirmiere-souris",
@@ -265,7 +265,7 @@ export const CARDS = {
       ],
       "capacite": "",
       "citation": "Elle guerit au-dela des blessures, et rappelle que l'espoir existe toujours.",
-      "art": null
+      "art": "assets/cards/sante/sante-archidruide-felin.png"
     },
     {
       "id": "sort-benediction-legere",
