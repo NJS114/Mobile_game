@@ -3,39 +3,77 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>Paw & Claw - Prototype</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Paw & Claw</title>
+  <link rel="stylesheet" href="home.css">
 </head>
 <body>
 
-  <div class="topbar">
-    <div class="hero hero-chat" id="hero-chat">
-      <span class="hero-label">Chats</span>
-      <span class="hero-hp" id="hp-chat"></span>
+  <div id="shell">
+
+    <div class="topbar">
+      <div class="profile">
+        <div class="avatar">🐱</div>
+        <div class="profile-info">
+          <div class="profile-name" id="player-name"></div>
+          <div class="xp-bar"><div class="xp-fill" id="xp-fill"></div></div>
+        </div>
+      </div>
+      <div class="currencies">
+        <div class="currency"><span class="currency-icon">👑</span><span id="currency-couronnes"></span></div>
+        <div class="currency"><span class="currency-icon">💎</span><span id="currency-gemmes"></span></div>
+      </div>
+      <button class="icon-btn" id="settings-btn" title="Parametres">⚙</button>
     </div>
-    <div class="turn-info" id="turn-info"></div>
-    <div class="mana-badge" id="mana-badge"></div>
-    <div class="hero hero-chien" id="hero-chien">
-      <span class="hero-label">Chiens</span>
-      <span class="hero-hp" id="hp-chien"></span>
+
+    <div class="hero-banner">
+      <div class="logo">PAW &amp; CLAW</div>
+      <div class="tagline">COLLECT · BATTLE · BELONG</div>
     </div>
+
+    <div class="quest-widget">
+      <div class="quest-label">Quete du jour</div>
+      <div class="quest-desc" id="quest-desc"></div>
+      <div class="quest-bar"><div class="quest-fill" id="quest-fill"></div></div>
+      <div class="quest-progress" id="quest-progress"></div>
+    </div>
+
+    <div class="primary-actions">
+      <a class="action-btn secondary" href="collection.html">
+        <span class="action-icon">🐾</span>
+        <span class="action-label">Collection</span>
+      </a>
+      <a class="action-btn primary" href="battle.html">
+        <span class="action-icon">⚔</span>
+        <span class="action-label">Combattre</span>
+      </a>
+      <a class="action-btn secondary" href="soon.html?titre=Arene&icone=🏟">
+        <span class="action-icon">🏟</span>
+        <span class="action-label">Arene</span>
+      </a>
+    </div>
+
+    <div class="nav-grid">
+      <a class="nav-tile" href="shop.html"><span class="nav-icon">🏪</span>Boutique</a>
+      <a class="nav-tile" href="collection.html"><span class="nav-icon">🃏</span>Cartes</a>
+      <a class="nav-tile" href="soon.html?titre=Decks&icone=🛡"><span class="nav-icon">🛡</span>Decks</a>
+      <a class="nav-tile" href="soon.html?titre=Missions&icone=📜"><span class="nav-icon">📜</span>Missions</a>
+      <a class="nav-tile" href="soon.html?titre=%C3%89v%C3%A9nements&icone=🏆"><span class="nav-icon">🏆</span>Evenements</a>
+      <a class="nav-tile" href="soon.html?titre=Guilde&icone=👥"><span class="nav-icon">👥</span>Guilde</a>
+    </div>
+
+    <div class="footer-icons">
+      <a href="soon.html?titre=Classement&icone=🏆" title="Classement">🏆</a>
+      <a href="soon.html?titre=Succ%C3%A8s&icone=⭐" title="Succes">⭐</a>
+      <a href="soon.html?titre=Mascottes&icone=🐈" title="Mascottes">🐈</a>
+      <a href="soon.html?titre=Param%C3%A8tres&icone=⚙" title="Parametres">⚙</a>
+    </div>
+
+    <div class="welcome-bubble" id="welcome-bubble">
+      Bienvenue dans Paw &amp; Claw ! Que l'aventure commence.
+    </div>
+
   </div>
 
-  <div id="table">
-    <div id="enemy-hand" class="hand-strip"></div>
-    <div id="enemy-board" class="board-row"></div>
-    <div id="own-board" class="board-row"></div>
-  </div>
-  <div id="action-bar"></div>
-  <div id="log"></div>
-
-  <div id="hand-zone"></div>
-
-  <div id="victory-overlay" class="hidden">
-    <h1 id="victory-text"></h1>
-    <button id="restart-btn">Nouvelle partie</button>
-  </div>
-
-  <script type="module" src="main.js"></script>
+  <script type="module" src="home.js"></script>
 </body>
 </html>

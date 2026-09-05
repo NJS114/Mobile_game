@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Paw & Claw - Prototype</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <a href="index.html" class="back-home" title="Retour a l'accueil">&larr;</a>
+    <div class="hero hero-chat" id="hero-chat">
+      <span class="hero-label">Chats</span>
+      <span class="hero-hp" id="hp-chat"></span>
+    </div>
+    <div class="turn-info" id="turn-info"></div>
+    <div class="mana-badge" id="mana-badge"></div>
+    <div class="hero hero-chien" id="hero-chien">
+      <span class="hero-label">Chiens</span>
+      <span class="hero-hp" id="hp-chien"></span>
+    </div>
+  </div>
+
+  <div id="table">
+    <div id="enemy-hand" class="hand-strip"></div>
+    <div id="enemy-board" class="board-row"></div>
+    <div id="own-board" class="board-row"></div>
+  </div>
+  <div id="action-bar"></div>
+  <div id="log"></div>
+
+  <div id="hand-zone"></div>
+
+  <div id="victory-overlay" class="hidden">
+    <h1 id="victory-text"></h1>
+    <button id="restart-btn">Nouvelle partie</button>
+  </div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

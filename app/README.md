@@ -1,10 +1,15 @@
 # Prototype jouable - Paw & Claw
 
-Prototype v1 en HTML/CSS/JS, sans etape de build (modules ES natifs).
-Mode passe-et-joue a deux sur le meme appareil, principes proches de
-Hearthstone (mana, plateau, points de vie de royaume) avec une touche de
-TFT (synergies de tribu), et deux camps opposes Chats contre Chiens qui
-piochent chacun dans leur propre espece — voir `docs/GAME_DESIGN.md`.
+Prototype v1 en HTML/CSS/JS, sans etape de build (modules ES natifs), compose
+de deux univers visuels distincts :
+- un **shell meta-jeu** (accueil, collection, boutique) au look parchemin/or
+  ornemente, inspire des maquettes fournies ;
+- un **plateau de combat** (`battle.html`) au style pastel cozy plus simple,
+  principes proches de Hearthstone (mana, plateau, points de vie de royaume)
+  avec une touche de TFT (synergies de tribu), et deux camps opposes Chats
+  contre Chiens qui piochent chacun dans leur propre espece.
+
+Voir `docs/GAME_DESIGN.md` pour le detail des mecaniques.
 
 ## Lancer
 
@@ -13,8 +18,41 @@ d'etre servis en HTTP (le navigateur bloque `import` sur `file://`) :
 
 ```
 python3 -m http.server 8000
-# puis ouvrir http://localhost:8000/app/
+# puis ouvrir http://localhost:8000/app/  (ecran d'accueil)
 ```
+
+## Ecrans du shell
+
+```
+app/
+  index.html + home.css + home.js          Accueil : profil, monnaies, quete du
+                                            jour (donnees de demonstration),
+                                            navigation vers le reste du shell
+  collection.html + collection.css/.js     Collection reelle : liste toutes les
+                                            cartes de data/cards.json par tribu,
+                                            avec filtres, badge de rarete,
+                                            cout/ATQ/PV et espece
+  shop.html + shop.css                     Maquette visuelle de la boutique
+                                            (coffres, pass de combat, craft -
+                                            voir GAME_DESIGN.md section 11) ;
+                                            achat non fonctionnel
+  soon.html + soon.css/.js                 Ecran-relais generique reutilise par
+                                            toutes les sections pas encore
+                                            implementees (Decks, Missions,
+                                            Evenements, Guilde, Arene,
+                                            Classement, Succes, Mascottes,
+                                            Parametres) - titre/icone passes en
+                                            parametres d'URL pour eviter de
+                                            dupliquer une page par section
+  battle.html + main.js + style.css + src/ + ui/
+                                            Le plateau de combat jouable
+                                            (voir sections suivantes)
+```
+
+Le shell n'a pas encore de backend/sauvegarde : le profil, les monnaies et la
+quete du jour affiches sur l'accueil sont des donnees de demonstration
+figees dans `home.js`, clairement isolees pour etre remplacees plus tard par
+un vrai systeme de progression (voir `docs/GAME_DESIGN.md` sections 10-11).
 
 ## Lancer les tests
 
@@ -24,11 +62,14 @@ Aucune dependance a installer : le moteur est du JavaScript pur.
 node app/src/engine.test.mjs
 ```
 
-## Architecture
+## Architecture du plateau de combat (`battle.html`)
 
 Le code separe strictement **moteur** (logique de jeu pure, testable sans
 navigateur) et **interface** (DOM), et applique plusieurs design patterns
-pour rester facile a faire evoluer :
+pour rester facile a faire evoluer. Le shell meta-jeu (accueil, collection,
+boutique) est volontairement plus simple : pages HTML statiques + un petit
+script par ecran, sans moteur dedie tant qu'il n'y a pas de logique de jeu
+a proprement parler.
 
 ```
 app/

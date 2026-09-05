@@ -99,6 +99,28 @@ D'autres conditions (fatigue en cas de pioche a vide, objectifs annexes) pourron
 
 Le prototype embarque un premier lot representatif du catalogue "Paw & Claw" — 6 unites par tribu (une par palier de cout 1 a 6, rarete croissante, 3 de chaque espece par tribu) et 7 sorts — voir `data/cards.json` et `app/README.md`. Ce lot sert a valider le moteur et l'UI ; le catalogue complet illustre par l'equipe (dizaines de cartes par tribu, plusieurs legendaires par tribu) doit etre transcrit progressivement dans `data/cards.json` au fur et a mesure que ses statistiques sont choisies et testees, en suivant le meme schema de champs (`espece`, `tribu`, `cout`, `attaque`, `pv`, `motscles`, `rarete`, `citation`, `art`).
 
+## 9bis. Shell meta-jeu (accueil, collection, boutique)
+
+Le prototype embarque desormais un ecran d'accueil et sa navigation, au style
+"parchemin et or" ornemente (distinct du plateau de combat, reste pastel et
+simple) - directement inspire des maquettes fournies :
+- **Accueil** (`app/index.html`) — profil, monnaies (Couronnes/Gemmes), quete
+  du jour, logo, et acces a tout le reste du shell. Les valeurs affichees
+  sont des donnees de demonstration figees (pas de backend/sauvegarde pour
+  l'instant).
+- **Collection** (`app/collection.html`) — vraie liste de toutes les cartes
+  de `data/cards.json`, filtrable par tribu/sorts, avec badge de rarete,
+  cout, ATQ/PV et icone d'espece. C'est le seul ecran du shell branche sur
+  de vraies donnees pour l'instant.
+- **Boutique** (`app/shop.html`) — maquette visuelle de la structure decrite
+  section 11 (coffres, pass de combat, craft) ; l'achat n'est pas encore
+  fonctionnel, clairement indique a l'ecran.
+- **Combattre** ouvre le plateau de combat existant (`app/battle.html`).
+- Toutes les autres sections (Decks, Missions, Evenements, Guilde, Arene,
+  Classement, Succes, Mascottes, Parametres) pointent vers un ecran-relais
+  generique "Bientot disponible" (`app/soon.html`) plutot que des maquettes
+  vides ou des fonctionnalites simulees.
+
 ## 10. Progression joueur (hors match)
 
 - **Rangs saisonniers** a theme royaume (Ecuyer → ... → Souverain Legendaire).

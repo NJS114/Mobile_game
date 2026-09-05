@@ -1,0 +1,10 @@
+.soon-panel {
+  margin-top: 40px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px;
+  background: rgba(26, 20, 15, 0.8); border: 1px solid #8A6B4A; border-radius: 14px; padding: 30px 20px;
+}
+.soon-icon { font-size: 40px; }
+.soon-text { font-size: 13px; color: #E8CFA0; max-width: 280px; }
+.soon-back {
+  margin-top: 6px; padding: 8px 18px; border-radius: 10px; text-decoration: none;
+  background: #C9744B; color: #FFF4DA; font-size: 12px; font-weight: 700;
+}
