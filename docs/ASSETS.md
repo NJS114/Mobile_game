@@ -124,3 +124,27 @@ assets/cards/
 Les illustrations "sans cadre" (`*-sans-cadre*.png`, `*-variantes-couleur.png`) n'ont pas ete decoupees individuellement : elles ne montrent ni nom ni cout ni rarete, donc moins utiles telles quelles pour peupler `data/cards.json` en l'etat. Dispo sur demande si besoin de variantes d'illustration "libres" pour un usage hors carte (splash art, menu, etc.).
 
 Une fois la generation canonique choisie par tribu (voir section 3), je peux relier ces illustrations aux entrees de `data/cards.json`.
+
+## 6. Lot pousse le 06/09/2026 - decor du plateau et planche d'icones du shell
+
+- `assets/decor/plateau-salle-du-trone.png` : illustration de fond du plateau de combat (salle du trone, 7+7 emplacements a empreintes deja dessines) - utilisee directement comme `background` de `#battlefield` dans `app/style.css` (voir `app/README.md`).
+- `assets/reference/accueil-mockup.png`, `skyline-royaume.png`, `heros-duo.png`, `plateau-variante.png` : references fournies pour la suite du shell (accueil, panorama, portraits des deux heros, variante du plateau) - pas encore integrees a l'appli.
+- `assets/reference/icones-ui-planche.png` : planche source de 57 icones/elements d'UI (nav, HUD profil, cartes/boosters/coffres, badges de rarete, monnaies/statuts, boutons bas d'ecran), **decoupee automatiquement icone par icone** dans `assets/ui/<categorie>/<nom>.png` :
+
+```
+assets/ui/
+  nav/      12 icones de navigation (boutique, cartes, decks, missions, evenements,
+            guilde, combattre, arene, collection, aventure, classement, parametres)
+  hud/      8  elements du profil joueur (cadre d'avatar, barre nom/niveau, soldes
+            or/gemmes, boutons messagerie/notifications/profil/parametres)
+  items/    8  dos de carte, boosters, pioche empilee, coffres (bois/bleu/or)
+  rarete/   4  badges (commune/rare/epique/legendaire)
+  status/   14 monnaies et objets generiques (piece, gemme, coeur, eclair, potion,
+            cle, parchemin, enveloppe, boussole, grimoire, carte au tresor,
+            bannieres, couronne)
+  boutons/  11 boutons (jouer + 5 raccourcis de nav + fleches/annuler/confirmer/supprimer)
+```
+
+**Methode de decoupe** : la planche source n'a pas de transparence (fond degrade continu derriere chaque icone), donc chaque decoupe est un simple rectangle - pas un detourage avec alpha. Les rectangles ont ete localises automatiquement par difference avec une version tres floutee de la planche (`PIL.ImageFilter.GaussianBlur`) pour isoler le detail net (icones) du fond flou, puis affines a la boite englobante des pixels de detail a l'interieur d'une fenetre approximative par icone (reperee visuellement sur une grille de reperage en %). Verifie par planche de contact (57 vignettes) avant integration - aucune icone ne chevauche sa voisine.
+
+**Pas encore utilisees dans l'appli** : ce lot n'est pour l'instant que range/renomme dans le depot ; brancher `assets/ui/*` sur les vrais boutons du shell (`index.html`/`home.css`, navigation, HUD) reste a faire.
