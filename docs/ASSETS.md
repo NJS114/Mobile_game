@@ -148,3 +148,31 @@ assets/ui/
 **Methode de decoupe** : la planche source n'a pas de transparence (fond degrade continu derriere chaque icone), donc chaque decoupe est un simple rectangle - pas un detourage avec alpha. Les rectangles ont ete localises automatiquement par difference avec une version tres floutee de la planche (`PIL.ImageFilter.GaussianBlur`) pour isoler le detail net (icones) du fond flou, puis affines a la boite englobante des pixels de detail a l'interieur d'une fenetre approximative par icone (reperee visuellement sur une grille de reperage en %). Verifie par planche de contact (57 vignettes) avant integration - aucune icone ne chevauche sa voisine.
 
 **Pas encore utilisees dans l'appli** : ce lot n'est pour l'instant que range/renomme dans le depot ; brancher `assets/ui/*` sur les vrais boutons du shell (`index.html`/`home.css`, navigation, HUD) reste a faire.
+
+## 7. Lot pousse le 06/09/2026 (2) - icones individuelles detourees + duo de heros
+
+47 fichiers reçus a la racine du repo (dont 4 doublons stricts par octets, supprimes :
+`carte-rouge`, `icon-classement`, `icon-decks`, `icone-cle` avaient chacun une copie
+` (1)` identique). Contrairement a la planche du lot precedent, ces icones sont deja
+**detourees individuellement avec un canal alpha propre** (fond transparent) - nettement
+superieures a mes decoupes rectangulaires automatiques de la section 6, qui ont ete
+**remplacees** partout ou une meme icone existait dans les deux lots :
+
+- `nav/` (12), `rarete/` (4) : toutes remplacees par la version detouree.
+- `items/` : `dos-carte-bleu-paw`, `dos-carte-rouge-couronne`, `booster-violet`,
+  `coffre-bois`, `coffre-bleu`, `coffre-or` remplacees ; `booster-bleu` et
+  `pile-cartes` inchangees (pas fournies dans ce lot).
+- `status/` : `piece-or`, `gemme`, `coeur`, `eclair`, `potion`, `cle`, `parchemin`,
+  `enveloppe` (recu sous le nom `icone-lettre.png`), `boussole`, `grimoire`,
+  `carte-tresor`, `couronne` remplacees. Nouveau fichier `banniere.png` (banniere
+  combinant couronne + patte en un seul design) - garde en plus des deux bannieres
+  separees deja presentes (`banniere-couronne.png`, `banniere-paw.png`), pas de
+  remplacement 1:1 evident entre les deux lots.
+- `boutons/` : `jouer`, `collection-btn`, `boutique-btn`, `arene-btn`,
+  `missions-btn`, `evenements-btn` remplaces ; `precedent`/`suivant`/`annuler`/
+  `confirmer`/`supprimer` inchanges (pas fournis).
+- `hud/` : rien fourni dans ce lot, toujours les decoupes de la section 6.
+- **Nouveau** : `heros/chaton-mage.png` et `heros/chien-chevalier.png` - portraits
+  individuels detoures des deux heros (deja vus ensemble, non detoures, dans
+  `assets/reference/heros-duo.png`) - pas encore relies aux avatars du plateau de
+  combat (`app/battle.html` utilise encore les emojis 🐈/🐕).
