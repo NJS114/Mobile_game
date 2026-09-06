@@ -39,9 +39,24 @@ html, body {
 .player-name { font-size: 11px; font-weight: 700; color: #F5E8CC; }
 .player-hp { font-size: 15px; font-weight: 800; color: #E39B6B; }
 
+/* Pioche : une vraie petite pile de dos de carte (illustration officielle),
+   legerement decalee pour suggerer l'epaisseur, avec le nombre restant en
+   badge - plutot qu'un simple texte "carte generique". */
 .deck-count {
-  flex: 0 0 auto; font-size: 10px; font-weight: 700; color: #C9A227;
-  background: rgba(0,0,0,0.35); border-radius: 8px; padding: 2px 6px; white-space: nowrap;
+  flex: 0 0 auto; position: relative; width: 26px; height: 34px; margin-right: 4px;
+}
+.deck-count .deck-card {
+  position: absolute; width: 22px; height: 30px; border-radius: 3px;
+  background: url("../assets/cards/dos/dos-carte-paw-and-claw.png") center / cover no-repeat;
+  border: 1px solid #1A140F; box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+}
+.deck-count .deck-card:nth-child(1) { top: 4px; left: 4px; }
+.deck-count .deck-card:nth-child(2) { top: 2px; left: 2px; }
+.deck-count .deck-card:nth-child(3) { top: 0; left: 0; }
+.deck-count .deck-total {
+  position: absolute; bottom: -6px; right: -6px; min-width: 15px; text-align: center;
+  font-size: 9px; font-weight: 800; color: #1A140F; background: #F0D878;
+  border: 1px solid #1A140F; border-radius: 8px; padding: 0 3px; line-height: 1.4;
 }
 .mana-display { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
 .mana-label { font-size: 11px; font-weight: 700; color: #9FD3F0; white-space: nowrap; }
@@ -62,40 +77,51 @@ html, body {
 }
 .hand-strip .hand-card { width: 22px; height: 30px; cursor: default; }
 
+/* Plateau photoreel (salle du trone) : les deux lignes de jeu et la
+   division centrale sont superposees en grille sur l'illustration, aux
+   memes proportions que ses bandes rouge / marbre / bleue et ses 7 cases
+   a empreintes deja dessinees - on ne pose donc plus de fond colore ni de
+   bordure sur les lignes elles-memes (voir board-row-enemy/own ci-dessous),
+   seules les cartes et les cases vides cliquables flottent par-dessus. */
+#battlefield {
+  background: url("../assets/decor/plateau-salle-du-trone.png") center / cover no-repeat;
+  aspect-ratio: 1536 / 1024;
+  display: grid;
+  grid-template-rows: 4.3% 26.2% 31.2% 24.2% 14.1%;
+  border-radius: 10px;
+  overflow: hidden;
+}
+#enemy-board { grid-row: 2; }
+.center-divider { grid-row: 3; }
+#own-board { grid-row: 4; }
+
 .board-row {
-  border-radius: 12px; padding: 8px; min-height: 66px;
-  display: flex; flex-wrap: wrap; gap: 5px; align-content: center; justify-content: center;
-}
-.board-row-enemy {
-  background: rgba(122, 39, 39, 0.55); border: 2px solid #8A3A3A;
-  box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.25);
-}
-.board-row-own {
-  background: rgba(28, 58, 92, 0.55); border: 2px solid #3E6A9E;
-  box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.25);
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 1.2%; align-items: center; justify-items: center;
+  width: 80%; height: 100%; margin: 0 auto; padding: 4% 0;
 }
 
 .board-slot-empty {
-  width: 48px; height: 66px; border-radius: 6px;
-  border: 2px dashed rgba(212, 175, 55, 0.4);
+  width: 100%; height: 100%; border-radius: 6px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 16px; opacity: 0.45;
 }
 .board-slot-empty.targetable {
-  outline: 3px dashed #E39B6B; outline-offset: 1px; opacity: 0.9; cursor: pointer;
+  outline: 3px dashed #F0D878; outline-offset: -2px; cursor: pointer;
+  background: rgba(240, 216, 120, 0.18);
 }
 
 .center-divider {
-  display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 2px 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
 }
 .turn-info { font-size: 11px; font-weight: 700; color: #4A3222; background: rgba(245,232,204,0.85); border-radius: 8px; padding: 2px 10px; }
 
 .mini-card {
-  width: 48px; height: 66px; border-radius: 6px; border: 2px solid #1A140F;
+  width: 100%; aspect-ratio: 3 / 4; border-radius: 6px; border: 2px solid #1A140F;
   display: flex; flex-direction: column; align-items: center; justify-content: space-between;
   background-size: cover; background-position: center top; background-color: #E9D9BC;
   position: relative; cursor: pointer; color: #FBF3E7;
   font-size: 8px; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
 }
 .mini-card.tribu-robots { border-color: #7A93AE; }
 .mini-card.tribu-nobles { border-color: #A886C9; }
@@ -158,7 +184,7 @@ html, body {
 }
 .hand-card.unaffordable { opacity: 0.4; cursor: not-allowed; }
 .hand-card.hidden-card {
-  background: #3A2E22 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Ctext x='2' y='8' font-size='8' fill='%23F5E8CC'%3E%F0%9F%90%BE%3C/text%3E%3C/svg%3E");
+  background: url("../assets/cards/dos/dos-carte-paw-and-claw.png") center / cover no-repeat;
   border-width: 2px; cursor: default;
 }
 

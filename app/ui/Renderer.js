@@ -28,8 +28,19 @@ export class Renderer {
     this.dom.turnInfo.textContent = `Tour ${game.turn} - ${game.activeLabel}`;
   }
 
+  // Une vraie petite pile de dos de carte (voir style.css .deck-count)
+  // plutot qu'un simple texte, pour ressembler a une pioche physique.
   renderDeckCount(container, player) {
-    container.textContent = `🂠 ${player.deck.size}`;
+    container.innerHTML = "";
+    for (let i = 0; i < 3; i++) {
+      const card = document.createElement("div");
+      card.className = "deck-card";
+      container.appendChild(card);
+    }
+    const total = document.createElement("div");
+    total.className = "deck-total";
+    total.textContent = player.deck.size;
+    container.appendChild(total);
   }
 
   renderManaDisplay(container, player) {

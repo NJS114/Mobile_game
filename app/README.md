@@ -4,9 +4,11 @@ Prototype v1 en HTML/CSS/JS, sans etape de build (modules ES natifs), avec une
 identite visuelle "parchemin et or" ornementee unifiee sur tout le shell :
 - le **shell meta-jeu** (accueil, collection, boutique), inspire des
   maquettes fournies ;
-- le **plateau de combat** (`battle.html`), reharmonise avec le meme style
-  (bandeaux joueur sombres a bordure doree, zones de plateau teintees par
-  camp, mana en pastilles, bouton de fin de tour circulaire) - principes
+- le **plateau de combat** (`battle.html`), dont le fond est l'illustration
+  officielle de la salle du trone (`assets/decor/plateau-salle-du-trone.png`)
+  avec ses 7+7 emplacements a empreintes deja dessines - les deux lignes de
+  jeu et la division centrale sont superposees en grille sur cette image
+  aux memes proportions (voir `#battlefield` dans `style.css`) - principes
   proches de Hearthstone (mana, plateau, points de vie de royaume) avec une
   touche de TFT (synergies de tribu), et deux camps opposes Chats contre
   Chiens qui piochent chacun dans leur propre espece.
@@ -159,6 +161,11 @@ app/
   mana de depart (sinon echangee contre une carte abordable de la pioche),
   et cliquer une carte trop chere explique pourquoi dans le journal plutot
   que de ne rien faire silencieusement.
+- Pioche et main adverse avec les vrais visuels de carte : la pioche de
+  chaque camp est une petite pile de dos de carte (illustration officielle
+  `assets/cards/dos/dos-carte-paw-and-claw.png`) plutot qu'un texte, et les
+  cartes cachees de la main adverse utilisent le meme dos plutot qu'un
+  placeholder generique.
 - Attaque manuelle et ciblee : chaque unite peut attaquer une fois par tour
   une unite ennemie de son choix (degats mutuels, vrais points de vie), ou
   frapper directement le heros adverse si aucune Garde adverse n'est en vie
