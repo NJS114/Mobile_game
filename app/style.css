@@ -81,6 +81,9 @@ html, body {
   display: flex; align-items: center; justify-content: center;
   font-size: 16px; opacity: 0.45;
 }
+.board-slot-empty.targetable {
+  outline: 3px dashed #E39B6B; outline-offset: 1px; opacity: 0.9; cursor: pointer;
+}
 
 .center-divider {
   display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 2px 0;

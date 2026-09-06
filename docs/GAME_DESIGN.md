@@ -28,7 +28,7 @@ Les illustrations concept-art existantes (chats/chiens en tranchees, decors somb
 ## 3. Regles de base (façon Hearthstone)
 
 - Chaque joueur commence avec **30 PV de royaume** et une reserve de mana de **1**, qui augmente de 1 par tour jusqu'a **10 [a tester]** ; le mana se recharge integralement a chaque tour (il ne se cumule pas d'un tour a l'autre).
-- Chaque joueur pioche une carte au debut de son tour (sauf le tout premier tour de la partie, ou la main de depart suffit).
+- Chaque joueur pioche une carte au debut de son tour (sauf le tout premier tour de la partie, ou la main de depart suffit). La main de depart est garantie de contenir au moins une carte jouable avec le mana de depart (sinon echangee automatiquement contre une carte abordable de la pioche) : avec 1 mana de depart et un deck majoritairement plus cher, une main entierement injouable arriverait sinon tres souvent par pur hasard.
 - Le plateau est un **unique alignement partage par camp** (pas de couloirs ni de zones cachees) : jusqu'a **7 unites [a tester]** par joueur, toutes visibles en permanence. Seules les mains sont cachees (l'adversaire voit le nombre de cartes, pas leur contenu).
 - Une unite posee souffre du **mal de debarquement** : elle ne peut pas attaquer le tour ou elle est jouee, sauf si elle a le mot-cle **Charge**. A partir du tour suivant, elle peut attaquer une fois par tour.
 
@@ -36,7 +36,7 @@ Les illustrations concept-art existantes (chats/chiens en tranchees, decors somb
 
 1. **Debut de tour** — le mana du joueur actif augmente d'un cran (sauf sur son tout premier tour) puis se recharge au maximum ; il pioche une carte ; ses unites deja en jeu redeviennent capables d'attaquer.
 2. **Phase d'action** — dans l'ordre de son choix, le joueur actif peut :
-   - poser une unite de sa main sur le plateau (cout = cout en mana de la carte, plateau limite a 7 unites) ;
+   - poser une unite de sa main sur le plateau (cout = cout en mana de la carte, plateau limite a 7 unites) ; l'emplacement dans la ligne se choisit au moment de la pose (devant une unite existante, ou en bout de ligne) ;
    - jouer un sort de sa main (cout en mana ; certains sorts demandent de designer une cible, alliee ou ennemie selon le sort) ;
    - **attaquer** : chaque unite posee depuis au moins un tour peut attaquer une fois par tour une unite ennemie de son choix (degats mutuels), ou frapper directement le heros adverse si aucune unite adverse ayant la **Garde** n'est en vie (une Garde doit toujours etre ciblee en priorite, comme un Taunt).
 3. **Fin de tour** — toute unite du joueur actif qui n'a pas encore attaque ce tour-ci (et qui le peut : pas de mal de debarquement, pas etourdie) attaque **automatiquement** avant que le tour ne passe au joueur suivant, en suivant exactement les memes regles de ciblage que l'attaque manuelle : une Garde adverse en priorite si une est en vie, sinon une unite adverse quelconque, sinon le heros adverse directement si le plateau adverse est vide. Cette resolution automatique garantit qu'aucune attaque possible n'est jamais perdue par oubli ; elle s'ajoute a l'attaque manuelle et ne la remplace pas (l'attaque manuelle reste utile pour choisir precisement quelle unite ennemie viser quand plusieurs cibles non-Garde sont possibles).

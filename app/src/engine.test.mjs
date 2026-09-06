@@ -397,4 +397,49 @@ function makeAttackable(instance) {
   );
 }
 
+// --- 27. La main de depart contient toujours une carte jouable au tour 1 -
+{
+  for (let i = 0; i < 20; i++) {
+    const game = newGame();
+    assert(
+      game.players.chat.hand.some((c) => game.players.chat.canAfford(c.card)),
+      "la main de depart des Chats contient au moins une carte jouable avec le mana de depart"
+    );
+    assert(
+      game.players.chien.hand.some((c) => game.players.chien.canAfford(c.card)),
+      "la main de depart des Chiens contient au moins une carte jouable avec le mana de depart"
+    );
+  }
+}
+
+// --- 28. Poser une unite a un emplacement choisi l'insere a cette position
+{
+  const game = newGame();
+  const first = playUnit(game, "chat", "robot-petit-automate");
+  const second = playUnit(game, "chat", "robot-golem-horlogerie");
+  // Les deux unites sont deja sur le plateau ; on en pose une troisieme en
+  // position 0 (avant la premiere), plutot qu'en bout de ligne par defaut.
+  const third = giveHandCard(game, "chat", "robot-automate-siege");
+  game.execute(new PlayUnitCommand(third.instanceId, 0));
+  assert(
+    game.players.chat.board[0] === third,
+    "poser une unite avec un index explicite l'insere a cette position plutot qu'en bout de ligne"
+  );
+  assert(
+    game.players.chat.board[1] === first && game.players.chat.board[2] === second,
+    "les unites deja en jeu se decalent mais gardent leur ordre relatif"
+  );
+}
+
+// --- 29. Sans index (comportement par defaut), l'unite part en bout de ligne
+{
+  const game = newGame();
+  const first = playUnit(game, "chat", "robot-petit-automate");
+  const second = playUnit(game, "chat", "robot-golem-horlogerie");
+  assert(
+    game.players.chat.board[0] === first && game.players.chat.board[1] === second,
+    "sans index de placement, chaque nouvelle unite part toujours en bout de ligne (comportement inchange)"
+  );
+}
+
 console.log(`\n${passed} assertions passees.`);

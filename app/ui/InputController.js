@@ -28,7 +28,17 @@ export class InputController {
   isTargetable(ownerId, instanceId) {
     if (this.selection?.kind === "attacking") return this.isAttackTargetable(ownerId, instanceId);
     if (this.selection?.kind === "awaitingSpellTarget") return this.isSpellTargetValid(instanceId);
+    if (this.selection?.kind === "placingUnit") return this.isPlacementTargetable(ownerId);
     return false;
+  }
+
+  // Une case vide n'a pas d'instanceId : cible propre pour le placement.
+  isEmptySlotTargetable(ownerId) {
+    return this.selection?.kind === "placingUnit" && this.isPlacementTargetable(ownerId);
+  }
+
+  isPlacementTargetable(ownerId) {
+    return ownerId === this.game.active;
   }
 
   isHeroTargetable(playerId) {
@@ -69,10 +79,12 @@ export class InputController {
         isSelected: (id) => this.isSelected(id),
         isTargetable: (ownerId, id) => this.isTargetable(ownerId, id),
         isHeroTargetable: (playerId) => this.isHeroTargetable(playerId),
+        isEmptySlotTargetable: (ownerId) => this.isEmptySlotTargetable(ownerId),
       },
       {
         onHandCardClick: (id, affordable) => this.onHandCardClick(id, affordable),
-        onBoardCardClick: (ownerId, id) => this.onBoardCardClick(ownerId, id),
+        onBoardCardClick: (ownerId, id, index) => this.onBoardCardClick(ownerId, id, index),
+        onEmptySlotClick: (ownerId, index) => this.onEmptySlotClick(ownerId, index),
         onHeroClick: (playerId) => this.onHeroClick(playerId),
       }
     );
@@ -81,11 +93,34 @@ export class InputController {
   }
 
   onHandCardClick(instanceId, affordable) {
-    if (!affordable || this.selection) return;
+    if (this.selection) return;
     const instance = this.game.activePlayer.hand.find((c) => c.instanceId === instanceId);
     if (!instance) return;
+    if (!affordable) {
+      this.explainUnaffordable(instance);
+      return;
+    }
     if (instance.card instanceof SpellCard) this.playSpellOrAwaitTarget(instanceId, instance.card);
-    else this.executeAndRender(new PlayUnitCommand(instanceId));
+    else this.selectUnitForPlacement(instanceId);
+  }
+
+  // Une carte grisee ne dit sinon jamais pourquoi elle refuse le clic (juste
+  // pas assez de mana) - on l'explicite dans le journal plutot que de
+  // laisser un clic sans effet passer pour un bug.
+  explainUnaffordable(instance) {
+    const mana = this.game.activePlayer.mana;
+    this.game.log.push(
+      `Pas assez de mana pour jouer ${instance.card.nom} (cout ${instance.card.cout}, mana disponible ${mana}).`
+    );
+    this.renderer.renderLog(this.game);
+  }
+
+  // Une unite ne part plus directement sur le plateau : on choisit d'abord
+  // son emplacement (avant une unite existante, ou en bout de ligne), avec
+  // le meme principe de selection en deux temps que le ciblage de sort.
+  selectUnitForPlacement(instanceId) {
+    this.selection = { kind: "placingUnit", instanceId };
+    this.renderAll();
   }
 
   playSpellOrAwaitTarget(instanceId, card) {
@@ -98,7 +133,11 @@ export class InputController {
     this.executeAndRender(new PlaySpellCommand(instanceId));
   }
 
-  onBoardCardClick(ownerId, instanceId) {
+  onBoardCardClick(ownerId, instanceId, index) {
+    if (this.selection?.kind === "placingUnit") {
+      this.tryPlaceUnit(ownerId, index);
+      return;
+    }
     if (this.selection?.kind === "awaitingSpellTarget") {
       this.tryPlaySpellOnTarget(instanceId);
       return;
@@ -108,6 +147,19 @@ export class InputController {
       return;
     }
     this.trySelectAttacker(ownerId, instanceId);
+  }
+
+  onEmptySlotClick(ownerId, index) {
+    if (this.selection?.kind === "placingUnit") this.tryPlaceUnit(ownerId, index);
+  }
+
+  // L'index clique devient la position d'insertion : cliquer une unite
+  // existante pose la nouvelle carte juste avant elle, cliquer une case vide
+  // la pose en bout de ligne (voir Player.addToBoardAt - le plateau reste
+  // une liste compacte, sans "trous").
+  tryPlaceUnit(ownerId, index) {
+    if (!this.isPlacementTargetable(ownerId)) return;
+    this.executeAndRender(new PlayUnitCommand(this.selection.instanceId, index));
   }
 
   onHeroClick(playerId) {
@@ -180,6 +232,9 @@ export class InputController {
       return "Touche une carte de ta main pour la jouer, ou une unite au front pour attaquer. Toute unite qui n'a pas attaque attaquera automatiquement a la fin du tour.";
     }
     if (this.selection.kind === "awaitingSpellTarget") return "Touche une cible valide (surlignee en pointille).";
+    if (this.selection.kind === "placingUnit") {
+      return "Touche l'emplacement de ton plateau ou poser la carte : devant une unite existante, ou une case vide pour la mettre en bout de ligne.";
+    }
     const name = this.findSelectedCard()?.nom ?? "Cette carte";
     return `${name} attaque : touche une cible ennemie valide (surlignee), ou le heros adverse.`;
   }

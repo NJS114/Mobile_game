@@ -152,7 +152,13 @@ app/
   restent neutres, disponibles pour les deux).
 - Pose d'unites (main -> plateau, paiement du mana) avec mal de
   debarquement (pas d'attaque le tour ou l'unite est posee, sauf mot-cle
-  Charge).
+  Charge). L'emplacement dans la ligne se choisit en un second clic (devant
+  une unite existante, ou une case vide pour la poser en bout de ligne) -
+  meme principe de selection en deux temps que le ciblage de sort.
+- La main de depart garantit toujours au moins une carte jouable avec le
+  mana de depart (sinon echangee contre une carte abordable de la pioche),
+  et cliquer une carte trop chere explique pourquoi dans le journal plutot
+  que de ne rien faire silencieusement.
 - Attaque manuelle et ciblee : chaque unite peut attaquer une fois par tour
   une unite ennemie de son choix (degats mutuels, vrais points de vie), ou
   frapper directement le heros adverse si aucune Garde adverse n'est en vie

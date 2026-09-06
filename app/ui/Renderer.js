@@ -68,19 +68,29 @@ export class Renderer {
     for (let i = 0; i < BOARD_CAPACITY; i++) {
       const instance = board[i];
       container.appendChild(
-        instance ? this.buildMiniCard(instance, ownerId, ui, callbacks) : this.buildEmptySlot()
+        instance
+          ? this.buildMiniCard(instance, ownerId, i, ui, callbacks)
+          : this.buildEmptySlot(ownerId, i, ui, callbacks)
       );
     }
   }
 
-  buildEmptySlot() {
+  // Une case vide devient elle-meme une cible cliquable pendant le
+  // placement d'une unite (voir InputController) : elle indique alors ou la
+  // carte va atterrir dans la ligne (toujours en bout de ligne compacte,
+  // les cases vides ne representant pas des positions fixes).
+  buildEmptySlot(ownerId, index, ui, callbacks) {
     const div = document.createElement("div");
     div.className = "board-slot-empty";
     div.textContent = "🐾";
+    if (ui.isEmptySlotTargetable(ownerId)) {
+      div.classList.add("targetable");
+      div.addEventListener("click", () => callbacks.onEmptySlotClick(ownerId, index));
+    }
     return div;
   }
 
-  buildMiniCard(instance, ownerId, ui, callbacks) {
+  buildMiniCard(instance, ownerId, index, ui, callbacks) {
     const div = document.createElement("div");
     div.className = `mini-card tribu-${instance.card.tribu}`;
     if (instance.card.art) div.style.backgroundImage = `url(../${instance.card.art})`;
@@ -93,7 +103,7 @@ export class Renderer {
     if (ui.isSelected(instance.instanceId)) div.classList.add("selected");
     if (ui.isTargetable(ownerId, instance.instanceId)) div.classList.add("targetable");
 
-    div.addEventListener("click", () => callbacks.onBoardCardClick(ownerId, instance.instanceId));
+    div.addEventListener("click", () => callbacks.onBoardCardClick(ownerId, instance.instanceId, index));
     return div;
   }
 

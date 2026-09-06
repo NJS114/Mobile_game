@@ -18,6 +18,26 @@ export class Player {
     this.mana = MANA_INITIAL;
     this.hasPlayedATurn = false;
     this.drawMany(STARTING_HAND_SIZE);
+    this.guaranteeAffordableOpeningCard();
+  }
+
+  // Avec 1 mana de depart et un deck ou la plupart des cartes coutent plus
+  // cher, une main de depart entierement injouable arrive tres souvent par
+  // pur hasard - une experience qui se lit comme un bug plutot que comme de
+  // la malchance. On garantit donc qu'au moins une carte de la main de
+  // depart est jouable des le tour 1, en l'echangeant contre la carte la
+  // moins chere disponible dans la pioche si besoin.
+  guaranteeAffordableOpeningCard() {
+    if (this.hand.some((c) => this.canAfford(c.card))) return;
+    const affordableIndex = this.deck.cards.findIndex((c) => this.canAfford(c.card));
+    if (affordableIndex === -1) return;
+    const priciestIndex = this.hand.reduce(
+      (maxI, c, i, arr) => (c.card.cout > arr[maxI].card.cout ? i : maxI),
+      0
+    );
+    const [affordableCard] = this.deck.cards.splice(affordableIndex, 1);
+    const [priciestCard] = this.hand.splice(priciestIndex, 1, affordableCard);
+    this.deck.cards.push(priciestCard);
   }
 
   drawOne() {
@@ -58,8 +78,17 @@ export class Player {
   }
 
   addToBoard(instance) {
+    return this.addToBoardAt(instance, this.board.length);
+  }
+
+  // Permet de choisir ou l'unite arrive dans la ligne (avant une unite
+  // existante, ou en bout de ligne) plutot que de toujours l'ajouter a la
+  // fin - le plateau reste une liste compacte (pas de "trous"), l'index
+  // choisi n'est donc qu'une position relative parmi les unites en jeu.
+  addToBoardAt(instance, index) {
     if (!this.hasFreeBoardSlot()) return false;
-    this.board.push(instance);
+    const clamped = Math.max(0, Math.min(index, this.board.length));
+    this.board.splice(clamped, 0, instance);
     return true;
   }
 
