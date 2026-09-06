@@ -23,7 +23,13 @@ export class Renderer {
     this.dom.hpChien.textContent = game.players.chien.hp;
     this.renderManaDisplay(this.dom.manaChat, game.players.chat);
     this.renderManaDisplay(this.dom.manaChien, game.players.chien);
+    this.renderDeckCount(this.dom.deckChat, game.players.chat);
+    this.renderDeckCount(this.dom.deckChien, game.players.chien);
     this.dom.turnInfo.textContent = `Tour ${game.turn} - ${game.activeLabel}`;
+  }
+
+  renderDeckCount(container, player) {
+    container.textContent = `🂠 ${player.deck.size}`;
   }
 
   renderManaDisplay(container, player) {
@@ -51,6 +57,7 @@ export class Renderer {
       back.className = "hand-card hidden-card";
       this.dom.enemyHand.appendChild(back);
     }
+    this.dom.enemyHandCount.textContent = `Main adverse : ${enemy.hand.length}`;
   }
 
   // Affiche toujours BOARD_CAPACITY emplacements (occupes ou non) pour que

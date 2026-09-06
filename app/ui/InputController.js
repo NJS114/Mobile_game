@@ -176,7 +176,9 @@ export class InputController {
   }
 
   hintText() {
-    if (!this.selection) return "Touche une carte de ta main pour la jouer, ou une unite au front pour attaquer.";
+    if (!this.selection) {
+      return "Touche une carte de ta main pour la jouer, ou une unite au front pour attaquer. Toute unite qui n'a pas attaque attaquera automatiquement a la fin du tour.";
+    }
     if (this.selection.kind === "awaitingSpellTarget") return "Touche une cible valide (surlignee en pointille).";
     const name = this.findSelectedCard()?.nom ?? "Cette carte";
     return `${name} attaque : touche une cible ennemie valide (surlignee), ou le heros adverse.`;

@@ -343,4 +343,58 @@ function makeAttackable(instance) {
   assert(game.winner === "chat", "les Chats remportent la partie quand le heros adverse tombe a 0 PV ou moins");
 }
 
+// --- 23. Auto-attaque en fin de tour : unite jamais attaquee -> heros ----
+{
+  const game = newGame();
+  const attacker = playUnit(game, "chat", "robot-petit-automate"); // 1 ATQ
+  makeAttackable(attacker);
+  game.execute(new EndTurnCommand());
+  assert(
+    game.players.chien.hp === 29,
+    "une unite qui n'a pas attaque frappe automatiquement le heros adverse en fin de tour si le plateau adverse est vide"
+  );
+  assert(attacker.hasAttacked === true, "l'unite est marquee comme ayant attaque apres la resolution automatique");
+}
+
+// --- 24. Auto-attaque : la priorite de Garde est respectee ---------------
+{
+  const game = newGame();
+  const attacker = playUnit(game, "chat", "robot-automate-siege"); // 5 ATQ
+  game.active = "chien";
+  const nonGarde = playUnit(game, "chien", "robot-ingenieure-renarde"); // pas Garde
+  const garde = playUnit(game, "chien", "robot-gardien-botanique"); // Garde
+  game.active = "chat";
+  makeAttackable(attacker);
+
+  game.execute(new EndTurnCommand());
+  assert(garde.currentPv < garde.maxPv, "l'auto-attaque cible en priorite la Garde adverse");
+  assert(nonGarde.currentPv === nonGarde.maxPv, "l'unite non-Garde n'est pas touchee tant qu'une Garde adverse est en vie");
+  assert(game.players.chien.hp === 30, "le heros adverse n'est pas frappe tant qu'une Garde adverse est en vie");
+}
+
+// --- 25. Auto-attaque : une unite ayant deja attaque n'attaque pas 2 fois -
+{
+  const game = newGame();
+  const attacker = playUnit(game, "chat", "robot-petit-automate"); // 1 ATQ
+  makeAttackable(attacker);
+  game.execute(new AttackCommand(attacker.instanceId, Target.hero("chien")));
+  assert(game.players.chien.hp === 29, "l'attaque manuelle inflige bien ses degats");
+  game.execute(new EndTurnCommand());
+  assert(
+    game.players.chien.hp === 29,
+    "une unite ayant deja attaque manuellement ce tour n'est pas re-attaquee par la resolution automatique"
+  );
+}
+
+// --- 26. Auto-attaque : une unite fraichement posee n'attaque pas -------
+{
+  const game = newGame();
+  playUnit(game, "chat", "robot-petit-automate"); // mal de debarquement, pas d'appel a makeAttackable
+  game.execute(new EndTurnCommand());
+  assert(
+    game.players.chien.hp === 30,
+    "une unite fraichement posee (mal de debarquement) n'attaque pas automatiquement en fin de tour"
+  );
+}
+
 console.log(`\n${passed} assertions passees.`);

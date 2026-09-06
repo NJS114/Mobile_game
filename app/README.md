@@ -108,7 +108,12 @@ app/
       PlayUnitCommand.js         Pose une unite (paiement du mana, plateau plein = refus)
       PlaySpellCommand.js        Joue un sort, avec ciblage optionnel
       AttackCommand.js           Attaque une unite ou frappe le heros adverse (Garde respectee)
-      EndTurnCommand.js          Passe au joueur suivant (mana, pioche, reinitialise les attaques)
+      EndTurnCommand.js          Resout les auto-attaques puis passe au joueur suivant (mana, pioche,
+                                 reinitialise les attaques)
+    combat/
+      AutoAttackResolver.js      Fait attaquer automatiquement, en fin de tour, toute unite qui ne
+                                 l'a pas encore fait ce tour-ci (memes regles de ciblage que
+                                 AttackCommand, reutilise directement)
     events/EventEmitter.js    Observer Pattern minimal (le moteur emet, l'UI ecoute)
   ui/
     Renderer.js             Traduit l'etat du jeu en DOM (jamais l'inverse)
@@ -152,6 +157,14 @@ app/
   une unite ennemie de son choix (degats mutuels, vrais points de vie), ou
   frapper directement le heros adverse si aucune Garde adverse n'est en vie
   (la Garde doit toujours etre ciblee en priorite).
+- Auto-attaque en fin de tour : toute unite qui n'a pas encore attaque ce
+  tour-ci (et qui le peut) frappe automatiquement avant que le tour ne
+  passe, avec exactement les memes regles de ciblage que l'attaque manuelle
+  (Garde en priorite, sinon unite adverse, sinon le heros adverse) - aucune
+  attaque possible n'est jamais perdue par oubli.
+- Nombre de cartes restantes visible pour les deux camps : la pioche de
+  chaque joueur (`🂠 N`) et la taille de la main adverse (dos de cartes +
+  compteur) - jamais le contenu de la main adverse.
 - Trois mots-cles fixes sur la carte : Garde (doit etre ciblee en
   priorite), Charge (peut attaquer des sa pose), Bouclier (absorbe
   integralement le premier coup recu).

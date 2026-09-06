@@ -39,7 +39,7 @@ Les illustrations concept-art existantes (chats/chiens en tranchees, decors somb
    - poser une unite de sa main sur le plateau (cout = cout en mana de la carte, plateau limite a 7 unites) ;
    - jouer un sort de sa main (cout en mana ; certains sorts demandent de designer une cible, alliee ou ennemie selon le sort) ;
    - **attaquer** : chaque unite posee depuis au moins un tour peut attaquer une fois par tour une unite ennemie de son choix (degats mutuels), ou frapper directement le heros adverse si aucune unite adverse ayant la **Garde** n'est en vie (une Garde doit toujours etre ciblee en priorite, comme un Taunt).
-3. **Fin de tour** — le tour passe au joueur suivant.
+3. **Fin de tour** — toute unite du joueur actif qui n'a pas encore attaque ce tour-ci (et qui le peut : pas de mal de debarquement, pas etourdie) attaque **automatiquement** avant que le tour ne passe au joueur suivant, en suivant exactement les memes regles de ciblage que l'attaque manuelle : une Garde adverse en priorite si une est en vie, sinon une unite adverse quelconque, sinon le heros adverse directement si le plateau adverse est vide. Cette resolution automatique garantit qu'aucune attaque possible n'est jamais perdue par oubli ; elle s'ajoute a l'attaque manuelle et ne la remplace pas (l'attaque manuelle reste utile pour choisir precisement quelle unite ennemie viser quand plusieurs cibles non-Garde sont possibles).
 
 Une partie dure typiquement 8-14 tours par joueur.
 
