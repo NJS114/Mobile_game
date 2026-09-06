@@ -8,26 +8,38 @@
 </head>
 <body>
 
-  <div class="topbar">
-    <a href="index.html" class="back-home" title="Retour a l'accueil">&larr;</a>
-    <div class="hero hero-chat" id="hero-chat">
-      <span class="hero-label">Chats</span>
-      <span class="hero-hp" id="hp-chat"></span>
+  <a href="index.html" class="back-home" title="Retour a l'accueil">&larr;</a>
+
+  <div id="table">
+    <div class="player-bar enemy-bar" id="hero-chien">
+      <div class="player-avatar">🐕</div>
+      <div class="player-info">
+        <div class="player-name">Chiens</div>
+        <div class="player-hp">❤ <span id="hp-chien"></span></div>
+      </div>
+      <div class="mana-display" id="mana-chien"></div>
     </div>
-    <div class="turn-info" id="turn-info"></div>
-    <div class="mana-badge" id="mana-badge"></div>
-    <div class="hero hero-chien" id="hero-chien">
-      <span class="hero-label">Chiens</span>
-      <span class="hero-hp" id="hp-chien"></span>
+
+    <div id="enemy-hand" class="hand-strip"></div>
+    <div id="enemy-board" class="board-row board-row-enemy"></div>
+
+    <div class="center-divider">
+      <div class="turn-info" id="turn-info"></div>
+      <div id="action-bar"></div>
+    </div>
+
+    <div id="own-board" class="board-row board-row-own"></div>
+
+    <div class="player-bar own-bar" id="hero-chat">
+      <div class="player-avatar">🐈</div>
+      <div class="player-info">
+        <div class="player-name">Chats</div>
+        <div class="player-hp">❤ <span id="hp-chat"></span></div>
+      </div>
+      <div class="mana-display" id="mana-chat"></div>
     </div>
   </div>
 
-  <div id="table">
-    <div id="enemy-hand" class="hand-strip"></div>
-    <div id="enemy-board" class="board-row"></div>
-    <div id="own-board" class="board-row"></div>
-  </div>
-  <div id="action-bar"></div>
   <div id="log"></div>
 
   <div id="hand-zone"></div>

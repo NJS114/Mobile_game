@@ -1,13 +1,15 @@
 # Prototype jouable - Paw & Claw
 
-Prototype v1 en HTML/CSS/JS, sans etape de build (modules ES natifs), compose
-de deux univers visuels distincts :
-- un **shell meta-jeu** (accueil, collection, boutique) au look parchemin/or
-  ornemente, inspire des maquettes fournies ;
-- un **plateau de combat** (`battle.html`) au style pastel cozy plus simple,
-  principes proches de Hearthstone (mana, plateau, points de vie de royaume)
-  avec une touche de TFT (synergies de tribu), et deux camps opposes Chats
-  contre Chiens qui piochent chacun dans leur propre espece.
+Prototype v1 en HTML/CSS/JS, sans etape de build (modules ES natifs), avec une
+identite visuelle "parchemin et or" ornementee unifiee sur tout le shell :
+- le **shell meta-jeu** (accueil, collection, boutique), inspire des
+  maquettes fournies ;
+- le **plateau de combat** (`battle.html`), reharmonise avec le meme style
+  (bandeaux joueur sombres a bordure doree, zones de plateau teintees par
+  camp, mana en pastilles, bouton de fin de tour circulaire) - principes
+  proches de Hearthstone (mana, plateau, points de vie de royaume) avec une
+  touche de TFT (synergies de tribu), et deux camps opposes Chats contre
+  Chiens qui piochent chacun dans leur propre espece.
 
 Voir `docs/GAME_DESIGN.md` pour le detail des mecaniques.
 

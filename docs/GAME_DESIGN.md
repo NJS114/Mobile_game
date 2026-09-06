@@ -102,8 +102,12 @@ Le prototype embarque un premier lot representatif du catalogue "Paw & Claw" —
 ## 9bis. Shell meta-jeu (accueil, collection, boutique)
 
 Le prototype embarque desormais un ecran d'accueil et sa navigation, au style
-"parchemin et or" ornemente (distinct du plateau de combat, reste pastel et
-simple) - directement inspire des maquettes fournies :
+"parchemin et or" ornemente directement inspire des maquettes fournies. Le
+plateau de combat (`app/battle.html`) partage desormais cette meme identite
+visuelle (bandeaux joueur sombres a bordure doree, zones de plateau teintees
+rouge/bleu par camp, emplacements vides watermarkes d'une empreinte de
+patte, mana affiche en pastilles lumineuses, bouton "Fin du tour" circulaire)
+plutot que son ancien style pastel clair :
 - **Accueil** (`app/index.html`) — profil, monnaies (Couronnes/Gemmes), quete
   du jour, logo, et acces a tout le reste du shell. Les valeurs affichees
   sont des donnees de demonstration figees (pas de backend/sauvegarde pour
@@ -115,7 +119,8 @@ simple) - directement inspire des maquettes fournies :
 - **Boutique** (`app/shop.html`) — maquette visuelle de la structure decrite
   section 11 (coffres, pass de combat, craft) ; l'achat n'est pas encore
   fonctionnel, clairement indique a l'ecran.
-- **Combattre** ouvre le plateau de combat existant (`app/battle.html`).
+- **Combattre** ouvre le plateau de combat existant (`app/battle.html`),
+  desormais reharmonise visuellement avec le reste du shell.
 - Toutes les autres sections (Decks, Missions, Evenements, Guilde, Arene,
   Classement, Succes, Mascottes, Parametres) pointent vers un ecran-relais
   generique "Bientot disponible" (`app/soon.html`) plutot que des maquettes

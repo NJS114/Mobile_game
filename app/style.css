@@ -1,65 +1,95 @@
 * { box-sizing: border-box; }
 html, body {
-  margin: 0; padding: 0; height: 100%;
-  background: #FBF3E7;
+  margin: 0; padding: 0; min-height: 100%;
   font-family: system-ui, sans-serif;
-  color: #4A3222;
+  color: #F5E8CC;
+  background: linear-gradient(180deg, #9CC3E0 0%, #E8CFA0 55%, #D9B77E 100%);
+  background-attachment: fixed;
   overflow-x: hidden;
 }
 
 .back-home {
-  flex: 0 0 auto; width: 28px; height: 28px; border-radius: 50%;
-  background: #4A3222; color: #FBF3E7; text-decoration: none;
+  position: fixed; top: 8px; left: 8px; z-index: 20;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(26, 20, 15, 0.86); border: 2px solid #C9A227;
+  color: #F5E8CC; text-decoration: none;
   display: flex; align-items: center; justify-content: center;
   font-size: 16px; font-weight: 700;
 }
 
-.topbar {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 8px 8px; background: #F0DFC8; border-bottom: 3px solid #D8C7A2;
-  position: sticky; top: 0; z-index: 10; gap: 4px;
-}
-.hero {
-  display: flex; flex-direction: column; align-items: center; gap: 2px;
-  padding: 4px 6px; border-radius: 10px; cursor: default; flex: 0 0 auto;
-}
-.hero.targetable { outline: 3px dashed #C9614B; outline-offset: 1px; cursor: pointer; }
-.hero-label { font-size: 10px; font-weight: 700; color: #8A6B4A; text-transform: uppercase; white-space: nowrap; }
-.hero-hp { font-size: 18px; font-weight: 700; }
-.hero-chat .hero-hp { color: #C9744B; }
-.hero-chien .hero-hp { color: #6C7A4C; }
-.mana-badge {
-  background: #4A3222; color: #FBF3E7; border-radius: 10px; padding: 4px 10px;
-  font-weight: 700; font-size: 13px; white-space: nowrap;
-}
-.turn-info { font-size: 13px; font-weight: 600; color: #6B5A3A; }
-
 #table {
-  padding: 10px; max-width: 560px; margin: 0 auto;
-  display: flex; flex-direction: column; gap: 10px;
+  padding: 44px 10px 6px; max-width: 480px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 6px;
 }
+
+/* --- Bandeaux joueur (avatar, nom, PV, mana) --- */
+.player-bar {
+  display: flex; align-items: center; gap: 8px; padding: 6px 10px;
+  background: rgba(26, 20, 15, 0.86); border: 2px solid #C9A227; border-radius: 14px;
+  box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.35);
+  cursor: default;
+}
+.player-bar.targetable { outline: 3px dashed #E39B6B; outline-offset: 1px; cursor: pointer; }
+.player-avatar {
+  flex: 0 0 auto; width: 32px; height: 32px; border-radius: 50%;
+  background: #3A2E22; border: 2px solid #D4AF37;
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+}
+.player-info { flex: 1 1 auto; min-width: 0; }
+.player-name { font-size: 11px; font-weight: 700; color: #F5E8CC; }
+.player-hp { font-size: 15px; font-weight: 800; color: #E39B6B; }
+
+.mana-display { flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
+.mana-label { font-size: 11px; font-weight: 700; color: #9FD3F0; white-space: nowrap; }
+.mana-pips { display: flex; gap: 2px; }
+.mana-pip {
+  width: 8px; height: 8px; border-radius: 50%; background: #3A4550; border: 1px solid #6B7A85;
+}
+.mana-pip.filled { background: #4FA8E0; border-color: #9FD3F0; }
+
+/* --- Plateau --- */
 .hand-strip {
-  display: flex; justify-content: center; gap: 4px; min-height: 30px;
+  display: flex; justify-content: center; gap: 4px; min-height: 26px;
 }
-.hand-strip .hand-card { width: 24px; height: 34px; cursor: default; }
+.hand-strip .hand-card { width: 22px; height: 30px; cursor: default; }
+
 .board-row {
-  background: #F0E2C8; border: 2px solid #D8C7A2; border-radius: 12px;
-  padding: 8px; min-height: 74px;
-  display: flex; flex-wrap: wrap; gap: 6px; align-content: center; justify-content: center;
+  border-radius: 12px; padding: 8px; min-height: 66px;
+  display: flex; flex-wrap: wrap; gap: 5px; align-content: center; justify-content: center;
 }
+.board-row-enemy {
+  background: rgba(122, 39, 39, 0.55); border: 2px solid #8A3A3A;
+  box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.25);
+}
+.board-row-own {
+  background: rgba(28, 58, 92, 0.55); border: 2px solid #3E6A9E;
+  box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.25);
+}
+
+.board-slot-empty {
+  width: 48px; height: 66px; border-radius: 6px;
+  border: 2px dashed rgba(212, 175, 55, 0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; opacity: 0.45;
+}
+
+.center-divider {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 2px 0;
+}
+.turn-info { font-size: 11px; font-weight: 700; color: #4A3222; background: rgba(245,232,204,0.85); border-radius: 8px; padding: 2px 10px; }
 
 .mini-card {
-  width: 52px; height: 70px; border-radius: 6px; border: 2px solid #4A3222;
+  width: 48px; height: 66px; border-radius: 6px; border: 2px solid #1A140F;
   display: flex; flex-direction: column; align-items: center; justify-content: space-between;
   background-size: cover; background-position: center top; background-color: #E9D9BC;
   position: relative; cursor: pointer; color: #FBF3E7;
   font-size: 8px; font-weight: 700; text-shadow: 0 1px 2px rgba(0,0,0,0.6);
 }
-.mini-card.tribu-robots { border-color: #5C7189; }
-.mini-card.tribu-nobles { border-color: #7C5A9E; }
-.mini-card.tribu-sante { border-color: #4F7A4A; }
-.mini-card.selected { outline: 3px solid #4A3222; outline-offset: 1px; }
-.mini-card.targetable { outline: 3px dashed #C9614B; outline-offset: 1px; }
+.mini-card.tribu-robots { border-color: #7A93AE; }
+.mini-card.tribu-nobles { border-color: #A886C9; }
+.mini-card.tribu-sante { border-color: #7FB077; }
+.mini-card.selected { outline: 3px solid #F0D878; outline-offset: 1px; }
+.mini-card.targetable { outline: 3px dashed #E39B6B; outline-offset: 1px; }
 .mini-card.has-attacked { opacity: 0.55; }
 
 .keyword-row {
@@ -78,69 +108,83 @@ html, body {
 
 .stat-row {
   display: flex; justify-content: space-between; width: 100%; padding: 2px 4px;
-  background: rgba(74,50,34,0.6); font-size: 12px; border-radius: 0 0 4px 4px;
+  background: rgba(0,0,0,0.6); font-size: 12px; border-radius: 0 0 4px 4px;
 }
 .stat-row .atq, .stat-row .pv {
   min-width: 15px; text-align: center; border-radius: 4px; padding: 0 2px;
 }
-.stat-row .atq { background: rgba(227,155,107,0.9); color: #4A3222; }
+.stat-row .atq { background: rgba(227,155,107,0.9); color: #1A140F; }
 .stat-row .pv { background: rgba(179,66,53,0.9); color: #FBF3E7; }
 
+/* --- Main --- */
 #hand-zone {
-  position: sticky; bottom: 0; background: #F0DFC8; border-top: 3px solid #D8C7A2;
+  position: sticky; bottom: 0; background: rgba(26, 20, 15, 0.92); border-top: 3px solid #C9A227;
   padding: 8px; display: flex; gap: 6px; overflow-x: auto; z-index: 10;
 }
 .hand-card {
-  flex: 0 0 auto; width: 64px; height: 88px; border-radius: 8px; border: 3px solid #4A3222;
+  flex: 0 0 auto; width: 68px; height: 96px; border-radius: 8px; border: 3px solid #1A140F;
   background-size: cover; background-position: center top; background-color: #E9D9BC;
   position: relative; cursor: pointer; color: #FBF3E7;
 }
-.hand-card.tribu-robots { border-color: #5C7189; }
-.hand-card.tribu-nobles { border-color: #7C5A9E; }
-.hand-card.tribu-sante { border-color: #4F7A4A; }
-.hand-card.selected { outline: 3px solid #7A9B6E; outline-offset: 2px; }
+.hand-card.tribu-robots { border-color: #7A93AE; }
+.hand-card.tribu-nobles { border-color: #A886C9; }
+.hand-card.tribu-sante { border-color: #7FB077; }
+.hand-card.selected { outline: 3px solid #F0D878; outline-offset: 2px; }
 .hand-card .cost {
   position: absolute; top: -6px; left: -6px; width: 22px; height: 22px; border-radius: 50%;
-  background: #6E8FBF; border: 2px solid #4A3222; color: #FBF3E7;
+  background: #4FA8E0; border: 2px solid #1A140F; color: #FFF;
   display: flex; align-items: center; justify-content: center; font: 700 11px "system-ui";
 }
 .hand-card .name {
-  position: absolute; bottom: 0; left: 0; right: 0; font-size: 8px; text-align: center;
-  background: rgba(74,50,34,0.7); padding: 1px 2px; font-weight: 700;
+  position: absolute; bottom: 14px; left: 0; right: 0; font-size: 8px; text-align: center;
+  background: rgba(26,20,15,0.75); padding: 1px 2px; font-weight: 700;
+}
+.hand-card .effect-line {
+  position: absolute; bottom: 0; left: 0; right: 0; font-size: 7px; text-align: center;
+  background: rgba(26,20,15,0.9); color: #F0D878; padding: 1px 2px 2px; font-weight: 600;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .hand-card.unaffordable { opacity: 0.4; cursor: not-allowed; }
 .hand-card.hidden-card {
-  background: #C9B78F url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Ctext x='2' y='8' font-size='8' fill='%234A3222'%3E?%3C/text%3E%3C/svg%3E");
+  background: #3A2E22 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'%3E%3Ctext x='2' y='8' font-size='8' fill='%23F5E8CC'%3E%F0%9F%90%BE%3C/text%3E%3C/svg%3E");
   border-width: 2px; cursor: default;
 }
 
+/* --- Barre d'action (contenue dans le centre-divider) --- */
 #action-bar {
-  display: flex; gap: 6px; padding: 6px 10px; background: #FBF3E7; flex-wrap: wrap;
-  justify-content: center; font-size: 12px;
+  display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; align-items: center; font-size: 12px;
 }
 #action-bar button {
-  font: 600 12px system-ui, sans-serif; padding: 8px 12px; border-radius: 10px; border: 2px solid #8A6B4A;
-  background: #F7E4CE; color: #4A3222; cursor: pointer;
+  font: 700 12px system-ui, sans-serif; padding: 8px 14px; border-radius: 20px; border: 2px solid #C9A227;
+  background: rgba(26, 20, 15, 0.86); color: #F5E8CC; cursor: pointer;
 }
 #action-bar button:disabled { opacity: 0.4; cursor: not-allowed; }
-#action-bar button.primary { background: #C9744B; color: #FBF3E7; }
+#action-bar button.primary {
+  background: radial-gradient(circle at 35% 30%, #6FB4E0, #2A6FA0);
+  border-color: #F0D878; width: 74px; height: 74px; border-radius: 50%;
+  padding: 0; display: flex; align-items: center; justify-content: center; text-align: center;
+  box-shadow: 0 0 0 3px rgba(212,175,55,0.3);
+  white-space: normal; line-height: 1.15; text-transform: uppercase; font-size: 11px;
+}
 .hint {
-  display: block; font-size: 11px; color: #8A6B4A; width: 100%; text-align: center;
+  display: block; font-size: 10px; color: #4A3222; background: rgba(245,232,204,0.85);
+  border-radius: 8px; padding: 3px 8px; width: 100%; text-align: center; max-width: 260px;
 }
 
 #log {
-  max-width: 560px; margin: 0 auto; padding: 8px 14px 100px;
-  font-size: 11px; color: #6B5A3A; max-height: 140px; overflow-y: auto;
+  max-width: 480px; margin: 0 auto; padding: 6px 14px 100px;
+  font-size: 11px; color: #4A3222; background: rgba(245,232,204,0.5); border-radius: 8px;
+  max-height: 100px; overflow-y: auto;
 }
 #log div { padding: 1px 0; }
 
 #victory-overlay {
-  position: fixed; inset: 0; z-index: 60; background: rgba(74,50,34,0.92);
-  color: #FBF3E7; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+  position: fixed; inset: 0; z-index: 60; background: rgba(10,8,6,0.92);
+  color: #F5E8CC; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
 }
 #victory-overlay.hidden { display: none; }
-#victory-overlay h1 { font-size: 28px; }
+#victory-overlay h1 { font-size: 26px; color: #F0D878; }
 #victory-overlay button {
-  font: 700 16px system-ui; padding: 12px 24px; border-radius: 12px; border: none;
-  background: #E39B6B; color: #4A3222; cursor: pointer;
+  font: 700 16px system-ui; padding: 12px 24px; border-radius: 12px; border: 2px solid #F0D878;
+  background: #C9744B; color: #FFF4DA; cursor: pointer;
 }

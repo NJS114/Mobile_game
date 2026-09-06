@@ -1,4 +1,4 @@
-import { otherFaction } from "../src/constants.js";
+import { otherFaction, BOARD_CAPACITY } from "../src/constants.js";
 
 // Responsabilite unique : transformer l'etat du jeu en DOM. Ne modifie
 // jamais l'etat, ne sait pas ce qu'est une Command - elle se contente
@@ -21,9 +21,26 @@ export class Renderer {
   renderTopbar(game) {
     this.dom.hpChat.textContent = game.players.chat.hp;
     this.dom.hpChien.textContent = game.players.chien.hp;
-    const player = game.activePlayer;
-    this.dom.manaBadge.textContent = `Mana ${player.mana}/${player.manaCap}`;
+    this.renderManaDisplay(this.dom.manaChat, game.players.chat);
+    this.renderManaDisplay(this.dom.manaChien, game.players.chien);
     this.dom.turnInfo.textContent = `Tour ${game.turn} - ${game.activeLabel}`;
+  }
+
+  renderManaDisplay(container, player) {
+    container.innerHTML = "";
+    const label = document.createElement("span");
+    label.className = "mana-label";
+    label.textContent = `⚡${player.mana}/${player.manaCap}`;
+    container.appendChild(label);
+
+    const pips = document.createElement("span");
+    pips.className = "mana-pips";
+    for (let i = 0; i < player.manaCap; i++) {
+      const pip = document.createElement("span");
+      pip.className = "mana-pip" + (i < player.mana ? " filled" : "");
+      pips.appendChild(pip);
+    }
+    container.appendChild(pips);
   }
 
   renderEnemyHand(game) {
@@ -36,11 +53,24 @@ export class Renderer {
     }
   }
 
+  // Affiche toujours BOARD_CAPACITY emplacements (occupes ou non) pour que
+  // le plateau se lise comme une grille de cases, façon table de jeu.
   renderBoard(container, game, ownerId, ui, callbacks) {
     container.innerHTML = "";
-    for (const instance of game.players[ownerId].board) {
-      container.appendChild(this.buildMiniCard(instance, ownerId, ui, callbacks));
+    const board = game.players[ownerId].board;
+    for (let i = 0; i < BOARD_CAPACITY; i++) {
+      const instance = board[i];
+      container.appendChild(
+        instance ? this.buildMiniCard(instance, ownerId, ui, callbacks) : this.buildEmptySlot()
+      );
     }
+  }
+
+  buildEmptySlot() {
+    const div = document.createElement("div");
+    div.className = "board-slot-empty";
+    div.textContent = "🐾";
+    return div;
   }
 
   buildMiniCard(instance, ownerId, ui, callbacks) {
@@ -101,10 +131,24 @@ export class Renderer {
     const div = document.createElement("div");
     div.className = `hand-card tribu-${instance.card.tribu ?? "sort"}` + (affordable ? "" : " unaffordable");
     if (instance.card.art) div.style.backgroundImage = `url(../${instance.card.art})`;
-    div.innerHTML = `<div class="cost">${instance.card.cout}</div><div class="name">${instance.card.nom}</div>`;
+    div.innerHTML = `<div class="cost">${instance.card.cout}</div><div class="name">${instance.card.nom}</div>${this.buildHandCardEffectLine(instance.card)}`;
     if (ui.isSelected(instance.instanceId)) div.classList.add("selected");
     div.addEventListener("click", () => callbacks.onHandCardClick(instance.instanceId, affordable));
     return div;
+  }
+
+  // Petite ligne d'effet sous le nom (mot-cle pour une unite, capacite pour
+  // un sort) - vide plutot que devinee si la carte n'en a pas.
+  buildHandCardEffectLine(card) {
+    const text = this.effectLineText(card);
+    return text ? `<div class="effect-line">${text}</div>` : "";
+  }
+
+  effectLineText(card) {
+    const keywordLabels = { garde: "Garde", charge: "Charge", bouclier: "Bouclier" };
+    const keyword = card.motscles?.find((m) => keywordLabels[m]);
+    if (keyword) return keywordLabels[keyword];
+    return card.capacite || "";
   }
 
   renderLog(game) {
