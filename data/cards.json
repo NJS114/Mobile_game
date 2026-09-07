@@ -111,7 +111,7 @@
       "motscles": [],
       "capacite": "",
       "citation": "De grands reves pour demain.",
-      "art": null
+      "art": "assets/cards/nobles/gen-c/noble-jeune-noble.png"
     },
     {
       "id": "noble-chambellan",
@@ -126,7 +126,7 @@
       "motscles": [],
       "capacite": "",
       "citation": "L'ordre fait la grandeur.",
-      "art": null
+      "art": "assets/cards/nobles/gen-c/noble-chambellan.png"
     },
     {
       "id": "noble-comtesse-elegante",
@@ -141,7 +141,7 @@
       "motscles": [],
       "capacite": "",
       "citation": "La grace est une forme de pouvoir.",
-      "art": null
+      "art": "assets/cards/nobles/gen-c/noble-comtesse-elegante.png"
     },
     {
       "id": "noble-chevalier-royal",
@@ -158,7 +158,7 @@
       ],
       "capacite": "",
       "citation": "L'honneur guide chacun de mes pas.",
-      "art": null
+      "art": "assets/cards/nobles/gen-c/noble-chevalier-royal.png"
     },
     {
       "id": "noble-roi-protecteur",
@@ -173,7 +173,7 @@
       "motscles": [],
       "capacite": "",
       "citation": "Ecouter. Comprendre. Agir pour tous.",
-      "art": null
+      "art": "assets/cards/nobles/gen-c/noble-roi-protecteur.png"
     },
     {
       "id": "noble-souveraine-aurelia",
@@ -250,7 +250,7 @@
       "motscles": [],
       "capacite": "",
       "citation": "Elle apaise les tempetes et rassemble les coeurs.",
-      "art": null
+      "art": "assets/cards/sante/sante-mediatrice-mainecoon.png"
     },
     {
       "id": "sante-sage-siamois",
@@ -265,7 +265,7 @@
       "motscles": [],
       "capacite": "",
       "citation": "Il percoit la douleur meme dans le silence.",
-      "art": null
+      "art": "assets/cards/sante/sante-sage-siamois.png"
     },
     {
       "id": "sante-archidruide-felin",

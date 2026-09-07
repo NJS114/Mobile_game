@@ -176,3 +176,46 @@ superieures a mes decoupes rectangulaires automatiques de la section 6, qui ont 
   individuels detoures des deux heros (deja vus ensemble, non detoures, dans
   `assets/reference/heros-duo.png`) - pas encore relies aux avatars du plateau de
   combat (`app/battle.html` utilise encore les emojis 🐈/🐕).
+
+## 8. Illustrations de cartes reliees a `data/cards.json` (06/09/2026)
+
+Suite a la question "peut-on recuperer les illustrations, les contours des cartes,
+les icones... provenant de la carte" : verification que **des illustrations
+individuelles existaient deja dans le depot** (decoupees lors d'une session
+anterieure - voir section 3, `assets/cards/nobles/gen-c/` et `assets/cards/sante/`)
+mais n'etaient pas encore reliees a `data/cards.json`. 7 correspondances de nom
+exact trouvees, `art` relie et `app/cards-data.js` regenere (verifie en jeu via
+`collection.html`, les 7 cartes affichent bien leur illustration) :
+
+- `noble-jeune-noble`, `noble-chambellan` (communes), `noble-comtesse-elegante`,
+  `noble-chevalier-royal` (rares), `noble-roi-protecteur` (epique) → deja
+  decoupees dans `assets/cards/nobles/gen-c/`, juste reliees.
+- `sante-mediatrice-mainecoon`, `sante-sage-siamois` (epiques) → deja decoupees
+  dans `assets/cards/sante/`, juste reliees.
+
+**Erreur commise puis corrigee** : n'ayant pas verifie que ces illustrations
+existaient deja, j'ai d'abord re-decoupe les 5 nobles depuis
+`nobles-planche-20-cartes-gen-c.png` (creant des doublons redondants a la racine
+de `assets/cards/nobles/`, supprimes) et **ecrase par erreur** les deux fichiers
+sante deja presents avec un recadrage legerement different - restaures depuis
+git (`git checkout HEAD --`) avant de relier proprement les fichiers existants.
+Lecon pour la suite : verifier `git ls-tree` sur le dossier cible avant de
+decouper quoi que ce soit qui pourrait deja exister.
+
+**Reponse a la question posee sur le contour de carte et les icones** :
+- Les **illustrations** : oui - c'est ce qui vient d'etre fait, en reliant les
+  fichiers deja decoupes. D'autres decoupes/liaisons sont possibles a la demande
+  si d'autres noms correspondent (voir section 3 pour les generations non
+  encore arbitrees).
+- Un **cadre de carte vide et reutilisable** (bordure doree + bandeau de nom +
+  bandeau de citation, sans le texte d'une carte precise) : **non, pas
+  proprement** avec les outils disponibles ici - le nom et la citation sont
+  peints directement dans l'image (pas un calque separe), donc les isoler
+  demanderait de "reboucher" l'image a cet endroit (inpainting generatif),
+  indisponible dans cette session. Rogner uniquement les coins ornementaux
+  (sans texte) resterait possible si utile un jour.
+- Les **petites icones sans texte specifique a une carte** (croix de soin en
+  haut a droite, embleme patte en bas a gauche, losange de rarete en bas au
+  centre) : oui, decoupables individuellement comme les icones UI des sections
+  6-7 puisqu'elles sont identiques d'une carte a l'autre (a la couleur de
+  rarete pres) - pas encore fait, sur demande.

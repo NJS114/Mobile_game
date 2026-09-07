@@ -112,7 +112,7 @@ export const CARDS = {
       "motscles": [],
       "capacite": "",
       "citation": "De grands reves pour demain.",
-      "art": null
+      "art": "assets/cards/nobles/gen-c/noble-jeune-noble.png"
     },
     {
       "id": "noble-chambellan",
@@ -127,7 +127,7 @@ export const CARDS = {
       "motscles": [],
       "capacite": "",
       "citation": "L'ordre fait la grandeur.",
-      "art": null
+      "art": "assets/cards/nobles/gen-c/noble-chambellan.png"
     },
     {
       "id": "noble-comtesse-elegante",
@@ -142,7 +142,7 @@ export const CARDS = {
       "motscles": [],
       "capacite": "",
       "citation": "La grace est une forme de pouvoir.",
-      "art": null
+      "art": "assets/cards/nobles/gen-c/noble-comtesse-elegante.png"
     },
     {
       "id": "noble-chevalier-royal",
@@ -159,7 +159,7 @@ export const CARDS = {
       ],
       "capacite": "",
       "citation": "L'honneur guide chacun de mes pas.",
-      "art": null
+      "art": "assets/cards/nobles/gen-c/noble-chevalier-royal.png"
     },
     {
       "id": "noble-roi-protecteur",
@@ -174,7 +174,7 @@ export const CARDS = {
       "motscles": [],
       "capacite": "",
       "citation": "Ecouter. Comprendre. Agir pour tous.",
-      "art": null
+      "art": "assets/cards/nobles/gen-c/noble-roi-protecteur.png"
     },
     {
       "id": "noble-souveraine-aurelia",
@@ -251,7 +251,7 @@ export const CARDS = {
       "motscles": [],
       "capacite": "",
       "citation": "Elle apaise les tempetes et rassemble les coeurs.",
-      "art": null
+      "art": "assets/cards/sante/sante-mediatrice-mainecoon.png"
     },
     {
       "id": "sante-sage-siamois",
@@ -266,7 +266,7 @@ export const CARDS = {
       "motscles": [],
       "capacite": "",
       "citation": "Il percoit la douleur meme dans le silence.",
-      "art": null
+      "art": "assets/cards/sante/sante-sage-siamois.png"
     },
     {
       "id": "sante-archidruide-felin",
